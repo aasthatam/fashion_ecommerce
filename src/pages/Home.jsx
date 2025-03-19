@@ -24,7 +24,7 @@ const Home = () => {
     <div className="font-sans">
     
     {/* Hero Section */}
-      <section className="relative text-center py-16">
+      <section className="relative text-center py-0">
         <img
           src={HeroImg}
           alt="Fashion model"
