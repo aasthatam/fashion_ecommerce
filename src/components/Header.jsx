@@ -4,6 +4,7 @@ import profileIcon from "../assets/iconamoon_profile-light.svg";
 import heartIcon from "../assets/solar_heart-linear.svg";
 import bagIcon from "../assets/weui_shop-outlined.svg";
 import arrowupIcon from "../assets/weui_arrow-outlinedup.svg";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -30,15 +31,15 @@ const Header = () => {
   return (
     <header className="flex justify-between items-center px-8 py-4 shadow-md bg-white">
       {/* Left Section - Logo */}
-      <h1 className="text-2xl font-medium tracking-wide" style={{ fontFamily: "Inspiration, sans-serif" }}>
+      <Link to="/" className="text-2xl font-medium tracking-wide" style={{ fontFamily: "Inspiration, sans-serif" }}>
         WearNova
-      </h1>
+      </Link>
 
       {/* Center Section - Navigation */}
       <nav className="flex-1 flex justify-center">
         <ul className="flex space-x-8 text-lg font-light">
           <li><a href="#" className="hover:underline">Shop Now</a></li>
-          <li><a href="#" className="hover:underline">About</a></li>
+          <li><a href="/about" className="hover:underline">About</a></li>
           <li><a href="#" className="hover:underline">Contact Us</a></li>
           <li className="relative" ref={dropdownRef}>
             {/* More Options Button */}
