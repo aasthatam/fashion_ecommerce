@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ChevronLeft, Heart } from "lucide-react";
+import { ChevronRight, Heart } from "lucide-react";
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
 import Shirt1 from "../assets/shirt1.png";
@@ -95,18 +95,19 @@ const Collection = () => {
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-10 space-x-4">
+      <div className="flex justify-center mt-10 space-x-6 items-center">
         {[1, 2, 3].map((page) => (
           <button
             key={page}
-            className={`w-8 h-8 flex items-center justify-center border rounded-full ${
-              currentPage === page ? "bg-black text-white" : "bg-gray-100"
-            }`}
+            className={`text-lg font-medium cursor-pointer ${currentPage === page ? "underline" : "text-black"}`}
             onClick={() => setCurrentPage(page)}
           >
             {page}
           </button>
         ))}
+         <button className="w-10 h-10 flex items-center justify-center border rounded-full">
+          <ChevronRight size={20} />
+        </button>
       </div>
     </div>
   );
