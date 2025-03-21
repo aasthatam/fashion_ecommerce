@@ -43,27 +43,29 @@ const Collection = () => {
   return (
     <div className="font-sans p-6 md:p-10">
       {/* Back Button */}
-      <a href="/" className="text-gray-500 text-sm mb-4 inline-block">
+      <a href="/" className="text-gray-500 text-sm mb-4 inline-block hover:underline">
         ← Back to home
       </a>
+      <h1 className="text-2xl font-semibold">Shirts</h1>
 
-      {/* Title & Filters */}
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Shirts</h1>
+       {/* Filters & Sort */}
+       <div className="flex justify-between items-center mt-4">
         <div className="flex gap-6 text-sm text-gray-600">
           <div className="cursor-pointer">Color +</div>
           <div className="cursor-pointer">Categories +</div>
           <div className="cursor-pointer">Fabrics +</div>
-          <div className="cursor-pointer">Sort By +</div>
         </div>
+        <div className="cursor-pointer text-sm text-gray-600">Sort By +</div>
       </div>
 
       {/* Product Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
         {products.map((item) => (
-          <div key={item.id} className="relative group">
+          <div key={item.id} className="relative group overflow-hidden">
             {/* Image */}
-            <img src={item.image} alt={item.name} className="w-full rounded-lg" />
+            <div className="overflow-hidden">
+              <img src={item.image} alt={item.name} className="w-full transition-transform duration-300 group-hover:scale-110" />
+            </div>
             {/* Discount Tag */}
             {item.tag && (
               <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded-md">
