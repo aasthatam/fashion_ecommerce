@@ -25,7 +25,7 @@ const Home = () => {
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-black">
           <h1 className="text-4xl font-bold">Effortless style, timeless fashion</h1>
-          <button className="mt-4 bg-black text-white py-2 px-4 rounded">Shop Now</button>
+          <button className="mt-4 bg-black text-white py-2 px-4 rounded transition hover:bg-white hover:text-black hover:scale-105">Shop Now</button>
         </div>
       </section>
       
@@ -55,7 +55,7 @@ const Home = () => {
             </div>
           ))}
         </div>
-        <button className="mt-6 border px-4 py-2 rounded">View More</button>
+        <button className="mt-6 border border-gray-900 px-6 py-2 rounded-md text-gray-900 hover:bg-gray-900 hover:text-white transition">View More</button>
       </section>
 
       <section className="py-16 px-10">
@@ -132,14 +132,14 @@ const Home = () => {
           <img src={Fashion} alt="Modern Edge" className="w-full h-[300px] object-cover" />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white bg-black/40">
             <h3 className="text-xl font-bold">Timeless fashion, modern edge</h3>
-            <button className="mt-2 bg-black text-white px-4 py-2 rounded">Discover Now</button>
+            <button className="mt-2 bg-black text-white px-4 py-2 rounded transition hover:bg-white hover:text-black hover:scale-105">Discover Now</button>
           </div>
         </div>
         <div className="relative text-center">
           <img src={Sales} alt="Clearance Sale" className="w-full h-[300px] object-cover" />
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white bg-black/40">
             <h3 className="text-xl font-bold">Clearance Sales Up to 70% off</h3>
-            <button className="mt-2 bg-black text-white px-4 py-2 rounded">Discover Now</button>
+            <button className="mt-2 bg-black text-white px-4 py-2 rounded transition hover:bg-white hover:text-black hover:scale-105">Discover Now</button>
           </div>
         </div>
       </section>
