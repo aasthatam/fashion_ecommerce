@@ -46,7 +46,7 @@ const Collection = () => {
       <a href="/" className="text-gray-500 text-sm mb-4 inline-block hover:underline">
         ← Back to home
       </a>
-      <h1 className="text-2xl font-semibold">Shirts</h1>
+      <h1 className="text-2xl font-semibold">Collection</h1>
 
        {/* Filters & Sort */}
        <div className="flex justify-between items-center mt-4">
