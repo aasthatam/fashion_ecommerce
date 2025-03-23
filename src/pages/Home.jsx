@@ -11,8 +11,10 @@ import Sweater from "../assets/sweater.png";
 import Dress from "../assets/dress.png";
 import Fashion from "../assets/fashion.png";
 import Sales from "../assets/sales.png";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <div className="font-sans">
     
@@ -25,7 +27,8 @@ const Home = () => {
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-black">
           <h1 className="text-4xl font-bold">Effortless style, timeless fashion</h1>
-          <button className="mt-4 bg-black text-white py-2 px-4 rounded transition hover:bg-white hover:text-black hover:scale-105">Shop Now</button>
+          <button className="mt-4 bg-black text-white py-2 px-4 rounded transition hover:bg-white hover:text-black hover:scale-105"
+          onClick={() => navigate("/collection")}>Shop Now</button>
         </div>
       </section>
       
