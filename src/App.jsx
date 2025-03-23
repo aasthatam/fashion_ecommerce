@@ -7,6 +7,9 @@ import About from "./pages/About";
 import Login from "./pages/Login";
 import CreateAccount from "./pages/CreateAccount";
 import Collection from "./pages/Collection";
+import Cart from "./pages/Cart";
+import ProductDetail from "./pages/ProductDetail";
+import Search from "./pages/Search";
 
 
 const App = () => {
@@ -20,6 +23,10 @@ const App = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/createaccount" element={<CreateAccount />} />
       <Route path="/collection" element={<Collection/>} />
+      <Route path="/cart" element={<Cart/>} />
+      <Route path="/productdetail" element={<ProductDetail/>} />
+      <Route path="/search" element={<Search/>} />
+    
       
     </Routes>
     <Footer/>
