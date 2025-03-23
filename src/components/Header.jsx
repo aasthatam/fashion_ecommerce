@@ -38,7 +38,7 @@ const Header = () => {
       {/* Center Section - Navigation */}
       <nav className="flex-1 flex justify-center">
         <ul className="flex space-x-8 text-lg font-light">
-          <li><a href="#" className="hover:underline">Shop Now</a></li>
+          <li><a href="/collection" className="hover:underline">Shop Now</a></li>
           <li><a href="/about" className="hover:underline">About</a></li>
           <li><a href="#" className="hover:underline">Contact Us</a></li>
           <li className="relative" ref={dropdownRef}>
