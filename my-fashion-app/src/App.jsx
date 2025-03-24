@@ -10,6 +10,7 @@ import Collection from "./pages/Collection";
 import Cart from "./pages/Cart";
 import ProductDetail from "./pages/ProductDetail";
 import Search from "./pages/Search";
+import Wishlist from "./pages/Wishlist";
 
 
 const App = () => {
@@ -26,6 +27,7 @@ const App = () => {
       <Route path="/cart" element={<Cart/>} />
       <Route path="/productdetail" element={<ProductDetail/>} />
       <Route path="/search" element={<Search/>} />
+      <Route path="/wishlist" element={<Wishlist/>} />
     
       
     </Routes>
