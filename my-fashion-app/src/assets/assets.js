@@ -43,6 +43,17 @@ export const colorOptions = [
     { name: "Hemp", count: 8 },
   ];
 
+  export const sortOptions = [
+    { name: "Best Selling" },
+    { name: "Alphabetically, A-Z" },
+    { name: "Alphabetically, Z-A" },
+    { name: "Price, Low to High" },
+    { name: "Price, High to Low" },
+    { name: "Date, Old to New" },
+    { name: "Date, New to Old" },
+
+  ];
+
   export const products = [
     { 
         id: 1, 
@@ -52,7 +63,8 @@ export const colorOptions = [
         color: "Black", 
         category: "Top", 
         fabric: "Cotton",
-        bestselling: true
+        bestselling: true,
+        isNewArrival: true
     },
     { 
         id: 2, 
@@ -62,7 +74,8 @@ export const colorOptions = [
         color: "Blue", 
         category: "Dresses", 
         fabric: "Silk",
-        bestselling: true 
+        bestselling: true ,
+        isNewArrival: true
     },
     { 
         id: 3, 
@@ -72,7 +85,8 @@ export const colorOptions = [
         color: "Brown", 
         category: "Top",
         fabric: "Nylon",
-        bestselling: false
+        bestselling: false,
+        isNewArrival: true
     },
     { 
         id: 4, 
@@ -82,7 +96,8 @@ export const colorOptions = [
         color: "White", 
         category: "Top", 
         fabric: "Cotton",
-        bestselling: true
+        bestselling: true,
+        isNewArrival: true
     },
     { 
         id: 5, 
@@ -92,7 +107,8 @@ export const colorOptions = [
         color: "Gray", 
         category: "Sweaters", 
         fabric: "Rayon",
-        bestselling: false
+        bestselling: false,
+        isNewArrival: true
     },
     { 
         id: 6, 
@@ -103,7 +119,8 @@ export const colorOptions = [
         category: "Top", 
         fabric: "Silk", 
         tag: "Save 20%",
-        bestselling: true
+        bestselling: true,
+        isNewArrival: true
     },
     { 
       id: 7, 
@@ -113,7 +130,8 @@ export const colorOptions = [
       color: "Red", 
       category: "Dresses", 
       fabric: "Viscose Jersey",
-      bestselling: false
+      bestselling: false,
+      isNewArrival: true
     },
     { 
       id: 8, 
@@ -124,7 +142,8 @@ export const colorOptions = [
       category: "Sweaters", 
       fabric: "Hemp", 
       tag: "Save 20%",
-      bestselling: true
+      bestselling: true,
+      isNewArrival: true
     },
     { 
       id: 9, 
@@ -134,7 +153,8 @@ export const colorOptions = [
       color: "Neutral", 
       category: "Bodysuits & Jumpsuits", 
       fabric: "Silk",
-      bestselling: false
+      bestselling: false,
+      isNewArrival: true
     },
     { 
       id: 10, 
@@ -145,7 +165,8 @@ export const colorOptions = [
       category: "Sweaters", 
       fabric: "Wood-Silk", 
       tag: "Save 20%",
-      bestselling: true
+      bestselling: true,
+      isNewArrival: true
     },
     { 
       id: 11, 
@@ -155,7 +176,8 @@ export const colorOptions = [
       color: "Blue", 
       category: "Top", 
       fabric: "Cotton",
-      bestselling: false
+      bestselling: false,
+      isNewArrival: true
     },
     { 
       id: 12, 
@@ -165,6 +187,7 @@ export const colorOptions = [
       color: "Brown", 
       category: "Pants", 
       fabric: "Nylon" ,
-      bestselling: true
+      bestselling: true,
+      isNewArrival: true
     },
   ];
