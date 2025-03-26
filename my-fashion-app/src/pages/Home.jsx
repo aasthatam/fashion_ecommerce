@@ -15,6 +15,10 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
+
+  const handleViewNewArrivals = () => {
+    navigate("/collection/new-arrivals");
+  }
   return (
     <div className="font-sans">
     
@@ -58,7 +62,8 @@ const Home = () => {
             </div>
           ))}
         </div>
-        <button className="mt-6 border border-gray-900 px-6 py-2 rounded-md text-gray-900 hover:bg-gray-900 hover:text-white transition">View More</button>
+        <button className="mt-6 border border-gray-900 px-6 py-2 rounded-md text-gray-900 hover:bg-gray-900 hover:text-white transition"
+        onClick={handleViewNewArrivals}>View More</button>
       </section>
 
       <section className="py-16 px-10">
