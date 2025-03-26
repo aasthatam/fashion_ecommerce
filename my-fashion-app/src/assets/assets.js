@@ -10,6 +10,9 @@ import Shirt9 from "../assets/shirt9.png";
 import Shirt10 from "../assets/shirt10.png";
 import Shirt11 from "../assets/shirt11.png";
 import Shirt12 from "../assets/shirt12.png";
+import Image from "../assets/image.png";
+import Image2 from "../assets/image2.png";
+import Image3 from "../assets/image3.png";
 
 export const colorOptions = [
     { name: "Black", count: 6 },
@@ -25,12 +28,14 @@ export const colorOptions = [
   ];
 
   export const categoryOptions = [
-    { name: "Top", count: 6 },
-    { name: "Sweaters", count: 20 },
-    { name: "Pants", count: 10 },
-    { name: "Dresses", count: 23 },
-    { name: "Bottoms", count: 6 },
-    { name: "Bodysuits & Jumpsuits", count: 6 },
+    { name: "New Arrivals", key: "new-arrivals", count: 80 },  // Changed from "New-Arrivals"
+    { name: "Top", key: "tops", count: 6 },
+    { name: "Shirts", key: "shirts", count: 3 },
+    { name: "Sweaters", key: "sweaters", count: 20 },
+    { name: "Pants", key: "pants", count: 10 },
+    { name: "Dresses", key: "dresses", count: 23 },
+    { name: "Bottoms", key: "bottoms", count: 6 },
+    { name: "Bodysuits & Jumpsuits", key: "bodysuits-and-jumpsuits", count: 6 },
   ];
 
   export const fabricsOptions = [
@@ -55,8 +60,42 @@ export const colorOptions = [
   ];
 
   export const products = [
-    { 
+      { 
         id: 1, 
+        name: "Neck High Waisted Mini Dress", 
+        price: 2500, 
+        image: Image, 
+        color: "Black", 
+        category: "Top", 
+        fabric: "Cotton",
+        bestselling: true,
+        isNewArrival: true
+      },
+          { 
+            id: 2, 
+            name: "Halter Neck Ribbed Cropped Top", 
+            price: 1500, 
+            image: Image2, 
+            color: "Black", 
+            category: "Top", 
+            fabric: "Cotton",
+            bestselling: true,
+            isNewArrival: true
+        },
+        { 
+          id: 3, 
+          name: "Long Sleeve Lapel Collar Blazer", 
+          price: 3000, 
+          image: Image3, 
+          color: "Brown", 
+          category: "Top", 
+          fabric: "Silk",
+          bestselling: true,
+          isNewArrival: true
+      },
+
+    { 
+        id: 4, 
         name: "Basic Bae Full Size Ribbed Round Neck Long T-Shirt", 
         price: 1500, 
         image: Shirt1, 
@@ -67,7 +106,7 @@ export const colorOptions = [
         isNewArrival: true
     },
     { 
-        id: 2, 
+        id: 5, 
         name: "Round Neck Tiered Tank Top", 
         price: 3000, 
         image: Shirt2, 
@@ -78,7 +117,7 @@ export const colorOptions = [
         isNewArrival: true
     },
     { 
-        id: 3, 
+        id: 6, 
         name: "Lantern Sleeve O-neck Casual Party Tunic Blouse", 
         price: 3000, 
         image: Shirt3, 
@@ -89,7 +128,7 @@ export const colorOptions = [
         isNewArrival: true
     },
     { 
-        id: 4, 
+        id: 7, 
         name: "Full Size Ribbed Round Neck Short Sleeve T-Shirt", 
         price: 1500, 
         image: Shirt4, 
@@ -100,7 +139,7 @@ export const colorOptions = [
         isNewArrival: true
     },
     { 
-        id: 5, 
+        id: 8, 
         name: "Simon Longsleeve Top", 
         price: 2500, 
         image: Shirt5, 
@@ -111,7 +150,7 @@ export const colorOptions = [
         isNewArrival: true
     },
     { 
-        id: 6, 
+        id: 9, 
         name: "Blouse with Notched Neck", 
         price: 3000, 
         image: Shirt6, 
@@ -123,7 +162,7 @@ export const colorOptions = [
         isNewArrival: true
     },
     { 
-      id: 7, 
+      id: 10, 
       name: "Halter Neck Blouse With Keyhole Back", 
       price: 2500, 
       image: Shirt7, 
@@ -131,22 +170,22 @@ export const colorOptions = [
       category: "Dresses", 
       fabric: "Viscose Jersey",
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: false
     },
     { 
-      id: 8, 
+      id: 11, 
       name: "Urban Solid Color Lapel Long Sleeves Blouse",
       price: 2700, 
       image: Shirt8, 
       color: "Green", 
-      category: "Sweaters", 
+      category: "Shirts", 
       fabric: "Hemp", 
       tag: "Save 20%",
       bestselling: true,
       isNewArrival: true
     },
     { 
-      id: 9, 
+      id: 12, 
       name: "Full Size Round Neck Tank Top", 
       price: 3000, 
       image: Shirt9,
@@ -154,10 +193,10 @@ export const colorOptions = [
       category: "Bodysuits & Jumpsuits", 
       fabric: "Silk",
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: false
     },
     { 
-      id: 10, 
+      id: 13, 
       name: "Mads Turtleneck Top", 
       price: 3000, 
       image: Shirt10, 
@@ -169,7 +208,7 @@ export const colorOptions = [
       isNewArrival: true
     },
     { 
-      id: 11, 
+      id: 14, 
       name: "Lace Top with High Neck",
       price: 2200, 
       image: Shirt11, 
@@ -180,7 +219,7 @@ export const colorOptions = [
       isNewArrival: true
     },
     { 
-      id: 12, 
+      id: 15, 
       name: "Swiss Dot Blouse with Shirred Flounce Sleeve", 
       price: 3000, 
       image: Shirt12, 
