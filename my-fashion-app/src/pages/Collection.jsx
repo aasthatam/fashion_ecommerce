@@ -89,7 +89,12 @@ const Collection = () => {
   };
 
   const handleSortChange = (sortOption) => {
-    setSortBy(sortOption);
+    if (sortOption === sortBy) {
+      // If the same option is clicked again, reset sorting (or set to a default state)
+      setSortBy(""); 
+    } else {
+      setSortBy(sortOption); 
+    }
   };
 
   const filteredProducts = products.filter((product) => {
