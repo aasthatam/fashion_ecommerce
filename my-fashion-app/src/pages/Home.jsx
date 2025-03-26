@@ -19,6 +19,12 @@ const Home = () => {
   const handleViewNewArrivals = () => {
     navigate("/collection/new-arrivals");
   }
+
+  // New handler for essentials navigation
+  const navigateToCategory = (category) => {
+    navigate(`/collection/${category}`);
+  };
+
   return (
     <div className="font-sans">
     
@@ -77,7 +83,7 @@ const Home = () => {
           </div>
 
           {/* Sweaters */}
-          <div className="relative group">
+          <div className="relative group cursor-pointer" onClick={() => navigateToCategory("sweaters")}>
             <img
               src={Sweater}
               alt="Sweaters"
@@ -91,7 +97,7 @@ const Home = () => {
           </div>
 
           {/* Dresses */}
-          <div className="relative group row-span-2">
+          <div className="relative group row-span-2 cursor-pointer"  onClick={() => navigateToCategory("dresses")}>
             <img
               src={Dress}
               alt="Dresses"
@@ -105,7 +111,7 @@ const Home = () => {
           </div>
 
           {/* Shirts */}
-          <div className="relative group">
+          <div className="relative group cursor-pointer"  onClick={() => navigateToCategory("shirts")}>
             <img
               src={Shirt}
               alt="Shirts"
@@ -119,7 +125,7 @@ const Home = () => {
           </div>
 
           {/* Pants */}
-          <div className="relative group">
+          <div className="relative group cursor-pointer"  onClick={() => navigateToCategory("pants")}>
             <img
               src={Pants}
               alt="Pants"
