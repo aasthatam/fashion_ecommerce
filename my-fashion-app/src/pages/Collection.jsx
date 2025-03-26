@@ -3,7 +3,9 @@ import { ChevronRight } from "lucide-react";
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
 import { colorOptions, categoryOptions, fabricsOptions, sortOptions, products } from "../assets/assets";
-import { useLocation, useNavigate } from "react-router-dom"; // Import useNavigate here
+import { useLocation, useNavigate } from "react-router-dom";
+
+const PRODUCTS_PER_PAGE = 8; // Number of products per page
 
 const FilterDropdown = ({ title, options, selectedOptions, onOptionChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -46,17 +48,16 @@ const FilterDropdown = ({ title, options, selectedOptions, onOptionChange }) => 
 
 const Collection = () => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [liked, setLiked] = useState({}); // State to track liked hearts
+  const [liked, setLiked] = useState({});
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedFabrics, setSelectedFabrics] = useState([]);
   const [sortBy, setSortBy] = useState("");
   const location = useLocation();
-  
-  const category = location.pathname.split('/')[2] || "collection"; // Default to 'collection'
-  const navigate = useNavigate(); // Initialize useNavigate hook here
+  const navigate = useNavigate();
 
-  // Define dynamic page titles based on the category
+  const category = location.pathname.split('/')[2] || "collection";
+
   const pageTitles = {
     "new-arrivals": "New Arrivals",
     "top": "Tops",
@@ -71,110 +72,94 @@ const Collection = () => {
 
   const [pageTitle, setPageTitle] = useState(pageTitles[category] || "Collection");
 
-  // Update the title whenever the category changes
   useEffect(() => {
     setPageTitle(pageTitles[category] || "Collection");
-  }, [category]); // Recalculate page title when category changes
+  }, [category]);
 
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [category, selectedColors, selectedFabrics, sortBy]);
 
   const toggleLike = (id) => {
-    setLiked((prev) => ({
+    setLiked(prev => ({
       ...prev,
-      [id]: !prev[id], // Toggle the like status for the clicked product
+      [id]: !prev[id],
     }));
   };
 
- 
   const handleColorChange = (color) => {
-    setSelectedColors((prev) =>
-      prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
+    setSelectedColors(prev =>
+      prev.includes(color) ? prev.filter(c => c !== color) : [...prev, color]
     );
   };
 
   const handleCategoryChange = (categoryName) => {
-    const getCategoryKey = (name) => {
-      return name.toLowerCase().replace(/\s+/g, '-').replace('&', 'and');
-    };
-  
-    // Check if this is the currently selected category
+    const getCategoryKey = (name) => name.toLowerCase().replace(/\s+/g, '-').replace('&', 'and');
     const categoryKey = getCategoryKey(categoryName);
     const isCurrentlySelected = category === categoryKey;
-  
-    // Toggle selection - if same category clicked, deselect it
+
     if (isCurrentlySelected) {
-      // Deselect (return to collection)
       setSelectedCategories([]);
-      navigate("/collection"); // Clean base URL
+      navigate("/collection");
       setPageTitle("Collection");
     } else {
-      // Select new category
       setSelectedCategories([categoryName]);
-      navigate(`/collection/${categoryKey}`); // Clean category URL
+      navigate(`/collection/${categoryKey}`);
       setPageTitle(pageTitles[categoryKey] || "Collection");
     }
   };
 
   const handleFabricChange = (fabric) => {
-    setSelectedFabrics((prev) =>
-      prev.includes(fabric) ? prev.filter((f) => f !== fabric) : [...prev, fabric]
+    setSelectedFabrics(prev =>
+      prev.includes(fabric) ? prev.filter(f => f !== fabric) : [...prev, fabric]
     );
   };
 
   const handleSortChange = (sortOption) => {
-    if (sortOption === sortBy) {
-      // If the same option is clicked again, reset sorting (or set to a default state)
-      setSortBy(""); 
-    } else {
-      setSortBy(sortOption); 
-    }
+    setSortBy(prev => prev === sortOption ? "" : sortOption);
   };
 
+  // Filter and sort products
   const filteredProducts = products.filter((product) => {
     const colorMatch = selectedColors.length === 0 || selectedColors.includes(product.color);
     const fabricMatch = selectedFabrics.length === 0 || selectedFabrics.includes(product.fabric);
-  
-    // Handle "new-arrivals" special case
+
     if (category === "new-arrivals") {
       return product.isNewArrival && colorMatch && fabricMatch;
     }
-  
-    // Normal category filtering
+
     if (category !== "collection") {
       const normalize = (str) => str.toLowerCase().replace(/\s+/g, '-').replace('&', 'and');
       const productCategory = normalize(product.category);
       return productCategory === category && colorMatch && fabricMatch;
     }
-  
-    // Default collection view
+
     return colorMatch && fabricMatch;
   });
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortBy === "Best Selling") {
-      // Sort products by bestselling status first (true comes before false)
-      return b.bestselling ? 1 : -1; // True products come first
-    } else if (sortBy === "Price, Low to High") {
-      return a.price - b.price;
-    } else if (sortBy === "Price, High to Low") {
-      return b.price - a.price;
-    } else if (sortBy === "Alphabetically, A-Z") {
-      return a.name.localeCompare(b.name);
-    } else if (sortBy === "Alphabetically, Z-A") {
-      return b.name.localeCompare(a.name);
-    } else {
-      return 0;
-    }
+    if (sortBy === "Best Selling") return b.bestselling ? 1 : -1;
+    if (sortBy === "Price, Low to High") return a.price - b.price;
+    if (sortBy === "Price, High to Low") return b.price - a.price;
+    if (sortBy === "Alphabetically, A-Z") return a.name.localeCompare(b.name);
+    if (sortBy === "Alphabetically, Z-A") return b.name.localeCompare(a.name);
+    return 0;
   });
+
+  // Pagination calculations
+  const totalProducts = sortedProducts.length;
+  const totalPages = Math.ceil(totalProducts / PRODUCTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+  const paginatedProducts = sortedProducts.slice(startIndex, startIndex + PRODUCTS_PER_PAGE);
 
   return (
     <div className="font-sans p-6 md:p-10">
-      {/* Back Button */}
       <a href="/" className="text-gray-500 text-sm mb-4 inline-block hover:underline">
         ← Back to home
       </a>
       <h1 className="text-2xl font-semibold">{pageTitle}</h1>
 
-      {/* Filters & Sort */}
       <div className="flex justify-between items-center mt-4">
         <div className="flex gap-6">
           <FilterDropdown 
@@ -204,34 +189,29 @@ const Collection = () => {
         />
       </div>
 
-      {/* Product Grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-        {sortedProducts.map((item) => (
+        {paginatedProducts.map((item) => (
           <div key={item.id} className="relative group overflow-hidden">
-            {/* Image */}
             <div className="overflow-hidden">
               <img src={item.image} alt={item.name} className="w-full transition-transform duration-300 group-hover:scale-110" />
             </div>
-            {/* Discount Tag */}
             {item.tag && (
               <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded-md">
                 {item.tag}
               </span>
             )}
-            {/* Wishlist Button */}
             <button
               className="absolute top-2 right-2 text-gray-700"
-              onClick={() => toggleLike(item.id)} // Toggle like on click
+              onClick={() => toggleLike(item.id)}
             >
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
                 <img
-                  src={liked[item.id] ? heartIconFilled : heartIcon} // Use filled heart when liked
+                  src={liked[item.id] ? heartIconFilled : heartIcon}
                   alt="Heart"
                   className="w-5 h-5"
                 />
               </div>
             </button>
-            {/* Product Details */}
             <div className="mt-3 text-center">
               <p className="text-sm">{item.name}</p>
               <p className="text-lg font-medium">Rs. {item.price.toFixed(2)}</p>
@@ -240,21 +220,57 @@ const Collection = () => {
         ))}
       </div>
 
-      {/* Pagination */}
-      <div className="flex justify-center mt-10 space-x-6 items-center">
-        {[1, 2, 3].map((page) => (
-          <button
-            key={page}
-            className={`text-lg font-medium cursor-pointer ${currentPage === page ? "underline" : "text-black"}`}
-            onClick={() => setCurrentPage(page)}
+      {/* Enhanced Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-10 space-x-3 items-center">
+          {/* Left Arrow Button */}
+          <button 
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="w-10 h-10 flex items-center justify-center border rounded-full disabled:opacity-50 hover:bg-gray-100"
           >
-            {page}
+            <ChevronRight size={20} className="rotate-180" />
           </button>
-        ))}
-        <button className="w-10 h-10 flex items-center justify-center border rounded-full">
-          <ChevronRight size={20} />
-        </button>
-      </div>
+
+          {/* Page Numbers */}
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            let pageNum;
+            if (totalPages <= 5) {
+              pageNum = i + 1;
+            } else if (currentPage <= 3) {
+              pageNum = i + 1;
+            } else if (currentPage >= totalPages - 2) {
+              pageNum = totalPages - 4 + i;
+            } else {
+              pageNum = currentPage - 2 + i;
+            }
+
+            return (
+              <button
+                key={pageNum}
+                className={`px-3 text-lg ${
+                  currentPage === pageNum ? "underline font-semibold" : "text-gray-600 hover:underline"
+                }`}
+                onClick={() => setCurrentPage(pageNum)}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
+
+          {totalPages > 5 && <span className="mx-2">...</span>}
+
+          {/* Right Arrow Button */}
+          <button 
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+            className="w-10 h-10 flex items-center justify-center border rounded-full disabled:opacity-50 hover:bg-gray-100"
+          >
+            <ChevronRight size={20} />
+          </button>
+        </div>
+      )}
+
     </div>
   );
 };
