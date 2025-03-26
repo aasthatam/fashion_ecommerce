@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { ChevronRight } from "lucide-react";
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
-import { colorOptions, categoryOptions, fabricsOptions, products } from "../assets/assets";
+import { colorOptions, categoryOptions, fabricsOptions, sortOptions, products } from "../assets/assets";
+
 
 const FilterDropdown = ({ title, options, selectedOptions, onOptionChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,16 +59,7 @@ const Collection = () => {
     }));
   };
 
-  const sortOptions = [
-    { name: "Best Selling" },
-    { name: "Alphabetically, A-Z" },
-    { name: "Alphabetically, Z-A" },
-    { name: "Price, Low to High" },
-    { name: "Price, High to Low" },
-    { name: "Date, Old to New" },
-    { name: "Date, New to Old" },
-
-  ]
+  
 
  
   const handleColorChange = (color) => {
