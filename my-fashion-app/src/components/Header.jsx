@@ -40,7 +40,7 @@ const Header = () => {
         <ul className="flex space-x-8 text-lg font-light">
           <li><a href="/collection" className="hover:underline">Shop Now</a></li>
           <li><a href="/about" className="hover:underline">About</a></li>
-          <li><a href="#" className="hover:underline">Contact Us</a></li>
+          <li><a href="/Contact-us" className="hover:underline">Contact Us</a></li>
           <li className="relative" ref={dropdownRef}>
             {/* More Options Button */}
             <button
@@ -65,17 +65,17 @@ const Header = () => {
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                    <a href="/Customer-support" className="block px-4 py-2 hover:bg-gray-100">
                       Customer Support
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                    <a href="/Returns-and-refunds" className="block px-4 py-2 hover:bg-gray-100">
                       Returns & Exchange
                     </a>
                   </li>
                   <li>
-                    <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                    <a href="/Privacy-policy" className="block px-4 py-2 hover:bg-gray-100">
                       Privacy Policy
                     </a>
                   </li>

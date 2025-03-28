@@ -21,8 +21,8 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-2">Shop</h4>
             <ul className="text-gray-600 space-y-1">
-              <li><a href="#" className="hover:underline">Shop Now</a></li>
-              <li><a href="#" className="hover:underline">New Arrivals</a></li>
+              <li><a href="/collection" className="hover:underline">Shop Now</a></li>
+              <li><a href="/collection/new-arrivals" className="hover:underline">New Arrivals</a></li>
               <li><a href="#" className="hover:underline">Trending Styles</a></li>
             </ul>
           </div>
@@ -30,10 +30,10 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-2">Customer Support</h4>
             <ul className="text-gray-600 space-y-1">
-              <li><a href="#" className="hover:underline">FAQs</a></li>
-              <li><a href="#" className="hover:underline">Shipping & Delivery</a></li>
-              <li><a href="#" className="hover:underline">Returns & Exchange</a></li>
-              <li><a href="#" className="hover:underline">Contact Us</a></li>
+              <li><a href="/FAQs" className="hover:underline">FAQs</a></li>
+              <li><a href="/Orders-and-delivery" className="hover:underline">Shipping & Delivery</a></li>
+              <li><a href="/Returns-and-refunds" className="hover:underline">Returns & Exchange</a></li>
+              <li><a href="/Contact-us" className="hover:underline">Contact Us</a></li>
             </ul>
           </div>
         </div>
