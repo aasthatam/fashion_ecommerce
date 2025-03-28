@@ -59,6 +59,11 @@ const Header = () => {
             {isDropdownOpen && (
               <div className="absolute left-0 top-full mt-2 w-48 bg-white shadow-md border border-gray-200 rounded-lg z-50">
                 <ul>
+                <li>
+                    <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                      Style Guide
+                    </a>
+                  </li>
                   <li>
                     <a href="#" className="block px-4 py-2 hover:bg-gray-100">
                       Customer Support
