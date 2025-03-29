@@ -1,88 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react'; 
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
-import Image2 from "../assets/image2.png";
-import Image4 from "../assets/image4.png";
-import Image5 from "../assets/image5.png";
-import Image6 from "../assets/image6.png";
-import Shirt4 from "../assets/shirt4.png";
-import Shirt2 from "../assets/shirt2.png";
-import Shirt9 from "../assets/shirt9.png";
-import Shirt8 from "../assets/shirt8.png";
-import Sweater from "../assets/cassiancardigan.png";
-import Coat from "../assets/trenchcoat.png";
+import { useParams } from 'react-router-dom';
+import { products } from "../assets/assets";
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
 
 function ProductDetailPage() {
+  const { id } = useParams();
   const [quantity, setQuantity] = useState(1);
-  const [liked, setLiked] = useState({}); // Track liked state for recommended products
-  const [isProductLiked, setIsProductLiked] = useState(false); // Track liked state for the main product
+  const [liked, setLiked] = useState({});
+  const [isProductLiked, setIsProductLiked] = useState(false);
   const [selectedSize, setSelectedSize] = useState('S');
   const [selectedImage, setSelectedImage] = useState(0);
+  const thumbnailRef = useRef(null); // Added useRef declaration
 
-  // Toggle like for recommended products
-  const toggleLike = (id) => {
-    setLiked((prev) => ({
-      ...prev,
-      [id]: !prev[id], // Toggle the like status for the clicked product
-    }));
-  };
+  // Find the product by id
+  const product = products.find((prod) => prod.id === parseInt(id));
 
-  // Toggle like for the main product
-  const toggleProductLike = () => {
-    setIsProductLiked((prev) => !prev); // Toggle the like status for the main product
-  };
+  if (!product) {
+    return <div className="max-w-6xl mx-auto px-4 py-8">Product not found</div>;
+  }
 
-  const productImages = [Image4, Image5, Image6];
-
-  const colorOptions = [
-    { name: 'Nude', color: '#d3b8a0' },
-    { name: 'Brown', color: '#8b572a' },
-    { name: 'Black', color: '#000000' },
-  ];
-
-  const sizeOptions = ['S', 'M', 'L', 'XL'];
-
-  const recommendedProducts = [
-    {
-      id: 1,
-      name: 'Full Size Ribbed Round Neck Short Sleeve T-Shirt',
-      price: 'Rs. 1500.00',
-      image: Shirt4,
-    },
-    {
-      id: 2,
-      name: 'Round Neck Tiered Tank Top',
-      price: 'Rs. 2200.00',
-      image: Shirt2,
-    },
-    {
-      id: 3,
-      name: 'Full Size Round Neck Tank Top',
-      price: 'Rs. 2000.00',
-      image: Shirt9,
-    },
-    {
-      id: 4,
-      name: 'Urban Solid Chic Lapel Long Sleeve Blouse',
-      price: 'Rs. 2700.00',
-      image: Shirt8,
-      tag: '40% off',
-    },
-    {
-      id: 5,
-      name: 'The Coassian Cardigan',
-      price: 'Rs. 4000.00',
-      image: Sweater,
-    },
-    {
-      id: 6,
-      name: 'Khaki Room Flap Double Breasted Trench Coat',
-      price: 'Rs. 5500.00',
-      image: Coat,
-      tag: 'New',
-    },
-  ];
+  // Get first 4 products as recommendations (excluding current product)
+  const recommendedProducts = products
+    .filter(p => p.id !== product.id)
+    .slice(0, 8);
 
   const handleQuantityChange = (e) => {
     const value = parseInt(e.target.value);
@@ -90,6 +32,28 @@ function ProductDetailPage() {
       setQuantity(value);
     }
   };
+
+  const toggleProductLike = () => {
+    setIsProductLiked(!isProductLiked);
+  };
+
+  const toggleLike = (productId) => {
+    setLiked(prev => ({
+      ...prev,
+      [productId]: !prev[productId],
+    }));
+  };
+
+  // Scroll thumbnails left/right
+  const scrollThumbnails = (direction) => {
+    if (thumbnailRef.current) {
+      const scrollAmount = direction === 'left' ? -200 : 200;
+      thumbnailRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  // Ensure image is always treated as an array
+  const productImages = Array.isArray(product.image) ? product.image : [product.image];
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -105,194 +69,211 @@ function ProductDetailPage() {
         {/* Product Images */}
         <div className="w-full md:w-1/2">
           <div className="relative">
-            <img
-              src={productImages[selectedImage]}
-              alt="Halter Neck Ribbed Cropped Top"
-              className="w-full h-auto"
+            <img 
+              src={productImages[selectedImage]} 
+              alt={product.name} 
+              className="max-h-full max-w-full object-contain"
             />
-            {/* Navigation Buttons */}
-            <button
-              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1 shadow-md"
-              onClick={() =>
-                setSelectedImage((prev) =>
-                  prev > 0 ? prev - 1 : productImages.length - 1
-                )
-              }
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1 shadow-md"
-              onClick={() =>
-                setSelectedImage((prev) =>
-                  prev < productImages.length - 1 ? prev + 1 : 0
-                )
-              }
-            >
-              <ChevronRight size={20} />
-            </button>
-            {/* Like Button for Main Product */}
-            <button
-              className="absolute top-2 right-2 text-gray-700"
-              onClick={toggleProductLike} // Toggle like for the main product
-            >
+            {/* Navigation Buttons (only show if multiple images) */}
+            {productImages.length > 1 && (
+              <>
+                <button
+                  className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md"
+                  onClick={() => setSelectedImage(prev => (prev > 0 ? prev - 1 : productImages.length - 1))}
+                >
+                  <ChevronLeft size={20} />
+                </button>
+                <button
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-md"
+                  onClick={() => setSelectedImage(prev => (prev < productImages.length - 1 ? prev + 1 : 0))}
+                >
+                  <ChevronRight size={20} />
+                </button>
+              </>
+            )}
+            {/* Like Button */}
+            <button className="absolute top-2 right-2 text-gray-700" onClick={toggleProductLike}>
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
-                <img
-                  src={isProductLiked ? heartIconFilled : heartIcon} // Use filled heart when liked
-                  alt="Heart"
-                  className="w-5 h-5"
-                />
+                <img src={isProductLiked ? heartIconFilled : heartIcon} alt="Heart" className="w-5 h-5" />
               </div>
             </button>
           </div>
-          {/* Thumbnails */}
-          <div className="flex mt-4 space-x-2">
-            {productImages.map((img, index) => (
-              <div
-                key={index}
-                className={`cursor-pointer border-2 ${
-                  selectedImage === index ? 'border-black' : 'border-transparent'
-                }`}
-                onClick={() => setSelectedImage(index)}
+          
+          {/* Thumbnail Carousel */}
+          {productImages.length > 1 && (
+            <div className="relative mt-4">
+              {/* Left scroll button */}
+              <button 
+                onClick={() => scrollThumbnails('left')}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1 shadow-md z-10"
               >
-                <img src={img} alt={`Thumbnail ${index + 1}`} className="w-20 h-auto" />
+                <ChevronLeft size={16} />
+              </button>
+              
+              {/* Thumbnail container */}
+              <div 
+                ref={thumbnailRef}
+                className="flex space-x-2 overflow-x-auto scrollbar-hide py-2"
+                style={{ scrollbarWidth: 'none' }}
+              >
+                {productImages.map((img, index) => (
+                  <div
+                    key={index}
+                    className={`flex-shrink-0 cursor-pointer border-2 ${
+                      selectedImage === index ? "border-black" : "border-transparent"
+                    }`}
+                    onClick={() => setSelectedImage(index)}
+                  >
+                    <img 
+                      src={img} 
+                      alt={`Thumbnail ${index + 1}`} 
+                      className="w-20 h-20 object-cover"
+                    />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
+              
+              {/* Right scroll button */}
+              <button 
+                onClick={() => scrollThumbnails('right')}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1 shadow-md z-10"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Product Information */}
         <div className="w-full md:w-1/2">
-          <h1 className="text-xl font-medium mb-2">Halter Neck Ribbed Cropped Top</h1>
-          <p className="text-xl mb-1">Rs. 1500.00</p>
-          <p className="text-gray-500 text-sm mb-4">CODE: CLAS-746</p>
+          <h1 className="text-2xl font-medium mb-2">{product.name}</h1>
+          <p className="text-xl mb-1">Rs. {product.price.toFixed(2)}</p>
+          {product.code && (
+            <p className="text-gray-500 text-sm mb-4">CODE: {product.code}</p>
+          )}
+          <p className={`text-sm mb-4 ${product.availability === "In Stock" ? "text-green-600" : "text-red-600"}`}>
+            {product.availability || "In Stock"}
+          </p>
 
-          <div className="mb-4">
-            <p className="text-sm text-green-600">Availability: In Stock</p>
-          </div>
-
-          {/* Color Selection */}
-          <div className="mb-4">
-            <div className="flex space-x-2">
-              {colorOptions.map((color, index) => (
-                <div
-                  key={index}
-                  className="w-6 h-6 rounded-full cursor-pointer border border-gray-300"
-                  style={{ backgroundColor: color.color }}
-                  title={color.name}
-                />
-              ))}
+          {/* Color Options (if available) */}
+          {product.colors && product.colors.length > 0 && (
+            <div className="mb-4">
+              <p className="text-sm mb-2">Color</p>
+              <div className="flex space-x-2">
+                {product.colors.map((color, index) => (
+                  <div 
+                    key={index} 
+                    className="w-6 h-6 rounded-full border border-gray-300" 
+                    style={{ backgroundColor: color }} 
+                  />
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
-          {/* Size Selection */}
-          <div className="mb-4">
-            <p className="text-sm mb-2">Size</p>
-            <div className="flex space-x-2">
-              {sizeOptions.map((size) => (
-                <button
-                  key={size}
-                  className={`w-8 h-8 border ${
-                    selectedSize === size ? 'border-black' : 'border-gray-300'
-                  }`}
-                  onClick={() => setSelectedSize(size)}
-                >
-                  {size}
-                </button>
-              ))}
+          {/* Size Options (if available) */}
+          {product.sizes && product.sizes.length > 0 && (
+            <div className="mb-4">
+              <p className="text-sm mb-2">Size</p>
+              <div className="flex flex-wrap gap-2">
+                {product.sizes.map((size) => (
+                  <button 
+                    key={size} 
+                    className={`w-10 h-10 border flex items-center justify-center ${
+                      selectedSize === size ? "border-black" : "border-gray-300"
+                    }`} 
+                    onClick={() => setSelectedSize(size)}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Quantity */}
           <div className="mb-6">
             <p className="text-sm mb-2">Quantity</p>
-            <input
-              type="number"
-              min="1"
-              value={quantity}
-              onChange={handleQuantityChange}
-              className="border border-gray-300 p-2 w-32"
+            <input 
+              type="number" 
+              min="1" 
+              value={quantity} 
+              onChange={handleQuantityChange} 
+              className="border border-gray-300 p-2 w-20 text-center" 
             />
           </div>
 
-          {/* Details */}
-          <div className="mb-6">
-            <h3 className="font-medium mb-2">Details</h3>
-            <ul className="text-sm space-y-1">
-              <li>• Soft cotton material</li>
-              <li>• Ethical manufacturing</li>
-              <li>• Halter neck style</li>
-              <li>• Moderate stretch</li>
-              <li>• Premium bamboo fibers</li>
-              <li>• Quick-dry technology</li>
-              <li>• Ribbed texture</li>
-              <li>• Hand wash cold</li>
-              <li>• Hang dry for best results</li>
-              <li>• Ribbed design for extra comfort</li>
-              <li>• Perfect for layering</li>
-              <li>• Body fits snug - if between sizes, order a size up</li>
-              <li>• Made with fabric that's been specially treated to be wrinkle-free</li>
-              <li>• Finished with premium stitching for durability</li>
-              <li>• Ribbed texture keeps its shape after wash and wear</li>
-              <li>• Body length: 18 in (for size S) / Waist width: 11 in (for size S)</li>
-              <li>• Dimensions may vary by size</li>
-            </ul>
-          </div>
+          {/* Details (if available) */}
+          {product.details && product.details.length > 0 && (
+            <div className="mb-6">
+              <h3 className="font-medium mb-2">Details</h3>
+              <ul className="text-sm space-y-1">
+                {product.details.map((detail, index) => (
+                  <li key={index}>• {detail}</li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-          {/* Action Buttons */}
-          <div className="flex space-x-4 mb-4">
-            <button className="px-6 py-3 border border-black bg-white text-black flex-1">
-              Add to bag
-            </button>
-            <button className="px-6 py-3 bg-black text-white flex-1">
-              Add to wishlist
+          {/* Buttons */}
+          <div className="flex flex-col space-y-4">
+            <div className="flex space-x-4">
+              <button className="px-6 py-3 border border-black bg-white text-black flex-1 hover:bg-gray-100 transition">
+                Add to bag
+              </button>
+              <button className="px-6 py-3 bg-black text-white flex-1 hover:bg-gray-800 transition">
+                Add to wishlist
+              </button>
+            </div>
+            <button className="w-full py-3 bg-black text-white hover:bg-gray-800 transition">
+              Buy it now
             </button>
           </div>
-
-          <button className="w-full py-3 bg-black text-white">Buy it now</button>
         </div>
       </div>
 
       {/* Recommendations Section */}
-      <div>
-        <h2 className="text-xl text-center mb-8">Have you seen these</h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {recommendedProducts.map((product) => (
-            <div key={product.id} className="relative group">
-              <div className="relative">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-auto"
-                />
-                {/* Like Button for Recommended Products */}
-                <button
-                  className="absolute top-2 right-2 text-gray-700"
-                  onClick={() => toggleLike(product.id)} // Toggle like on click
-                >
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
-                    <img
-                      src={liked[product.id] ? heartIconFilled : heartIcon} // Use filled heart when liked
-                      alt="Heart"
-                      className="w-5 h-5"
-                    />
-                  </div>
-                </button>
-                {product.tag && (
-                  <div className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1">
-                    {product.tag}
-                  </div>
-                )}
+      {recommendedProducts.length > 0 && (
+        <div className="mt-16">
+          <h2 className="text-xl text-center mb-8">You might also like</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {recommendedProducts.map((product) => (
+              <div key={product.id} className="relative group">
+                <div className="relative">
+                  <img 
+                    src={Array.isArray(product.image) ? product.image[0] : product.image} 
+                    alt={product.name} 
+                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                  />
+                  {/* Like Button */}
+                  <button
+                    className="absolute top-2 right-2 text-gray-700"
+                    onClick={() => toggleLike(product.id)}
+                  >
+                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
+                      <img
+                        src={liked[product.id] ? heartIconFilled : heartIcon}
+                        alt="Heart"
+                        className="w-5 h-5"
+                      />
+                    </div>
+                  </button>
+                  {/* Tag */}
+                  {product.tag && (
+                    <div className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1">
+                      {product.tag}
+                    </div>
+                  )}
+                </div>
+                <div className="mt-2 text-center">
+                  <h3 className="text-sm">{product.name}</h3>
+                  <p className="text-sm font-medium">Rs. {product.price.toFixed(2)}</p>
+                </div>
               </div>
-              <div className="mt-2">
-                <h3 className="text-sm">{product.name}</h3>
-                <p className="text-sm">{product.price}</p>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
