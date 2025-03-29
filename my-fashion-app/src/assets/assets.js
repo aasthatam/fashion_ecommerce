@@ -13,6 +13,9 @@ import Shirt12 from "../assets/shirt12.png";
 import Image from "../assets/image.png";
 import Image2 from "../assets/image2.png";
 import Image3 from "../assets/image3.png";
+import Image4 from "../assets/image4.png";
+import Image5 from "../assets/image5.png";
+import Image6 from "../assets/image6.png";
 
 import BabilDress1 from "../assets/BabilDress1.png";
 import BabilDress2 from "../assets/BabilDress2.png";
@@ -148,6 +151,7 @@ export const colorOptions = [
     { name: "Wood-Silk", count: 20 },
     { name: "Viscose Jersey", count: 17 },
     { name: "Hemp", count: 8 },
+    { name: "Denim", count: 8 },
   ];
 
   export const sortOptions = [
@@ -171,18 +175,57 @@ export const colorOptions = [
         category: "Dresses", 
         fabric: "Viscose Jersey",
         bestselling: true,
-        isNewArrival: true
+        isNewArrival: true,
+        code: "DRESS-001",
+        availability: "In Stock",
+        colors: ["#17202a"],
+        sizes: ["S", "M", "L", "XL"],
+        details:[
+          "Comfortable viscose jersey fabric",
+          "High waist for a flattering silhouette",
+          "Mini dress design perfect for warm weather",
+          "Soft, breathable fabric",
+          "Ideal for both casual and formal occasions",
+          "Machine wash cold for easy care",
+          "Available in multiple sizes: S, M, L",
+          "Body length: 34 in (for size S)",
+          "Dimensions may vary by size"
+
+        ]
       },
           { 
             id: 2, 
             name: "Halter Neck Ribbed Cropped Top", 
             price: 1500, 
-            image: [Image2], 
+            image: [Image2, Image5, Image6], 
             color: "Neutral", 
             category: "Top", 
             fabric: "Hemp",
             bestselling: true,
-            isNewArrival: true
+            isNewArrival: true,
+            code: "CLAS-746",
+            availability: "In Stock",
+            colors: ["#d3b8a0", "#8b572a", "#000000"],
+            sizes: ["S", "M", "L", "XL"],
+            details: [
+              "Soft cotton material",
+              "Ethical manufacturing",
+              "Halter neck style",
+              "Moderate stretch",
+              "Premium bamboo fibers",
+              "Quick-dry technology",
+              "Ribbed texture",
+              "Hand wash cold",
+              "Hang dry for best results",
+              "Ribbed design for extra comfort",
+              "Perfect for layering",
+              "Body fits snug - if between sizes, order a size up",
+              "Made with fabric that's been specially treated to be wrinkle-free",
+              "Finished with premium stitching for durability",
+              "Ribbed texture keeps its shape after wash and wear",
+              "Body length: 18 in (for size S) / Waist width: 11 in (for size S)",
+              "Dimensions may vary by size"
+            ]
         },
         { 
           id: 3, 
@@ -193,7 +236,21 @@ export const colorOptions = [
           category: "Top", 
           fabric: "Silk",
           bestselling: true,
-          isNewArrival: true
+          isNewArrival: true,
+          code: "BLZR-330",  
+          availability: "In Stock",
+          colors: ["#c9b8a4", "#000000"], 
+          sizes: ["S", "M", "L", "XL"],
+          details: [
+            "Elegant silk fabric",
+            "Classic lapel collar design",
+            "Long sleeve for cooler weather",
+            "Perfect for layering over office or evening wear",
+            "Slim fit for a sleek silhouette",
+            "Dry clean recommended for best care",
+            "Body length: 28 in (for size S)",
+            "Dimensions may vary by size"
+          ]
       },
 
     { 
@@ -205,7 +262,21 @@ export const colorOptions = [
         category: "Sweaters", 
         fabric: "Hemp",
         bestselling: true,
-        isNewArrival: false
+        isNewArrival: false,
+        availability: "In Stock",
+        colors: ["#a25d41"],  
+        sizes: ["S", "M", "L"],
+        code: "BRT-400", 
+        details: [
+          "Made from comfortable hemp fabric",
+          "Ribbed texture for added stretch and comfort",
+          "Long-sleeve round neck design",
+          "Perfect for layering with jackets or cardigans",
+          "Eco-friendly material",
+          "Machine wash cold, tumble dry low",
+          "Body length: 25 in (for size S)",
+          "Dimensions may vary by size"
+        ]
     },
     { 
         id: 5, 
@@ -216,7 +287,19 @@ export const colorOptions = [
         category: "Top", 
         fabric: "Cotton",
         bestselling: true ,
-        isNewArrival: true
+        isNewArrival: true,
+        colors: ["#d32f2f"],  
+        sizes: ["S", "M", "L"],
+        code: "TANK-505",  
+        details: [
+          "Soft cotton fabric for comfort",
+          "Round neck and tiered design",
+          "Perfect for summer and casual wear",
+          "Relaxed fit for easy movement",
+          "Machine wash cold for convenience",
+          "Body length: 20 in (for size S)",
+          "Dimensions may vary by size"
+        ]
     },
     { 
         id: 6, 
@@ -227,7 +310,20 @@ export const colorOptions = [
         category: "Top",
         fabric: "Nylon",
         bestselling: false,
-        isNewArrival: true
+        isNewArrival: true,
+        availability: "In Stock",
+        colors: ["#f44336"],  
+        sizes: ["S", "M", "L"],
+        code: "TUNIC-666",  
+        details: [
+          "Flowy lantern sleeves for an elegant look",
+          "O-neck design",
+          "Casual yet stylish, perfect for parties or evening events",
+          "Soft nylon fabric for comfort and durability",
+          "Hand wash cold recommended",
+          "Body length: 26 in (for size S)",
+          "Dimensions may vary by size"
+        ]
     },
     { 
         id: 7, 
@@ -238,7 +334,21 @@ export const colorOptions = [
         category: "Top", 
         fabric: "Hemp",
         bestselling: true,
-        isNewArrival: true
+        isNewArrival: true,
+        availability: "In Stock",
+        colors: ["#8b572a", "#F3F8F2"],  // Brown color code
+        sizes: ["S", "M", "L"],
+        code: "RIBBED-700",  // Product code
+        details: [
+            "Made from eco-friendly hemp fabric",
+            "Ribbed design for added texture and stretch",
+            "Short sleeves, perfect for warmer weather",
+            "Classic round neck design",
+            "Great for casual or everyday wear",
+            "Machine wash cold, tumble dry low",
+            "Body length: 24 in (for size S)",
+            "Dimensions may vary by size"
+      ]
     },
     { 
         id: 8, 
@@ -249,7 +359,21 @@ export const colorOptions = [
         category: "Top", 
         fabric: "Silk",
         bestselling: false,
-        isNewArrival: true
+        isNewArrival: true,
+        availability: "In Stock",
+        colors: ["#000000"],  
+        sizes: ["S", "M", "L"],
+        code: "TOP-213",
+        details: [
+          "Luxurious silk fabric",
+          "Long sleeve design for cooler weather",
+          "Perfect for layering or wearing alone",
+          "Loose fit for added comfort",
+          "Dry clean recommended for best care",
+          "Body length: 26 in (for size S)",
+          "Dimensions may vary by size"
+        ]
+
     },
     { 
         id: 9, 
@@ -261,7 +385,20 @@ export const colorOptions = [
         fabric: "Cotton", 
         tag: "Save 20%",
         bestselling: true,
-        isNewArrival: true
+        isNewArrival: true,
+        availability: "In Stock",
+        colors: ["#ffffff"], 
+        sizes: ["S", "M", "L", "XL"],
+        code: "BLST-444",
+        details: [
+          "Soft cotton material for comfort",
+          "Stylish notched neckline design",
+          "Relaxed fit for casual wear",
+          "Great for pairing with skirts or pants",
+          "Machine wash cold, tumble dry low",
+          "Body length: 24 in (for size S)",
+          "Dimensions may vary by size"
+        ]
     },
     { 
       id: 10, 
@@ -272,7 +409,20 @@ export const colorOptions = [
       category: "Top", 
       fabric: "Viscose Jersey",
       bestselling: false,
-      isNewArrival: false
+      isNewArrival: false,
+      availability: "In Stock",
+      colors: ["#000000"],  
+      sizes: ["S", "M", "L"],
+      code: "BLSE-556",
+      details: [
+        "Comfortable viscose jersey fabric",
+        "Elegant halter neck design",
+        "Keyhole back for added style",
+        "Perfect for evenings or formal occasions",
+        "Machine wash cold, do not bleach",
+        "Body length: 25 in (for size S)",
+        "Dimensions may vary by size"
+      ]
     },
     { 
       id: 11, 
@@ -284,7 +434,21 @@ export const colorOptions = [
       fabric: "Silk", 
       tag: "Save 20%",
       bestselling: true,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#03256C"],  
+      sizes: ["S", "M", "L"],
+      code: "USSE-2190",
+      details: [
+         "Soft and lightweight fabric for a comfortable fit",
+          "Classic lapel collar with a button-down front",
+          "Long sleeves with buttoned cuffs for a polished look",
+          "Relaxed fit perfect for casual and office wear",
+          "Versatile styling - tuck into pants or wear loose",
+          "Machine washable, do not bleach",
+          "Body length: 26 in (for size M), varies by size"
+      ]
+
     },
     { 
       id: 12, 
@@ -295,7 +459,19 @@ export const colorOptions = [
       category: "Top", 
       fabric: "Hemp",
       bestselling: true,
-      isNewArrival: false
+      isNewArrival: false,
+      availability: "In Stock",
+      colors: ["#FFFF"],  
+      sizes: ["S", "M", "L"],
+      code: "TP-0234",
+      details: [
+        "Classic round-neck design for a timeless look",
+        "Breathable and lightweight fabric for all-day comfort",
+        "Perfect for layering or wearing on its own",
+        "Slightly relaxed fit for easy movement",
+        "Sleeveless cut ideal for warm weather",
+        "Body length: 24 in (for size M), varies by size"
+      ]
     },
     { 
       id: 13, 
@@ -307,7 +483,19 @@ export const colorOptions = [
       fabric: "Nylon", 
       tag: "Save 20%",
       bestselling: true,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#c9b8a4"],  
+      sizes: ["S", "M", "L"],
+      code: "USSE-2190",
+      details: [
+        "Soft and stretchy fabric for a snug yet comfortable fit",
+        "Classic turtleneck design for added warmth and style",
+        "Slim fit, perfect for layering",
+        "Ribbed cuffs and hem for a sleek finish",
+        "Lightweight yet cozy for all-season wear",
+        "Body length: 25 in (for size M), varies by size"
+      ]
     },
     { 
       id: 14, 
@@ -318,7 +506,19 @@ export const colorOptions = [
       category: "Top", 
       fabric: "Cotton",
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#FFFF"],  
+      sizes: ["S", "M", "L"],
+      code: "LTHN-1276",
+      details: [
+        "Delicate lace fabric with intricate detailing",
+        "High neckline for a sophisticated look",
+        "Semi-sheer design for a subtle touch of elegance",
+        "Scalloped edges on sleeves and hem",
+        "Relaxed fit, perfect for layering over camisoles",
+        "Body length: 24 in (for size M), varies by size"
+      ]
     },
     { 
       id: 15, 
@@ -329,205 +529,450 @@ export const colorOptions = [
       category: "Top", 
       fabric: "Cotton" ,
       bestselling: true,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#DB3069"],  
+      sizes: ["S", "M", "L", "XL"],
+      code: "SDBS-1265",
+      details: [
+        "Elegant Swiss dot textured fabric",
+        "Flounce sleeves with a slight puff for a feminine touch",
+        "Lightweight and breathable material",
+        "Relaxed fit with a slight flowy silhouette",
+        "Perfect for both casual and semi-formal occasions",
+        "Body length: 25 in (for size M), varies by size"
+      ]
     },
     { 
       id: 16, 
       name: "Babil Dress", 
       price: 4000, 
-      image: [BabilDress1], 
+      image: [BabilDress1, BabilDress2, BabilDress3, BabilDress4], 
       color: "White", 
       category: "Dresses", 
       fabric: "Nylon" ,
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#F2EDEB"],  
+      sizes: ["S", "M", "L", "XL"],
+      code: "BD-1200",
+      details: [
+        "Stretchy and body-hugging fabric for a perfect fit",
+        "Minimalist design with a sleek silhouette",
+        "Sleeveless cut with a modest neckline",
+        "Perfect for formal events or evening wear",
+        "Back zipper closure for easy wear",
+        "Body length: 42 in (for size M), varies by size"
+      ]
     },
     { 
       id: 17, 
       name: "Belamy Dress", 
       price: 4000, 
-      image: [BelamyDress1], 
+      image: [BelamyDress1, BelamyDress2, BelamyDress3, BelamyDress4], 
       color: "Black", 
       category: "Dresses", 
       fabric: "Nylon" ,
+      tag: "Save 10%",
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#000000"],  
+      sizes: ["S", "M", "L","XL"],
+      code: "BD-1345",
+      details: [
+        "Premium lightweight nylon fabric for durability and breathability",
+        "Sleek, body-hugging silhouette for an elegant look",
+        "Adjustable spaghetti straps for a perfect fit",
+        "Subtle slit at the side for ease of movement",
+        "Ideal for formal events, evening parties, or date nights",
+        "Dry clean recommended for fabric longevity" 
+      ]
     },
     { 
       id: 18, 
       name: "Biddy Skirt", 
       price: 3500, 
-      image: [BiddySkirt1], 
+      image: [BiddySkirt1, BiddySkirt2, BiddySkirt3, BiddySkirt4, BiddySkirt5], 
       color: "Black", 
       category: "Bottoms", 
       fabric: "Cotton" ,
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#000000"],  
+      sizes: ["S", "M", "L", "XL"],
+      code: "BS-1256",
+      details: [
+        "Soft, breathable cotton fabric for comfort",
+        "High-waisted fit with an adjustable waistband",
+        "Flowy A-line silhouette for a flattering appearance",
+        "Midi-length, perfect for casual and semi-formal occasions",
+        "Pairs well with crop tops, blouses, and heels",
+        "Machine wash cold, tumble dry low"
+      ]
     },
     { 
       id: 19, 
       name: "Candela Dress", 
       price: 3500, 
-      image: [CandelaDress1], 
+      image: [CandelaDress1, CandelaDress2, CandelaDress3, CandelaDress4], 
       color: "White", 
       category: "Dresses", 
       fabric: "Cotton" ,
       bestselling: false,
-      isNewArrival: false
+      isNewArrival: false,
+      availability: "In Stock",
+      colors: ["#FFFF"],  
+      sizes: ["S", "M", "L"],
+      code: "CD-00987",
+      details: [
+        "Soft cotton fabric for comfort and breathability",
+        "Flowy maxi length with a ruffled hemline",
+        "Feminine and bohemian-inspired style",
+        "Perfect for summer outings, vacations, and brunch dates",
+        "Hand wash recommended, do not bleach"
+      ]
     },
     { 
       id: 20, 
       name: "Chiffon Event Dress", 
       price: 3500, 
-      image: [ChiffonEventDress1], 
+      image: [ChiffonEventDress1, ChiffonEventDress2, ChiffonEventDress3, ChiffonEventDress4, ChiffonEventDress5], 
       color: "Black", 
       category: "Dresses", 
       fabric: "Cotton" ,
+      tag: "Save 20%",
       bestselling: false,
-      isNewArrival: false
+      isNewArrival: false,
+      availability: "In Stock",
+      colors: ["#000000"],  
+      sizes: ["S", "M", "L","XL"],
+      code: "SDBS-1265",
+      details: [
+        "Lightweight chiffon fabric with a soft lining",
+        "Elegant V-neckline with subtle pleats",
+        "Flowing silhouette with a high-low hem",
+        "Sleeveless design for a graceful look",
+        "Perfect for weddings, cocktail parties, and evening events",
+        "Hand wash recommended, line dry"
+      ]
     },
     { 
       id: 21, 
       name: "Dolino Top", 
       price: 2500, 
-      image: [DolinoTop1], 
+      image: [DolinoTop1, DolinoTop2, DolinoTop3, DolinoTop4, DolinoTop5], 
       color: "Black", 
-      category: "Dresses", 
+      category: "Top", 
       fabric: "Hemp" ,
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#000000"],  
+      sizes: ["S", "M", "L"],
+      code: "DT-32450",
+      details: [
+        "Eco-friendly hemp fabric for a natural feel",
+        "Classic button-down design with a relaxed fit",
+        "Long sleeves with roll-up tab functionality",
+        "Breathable and moisture-wicking for summer wear",
+        "Can be styled tucked-in or left loose",
+        "Machine wash cold, gentle cycle"
+      ]
     },
     { 
       id: 22, 
       name: "Dovi Pant", 
       price: 3000, 
-      image: [DoviPant1], 
+      image: [DoviPant1, DoviPant2, DoviPant3, DoviPant4, DoviPant5], 
       color: "Gray", 
       category: "Pants", 
       fabric: "Hemp" ,
       bestselling: true,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#3C3C3B"],  
+      sizes: ["S", "M", "L"],
+      code: "DP-13156",
+      details: [
+        "Durable hemp fabric with a slight stretch",
+        "Straight-leg cut for a modern and stylish look",
+        "Elastic waistband with drawstring for an adjustable fit",
+        "Functional side pockets for convenience",
+        "Great for casual outings, work, or lounging",
+        "Machine wash cold, tumble dry low"
+      ]
     },
     { 
       id: 23, 
       name: "Felix Top", 
       price: 4500, 
-      image: [FelixTop1], 
+      image: [FelixTop1, FelixTop2, FelixTop3, FelixTop4], 
       color: "Black", 
       category: "Top", 
       fabric: "Cotton" ,
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#000000"],  
+      sizes: ["S", "M", "L","XL"],
+      code: "SDBS-1265",
+      details: [
+        "Soft and lightweight cotton fabric for all-day wear",
+        "Fitted crop top with a scoop neckline",
+        "Ribbed texture for a chic and trendy appearance",
+        "Sleeveless design, ideal for layering",
+        "Can be paired with high-waisted skirts or pants",
+        "Hand wash recommended, dry flat"
+      ]
     },
     { 
       id: 24, 
       name: "Greta Body Suit", 
       price: 4500, 
-      image: [GretaBodySuit1], 
+      image: [GretaBodySuit1, GretaBodySuit2, GretaBodySuit3, GretaBodySuit4], 
       color: "Black", 
       category: "Bodysuits & Jumpsuits", 
-      fabric: "Cotton" ,
+      fabric: "Cotton",
+      tag: "Save 10%",
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#000000"],  
+      sizes: ["S", "M", "L"],
+      code: "GBS-1265",
+      details: [
+        "Stretchy cotton fabric for a snug and comfortable fit",
+        "High neckline with a sleeveless cut",
+        "Snap closure at the bottom for ease of wear",
+        "Perfect for layering under blazers, jackets, or jeans",
+        "Available in neutral tones for versatile styling",
+        "Machine wash cold, lay flat to dry",
+      ]
     },
     { 
       id: 25, 
       name: "High Waist Boot Cut Jean", 
       price: 4500, 
-      image: [HighWaistBootCutJean1], 
+      image: [HighWaistBootCutJean1, HighWaistBootCutJean2, HighWaistBootCutJean3, HighWaistBootCutJean4], 
       color: "Blue", 
       category: "Pants", 
       fabric: "Cotton" ,
       bestselling: true,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#44648D"],  
+      sizes: ["S", "M", "L"],
+      code: "HWBCJ-09654",
+      details: [
+        "Premium cotton denim with slight stretch for comfort",
+        "High-rise waist for a flattering fit",
+        "Bootcut design for a retro-inspired look",
+        "Functional front and back pockets",
+        "Button and zipper closure for secure wear",
+        "Machine wash cold, tumble dry low"
+      ]
     },
     { 
       id: 26, 
       name: "Imogene JumpSuit", 
       price: 4500, 
-      image: [ImogeneJumpsuit1], 
+      image: [ImogeneJumpsuit1. ImogeneJumpsuit2, ImogeneJumpsuit3, ImogeneJumpsuit4], 
       color: "Black", 
       category: "Bodysuits & Jumpsuits", 
       fabric: "Nylon" ,
       bestselling: true,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#000000"],  
+      sizes: ["S", "M", "L"],
+      code: "IJ-5643",
+      details: [
+        "Sleek and lightweight nylon fabric for movement",
+        "Deep V-neck with an elegant tie-back design",
+        "Cinched waist for a defined silhouette",
+        "Wide-leg style for a modern, sophisticated look",
+        "Perfect for formal occasions, date nights, or evening wear",
+        "Dry clean only for fabric longevity"
+      ]
     },
     { 
       id: 27, 
       name: "Long Sleeve Knit Top", 
       price: 4500, 
-      image: [LongSleeveKnitTop1], 
+      image: [LongSleeveKnitTop1, LongSleeveKnitTop2, LongSleeveKnitTop3, LongSleeveKnitTop4, LongSleeveKnitTop5], 
       color: "White", 
       category: "Sweaters", 
       fabric: "Hemp" ,
       bestselling: true,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#FFFF"],  
+      sizes: ["S", "M", "L"],
+      code: "LSKT-1265",
+      details: [
+        "Soft and breathable hemp knit fabric for warmth and comfort",
+        "Classic round neckline with a relaxed fit",
+        "Long sleeves with ribbed cuffs for a cozy look",
+        "Lightweight and perfect for layering in all seasons",
+        "Pairs well with jeans, skirts, or layered under jackets",
+        "Machine wash cold, lay flat to dry"
+      ]
     },
     { 
       id: 28, 
       name: "Raw Hem Wide Leg Jean with Pocket", 
       price: 4500, 
-      image: [WideLegJean1], 
+      image: [WideLegJean1, WideLegJean2, WideLegJean3, WideLegJean4], 
       color: "Blue", 
       category: "Pants", 
-      fabric: "Cotton" ,
+      fabric: "Denim",
+      tag: "Save 20%",
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#44648D"],  
+      sizes: ["S", "M", "L"],
+      code: "RHWLJ-3674",
+      details: [
+        "Premium cotton denim with a soft stretch for comfort",
+        "High-waisted fit with a flattering wide-leg silhouette",
+        "Raw hem detailing for a trendy, unfinished look",
+        "Functional deep pockets for added practicality",
+        "Perfect for casual, streetwear, and retro-inspired outfits",
+        "Machine wash cold, tumble dry low"
+      ]
     },
     { 
       id: 29, 
       name: "Ripped Flare Leg Jeans and High Waist", 
       price: 4500, 
-      image: [RippedFlareJean1], 
+      image: [RippedFlareJean1, RippedFlareJean2, RippedFlareJean3, RippedFlareJean4], 
       color: "Blue", 
       category: "Pants", 
       fabric: "Cotton" ,
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#44648D"],  
+      sizes: ["S", "M", "L","XL"],
+      code: "RFJHW-23412",
+      details: [
+       "Trendy high-waist design for a flattering fit",
+        "Flare leg cut with distressed ripped details for a stylish, edgy look",
+        "Stretchy denim fabric for all-day comfort and movement",
+        "Classic five-pocket construction for convenience",
+        "Zip fly with a secure button closure",
+        "Light blue wash with a vintage aesthetic",
+        "Versatile for casual, streetwear, and semi-formal occasions",
+        "Inseam length: 32 in (for size M), varies by size"
+      ]
     },
     { 
       id: 30, 
       name: "Solid Knit Sweater", 
       price: 4500, 
-      image: [SolidKnittedSweater1], 
+      image: [SolidKnittedSweater1, SolidKnittedSweater2, SolidKnittedSweater3, SolidKnittedSweater4, SolidKnittedSweater5, SolidKnittedSweater6, SolidKnittedSweater7, SolidKnittedSweater8, SolidKnittedSweater9], 
       color: "Neutral", 
       category: "Sweaters", 
       fabric: "Cotton" ,
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#c9b8a4"],  
+      sizes: ["S", "M", "L"],
+      code: "SKS-43265",
+      details: [
+        "Soft and breathable knit fabric for all-day comfort",
+        "Classic crew neckline with a ribbed hem and cuffs",
+        "Relaxed fit for effortless layering",
+        "Perfect for casual wear and office-friendly styling",
+        "Mid-weight fabric keeps you warm in cooler temperatures",
+        "Versatile neutral shade pairs well with any outfit",
+        "Body length: 26 in (for size M), varies by size"
+      ]
     },
     { 
       id: 31, 
       name: "Square Neck Top and Wide Leg Pant Set", 
       price: 4500, 
-      image: [TopandPantSet1], 
+      image: [TopandPantSet1, TopandPantSet2, TopandPantSet3], 
       color: "Black", 
       category: "Pants", 
       fabric: "Cotton" ,
       bestselling: true,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#000000"],  
+      sizes: ["S", "M", "L", "XL"],
+      code: "SNTWP-2312",
+      details: [
+        "Chic square neckline for a modern look",
+        "Sleeveless crop top with a flattering fitted silhouette",
+        "Wide-leg high-waisted pants for an elegant, elongated look",
+        "Soft and stretchy fabric for a comfortable fit",
+        "Elastic waistband on pants for easy wear",
+        "Versatile co-ord set for casual and formal occasions",
+        "Top length: 18 in (for size M), Pant inseam: 32 in"
+      ]
     },
     { 
       id: 32, 
       name: "Straight Leg Jean", 
       price: 4500, 
-      image: [StraightLegJean1], 
+      image: [StraightLegJean1, StraightLegJean2, StraightLegJean3, StraightLegJean4, StraightLegJean5], 
       color: "Black", 
       category: "Pants", 
-      fabric: "Cotton" ,
+      fabric: "Denim" ,
       bestselling: false,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#000000"],  
+      sizes: ["S", "M", "L", "XL"],
+      code: "SLJ-40432",
+      details: [
+        "Classic high-rise straight-leg fit for a timeless look",
+        "Soft and breathable cotton-blend fabric with slight stretch for comfort",
+        "Durable denim construction with reinforced stitching",
+        "Traditional five-pocket design for added functionality",
+        "Zip fly with a sturdy button closure",
+        "Tapered straight-leg silhouette that flatters all body types",
+        "Versatile black color pairs well with casual and formal outfits",
+        "Designed for daily wear with a modern, sleek aesthetic",
+        "Inseam length: 31 in (for size M), varies by size",
+        "Waist sizes available: 26, 28, 30, 32, 34, 36 inches"
+      ]
     },
     { 
       id: 33, 
       name: "Straight Leg Jean Light Washed", 
       price: 4500, 
-      image: [StraightLegJeanLightWash1] , 
+      image: [StraightLegJeanLightWash1, StraightLegJeanLightWash2, StraightLegJeanLightWash3, StraightLegJeanLightWash4, StraightLegJeanLightWash5, StraightLegJeanLightWash6] , 
       color: "Blue", 
       category: "Pants", 
-      fabric: "Cotton" ,
+      fabric: "Denim" ,
       bestselling: true,
-      isNewArrival: true
+      isNewArrival: true,
+      availability: "In Stock",
+      colors: ["#ADD8E6"],  
+      sizes: ["S", "M", "L", "XL"],
+      code: "SLJW-23123",
+      details: [
+        "High-rise, straight-leg fit that elongates the legs",
+        "Premium light-wash denim for a modern, vintage-inspired look",
+        "Five-pocket styling with reinforced stitching for durability",
+        "Button-fly and zip closure for a secure, comfortable fit",
+        "Non-stretch, rigid denim that softens with wear",
+        "Distressed hemline and subtle whiskering for added style",
+        "Designed to sit at the natural waist with a relaxed hip and thigh",
+        "Breathable and lightweight fabric perfect for all seasons",
+        "Pairs well with both casual and semi-formal outfits",
+        "Machine wash cold, tumble dry low, iron on low heat",
+        "Inseam length: 32 in (for size M), varies by size",
+        "Waist sizes available: 26, 28, 30, 32, 34, 36 inches"
+      ]
     },
     
     
