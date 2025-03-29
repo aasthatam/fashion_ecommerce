@@ -4,6 +4,7 @@ import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
 import { colorOptions, categoryOptions, fabricsOptions, sortOptions, products } from "../assets/assets";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const PRODUCTS_PER_PAGE = 8; // Number of products per page
 
@@ -192,13 +193,15 @@ const Collection = () => {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
         {paginatedProducts.map((item) => (
           <div key={item.id} className="relative group overflow-hidden">
+            <Link to={`/product/${item.id}`}>
             <div className="overflow-hidden">
             <img 
              src={Array.isArray(item.image) ? item.image[0] : item.image} 
              alt={item.name} 
-             className="w-full transition-transform duration-300 group-hover:scale-110" 
+             className="w-full h-full transition-transform duration-300 group-hover:scale-110" 
              />
              </div>
+             </Link>
             {item.tag && (
               <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded-md">
                 {item.tag}
