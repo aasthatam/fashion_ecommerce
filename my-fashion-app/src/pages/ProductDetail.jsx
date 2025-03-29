@@ -26,12 +26,6 @@ function ProductDetailPage() {
     .filter(p => p.id !== product.id)
     .slice(0, 8);
 
-  const handleQuantityChange = (e) => {
-    const value = parseInt(e.target.value);
-    if (!isNaN(value) && value > 0) {
-      setQuantity(value);
-    }
-  };
 
   const toggleProductLike = () => {
     setIsProductLiked(!isProductLiked);
@@ -72,7 +66,7 @@ function ProductDetailPage() {
             <img 
               src={productImages[selectedImage]} 
               alt={product.name} 
-              className="max-h-full max-w-full object-contain"
+              className="w-full h-[800px] object-cover"
             />
             {/* Navigation Buttons (only show if multiple images) */}
             {productImages.length > 1 && (
@@ -192,16 +186,27 @@ function ProductDetailPage() {
           )}
 
           {/* Quantity */}
-          <div className="mb-6">
-            <p className="text-sm mb-2">Quantity</p>
-            <input 
-              type="number" 
-              min="1" 
-              value={quantity} 
-              onChange={handleQuantityChange} 
-              className="border border-gray-300 p-2 w-20 text-center" 
-            />
-          </div>
+            <div className="mb-6">
+              <p className="text-sm mb-2">Quantity</p>
+              <div className="flex items-center border border-gray-300 w-fit rounded-md px-2 py-1">
+                <button 
+                  onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                  className="px-3 py-2 text-lg hover:bg-gray-200 transition focus:outline-none focus:ring-0 active:outline-none"
+                  aria-label="Decrease quantity"
+                >
+                  -
+                </button>
+                <div className="px-6 py-2 text-lg font-medium">{quantity}</div>
+                <button 
+                  onClick={() => setQuantity(prev => prev + 1)}
+                  className="px-3 py-2 text-lg hover:bg-gray-200 transition focus:outline-none focus:ring-0 active:outline-none"
+                  aria-label="Increase quantity"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
 
           {/* Details (if available) */}
           {product.details && product.details.length > 0 && (
@@ -218,14 +223,14 @@ function ProductDetailPage() {
           {/* Buttons */}
           <div className="flex flex-col space-y-4">
             <div className="flex space-x-4">
-              <button className="px-6 py-3 border border-black bg-white text-black flex-1 hover:bg-gray-100 transition">
+              <button className="px-6 py-3 rounded-md border border-black bg-white text-black flex-1 hover:bg-gray-100 transition">
                 Add to bag
               </button>
-              <button className="px-6 py-3 bg-black text-white flex-1 hover:bg-gray-800 transition">
+              <button className="px-6 py-3 rounded-md bg-black text-white flex-1 hover:bg-gray-800 transition">
                 Add to wishlist
               </button>
             </div>
-            <button className="w-full py-3 bg-black text-white hover:bg-gray-800 transition">
+            <button className="w-full py-3 rounded-md bg-black text-white hover:bg-gray-800 transition">
               Buy it now
             </button>
           </div>
