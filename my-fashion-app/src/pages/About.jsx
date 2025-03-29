@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AboutImage from "../assets/about.png"; 
+import { Link } from "react-router-dom";
 
 const About = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -33,9 +34,11 @@ const About = () => {
           Step into WearNova. Wear confidence. Own your style.
         </p>
 
-        <button className="border border-gray-900 px-6 py-2 rounded-md text-gray-900 hover:bg-gray-900 hover:text-white transition">
-          Shop Now
-        </button>
+        <Link to="/collection">
+          <button className="border border-gray-900 px-6 py-2 rounded-md text-gray-900 hover:bg-gray-900 hover:text-white transition">
+            Shop Now
+          </button>
+        </Link>
       </div>
 
       {/* Right: Image Section with zoom effect */}
