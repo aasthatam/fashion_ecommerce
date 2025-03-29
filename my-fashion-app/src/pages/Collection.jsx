@@ -193,8 +193,12 @@ const Collection = () => {
         {paginatedProducts.map((item) => (
           <div key={item.id} className="relative group overflow-hidden">
             <div className="overflow-hidden">
-              <img src={item.image} alt={item.name} className="w-full transition-transform duration-300 group-hover:scale-110" />
-            </div>
+            <img 
+             src={Array.isArray(item.image) ? item.image[0] : item.image} 
+             alt={item.name} 
+             className="w-full transition-transform duration-300 group-hover:scale-110" 
+             />
+             </div>
             {item.tag && (
               <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded-md">
                 {item.tag}
