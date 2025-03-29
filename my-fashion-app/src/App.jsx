@@ -26,7 +26,7 @@ const App = () => {
       <Route path="/createaccount" element={<CreateAccount />} />
       <Route path="/collection/:category?" element={<Collection />} />
       <Route path="/cart" element={<Cart/>} />
-      <Route path="/productdetail" element={<ProductDetail/>} />
+      <Route path="/product/:id" element={<ProductDetail/>} />
       <Route path="/search" element={<Search/>} />
       <Route path="/wishlist" element={<Wishlist/>} />
       <Route path="/:section" element={<CustomerSupport/>} />
