@@ -12,6 +12,7 @@ import Dress from "../assets/dress.png";
 import Fashion from "../assets/fashion.png";
 import Sales from "../assets/sales.png";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -47,11 +48,12 @@ const Home = () => {
         <h2 className="text-3xl font-semibold">New Arrivals</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 px-10 mt-8">
           {[ 
-            { name: "Neck High Waisted Mini Dress", price: "Rs. 2500.00", image: Image },
-            { name: "Halter Neck Ribbed Cropped Top", price: "Rs. 1500.00", image: Image2 },
-            { name: "Long Sleeve Lapel Collar Blazer", price: "Rs. 3000.00", image: Image3 },
+            { id: 1, name: "Neck High Waisted Mini Dress", price: "Rs. 2500.00", image: Image },
+            { id: 2, name: "Halter Neck Ribbed Cropped Top", price: "Rs. 1500.00", image: Image2 },
+            { id: 3, name: "Long Sleeve Lapel Collar Blazer", price: "Rs. 3000.00", image: Image3 },
           ].map((item, index) => (
             <div key={index} className="text-center relative">
+              <Link to={`/product/${item.id}`}>
               {/* Image with zoom effect */}
               <div className="group overflow-hidden">
                 <img 
@@ -60,6 +62,7 @@ const Home = () => {
                   className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110" 
                 />
               </div>
+              </Link>
               {/* Static Text Content */}
               <div className="mt-2">
                 <p className="font-medium">{item.name}</p>
