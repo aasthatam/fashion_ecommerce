@@ -12,6 +12,7 @@ import ProductDetail from "./pages/ProductDetail";
 import Search from "./pages/Search";
 import Wishlist from "./pages/Wishlist";
 import CustomerSupport from "./pages/CustomerSupport";
+import StyleGuide from "./pages/StyleGuide";
 
 
 const App = () => {
@@ -30,6 +31,7 @@ const App = () => {
       <Route path="/search" element={<Search/>} />
       <Route path="/wishlist" element={<Wishlist/>} />
       <Route path="/:section" element={<CustomerSupport/>} />
+      <Route path="/styleguide" element={<StyleGuide/>} />
   
     </Routes>
     <Footer/>
