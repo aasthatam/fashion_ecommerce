@@ -68,9 +68,9 @@ const StyleGuide = () => {
             </h3>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {/* Placeholder for recommended items */}
+              {/* Adjusted shape of recommendation boxes */}
               {[...Array(9)].map((_, index) => (
-                <div key={index} className="w-full h-32 bg-gray-300 rounded-lg"></div>
+                <div key={index} className="w-full h-60 bg-gray-300 rounded-lg"></div>
               ))}
             </div>
           </div>
