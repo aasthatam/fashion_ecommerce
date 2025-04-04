@@ -61,10 +61,15 @@ button:focus-visible {
   }
   a:hover {
     color: #747bff;
-  }
+  }  
   button {
     background-color: #f9f9f9;
   }
 } */
-
+@import url('https://fonts.googleapis.com/css2?family=Inspiration&family=Outfit:wght@100..900&display=swap');
 @import "tailwindcss";
+
+.active {
+  background-color: #c4c4c4;
+  border-color: #17120a;
+}
