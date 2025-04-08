@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom"
 import facebookIcon from "../assets/ic_baseline-facebook.svg";
 import instagramIcon from "../assets/mdi_instagram.svg";
 import twitterIcon from "../assets/proicons_x-twitter.svg";
@@ -22,19 +23,19 @@ const Footer = () => {
           <div className="mb-4 sm:mb-0">
             <h4 className="font-semibold mb-2">Shop</h4>
             <ul className="text-gray-600 space-y-1">
-              <li><a href="/collection" className="hover:underline">Shop Now</a></li>
-              <li><a href="/collection/new-arrivals" className="hover:underline">New Arrivals</a></li>
-              <li><a href="#" className="hover:underline">Trending Styles</a></li>
+              <li><Link to="/collection" className="hover:underline">Shop Now</Link></li>
+              <li><Link to="/collection/new-arrivals" className="hover:underline">New Arrivals</Link></li>
+              <li><Link to="#" className="hover:underline">Trending Styles</Link></li>
             </ul>
           </div>
 
           <div className="mb-4 sm:mb-0">
             <h4 className="font-semibold mb-2">Customer Support</h4>
             <ul className="text-gray-600 space-y-1">
-              <li><a href="/FAQs" className="hover:underline">FAQs</a></li>
-              <li><a href="/Orders-and-delivery" className="hover:underline">Shipping & Delivery</a></li>
-              <li><a href="/Returns-and-refunds" className="hover:underline">Returns & Exchange</a></li>
-              <li><a href="/Contact-us" className="hover:underline">Contact Us</a></li>
+              <li><Link to="/FAQs" className="hover:underline">FAQs</Link></li>
+              <li><Link to="/Orders-and-delivery" className="hover:underline">Shipping & Delivery</Link></li>
+              <li><Link to="/Returns-and-refunds" className="hover:underline">Returns & Exchange</Link></li>
+              <li><Link to="/Contact-us" className="hover:underline">Contact Us</Link></li>
             </ul>
           </div>
         </div>
@@ -73,4 +74,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default Footer; 
