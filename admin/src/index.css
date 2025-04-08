@@ -69,6 +69,12 @@ button:focus-visible {
 @import url('https://fonts.googleapis.com/css2?family=Inspiration&family=Outfit:wght@100..900&display=swap');
 @import "tailwindcss";
 
+select, input, textarea {
+  border: 1px solid #c2c2c2;
+  outline-color: #1f1d1e;
+  border-radius: 4px;
+}
+
 .active {
   background-color: #c4c4c4;
   border-color: #17120a;
