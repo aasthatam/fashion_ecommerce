@@ -1,18 +1,20 @@
-import React, { useState, useRef } from 'react'; 
+import React, { useState, useRef, useContext } from 'react'; 
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { useParams } from 'react-router-dom';
-import { products } from "../assets/assets";
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
+import { ShopContext } from '../context/ShopContext';
+import RecommendationsSection from '../components/RecommendationsSection';
 
 function ProductDetailPage() {
   const { id } = useParams();
-  const [quantity, setQuantity] = useState(1);
-  const [liked, setLiked] = useState({});
+  const [quantity, setQuantity] = useState(1); 
   const [isProductLiked, setIsProductLiked] = useState(false);
   const [selectedSize, setSelectedSize] = useState('S');
   const [selectedImage, setSelectedImage] = useState(0);
   const thumbnailRef = useRef(null); // Added useRef declaration
+  // Access context values
+  const { products, currency } = useContext (ShopContext); // Correct usage of useContext
 
   // Find the product by id
   const product = products.find((prod) => prod.id === parseInt(id));
@@ -21,21 +23,8 @@ function ProductDetailPage() {
     return <div className="max-w-6xl mx-auto px-4 py-8">Product not found</div>;
   }
 
-  // Get first 4 products as recommendations (excluding current product)
-  const recommendedProducts = products
-    .filter(p => p.id !== product.id)
-    .slice(0, 8);
-
-
   const toggleProductLike = () => {
     setIsProductLiked(!isProductLiked);
-  };
-
-  const toggleLike = (productId) => {
-    setLiked(prev => ({
-      ...prev,
-      [productId]: !prev[productId],
-    }));
   };
 
   // Scroll thumbnails left/right
@@ -141,7 +130,7 @@ function ProductDetailPage() {
         {/* Product Information */}
         <div className="w-full md:w-1/2">
           <h1 className="text-2xl font-medium mb-2">{product.name}</h1>
-          <p className="text-xl mb-1">Rs. {product.price.toFixed(2)}</p>
+          <p className="text-xl mb-1">{currency}{product.price.toFixed(2)}</p>
           {product.code && (
             <p className="text-gray-500 text-sm mb-4">CODE: {product.code}</p>
           )}
@@ -236,49 +225,8 @@ function ProductDetailPage() {
           </div>
         </div>
       </div>
-
       {/* Recommendations Section */}
-      {recommendedProducts.length > 0 && (
-        <div className="mt-16">
-          <h2 className="text-xl text-center mb-8">You might also like</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {recommendedProducts.map((product) => (
-              <div key={product.id} className="relative group">
-                <div className="relative">
-                  <img 
-                    src={Array.isArray(product.image) ? product.image[0] : product.image} 
-                    alt={product.name} 
-                    className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                  />
-                  {/* Like Button */}
-                  <button
-                    className="absolute top-2 right-2 text-gray-700"
-                    onClick={() => toggleLike(product.id)}
-                  >
-                    <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
-                      <img
-                        src={liked[product.id] ? heartIconFilled : heartIcon}
-                        alt="Heart"
-                        className="w-5 h-5"
-                      />
-                    </div>
-                  </button>
-                  {/* Tag */}
-                  {product.tag && (
-                    <div className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1">
-                      {product.tag}
-                    </div>
-                  )}
-                </div>
-                <div className="mt-2 text-center">
-                  <h3 className="text-sm">{product.name}</h3>
-                  <p className="text-sm font-medium">Rs. {product.price.toFixed(2)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <RecommendationsSection currentProductId={product.id} category={product.category} />
     </div>
   );
 }
