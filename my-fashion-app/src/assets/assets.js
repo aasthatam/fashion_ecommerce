@@ -1,123 +1,123 @@
-import Shirt1 from "../assets/shirt1.png";
-import Shirt2 from "../assets/shirt2.png";
-import Shirt3 from "../assets/shirt3.png";
-import Shirt4 from "../assets/shirt4.png";
-import Shirt5 from "../assets/shirt5.png";
-import Shirt6 from "../assets/shirt6.png";
-import Shirt7 from "../assets/shirt7.png";
-import Shirt8 from "../assets/shirt8.png";
-import Shirt9 from "../assets/shirt9.png";
-import Shirt10 from "../assets/shirt10.png";
-import Shirt11 from "../assets/shirt11.png";
-import Shirt12 from "../assets/shirt12.png";
-import Image from "../assets/image.png";
-import Image2 from "../assets/image2.png";
-import Image3 from "../assets/image3.png";
-import Image4 from "../assets/image4.png";
-import Image5 from "../assets/image5.png";
-import Image6 from "../assets/image6.png";
+import Shirt1 from "./shirt1.png";
+import Shirt2 from "./shirt2.png";
+import Shirt3 from "./shirt3.png";
+import Shirt4 from "./shirt4.png";
+import Shirt5 from "./shirt5.png";
+import Shirt6 from "./shirt6.png";
+import Shirt7 from "./shirt7.png";
+import Shirt8 from "./shirt8.png";
+import Shirt9 from "./shirt9.png";
+import Shirt10 from "./shirt10.png";
+import Shirt11 from "./shirt11.png";
+import Shirt12 from "./shirt12.png";
+import Image from "./image.png";
+import Image2 from "./image2.png";
+import Image3 from "./image3.png";
+import Image4 from "./image4.png";
+import Image5 from "./image5.png";
+import Image6 from "./image6.png";
 
-import BabilDress1 from "../assets/BabilDress1.png";
-import BabilDress2 from "../assets/BabilDress2.png";
-import BabilDress3 from "../assets/BabilDress3.png";
-import BabilDress4 from "../assets/BabilDress4.png";
+import BabilDress1 from "./BabilDress1.png";
+import BabilDress2 from "./BabilDress2.png";
+import BabilDress3 from "./BabilDress3.png";
+import BabilDress4 from "./BabilDress4.png";
 
-import BelamyDress1 from "../assets/BelamyDress1.png";
-import BelamyDress2 from "../assets/BelamyDress2.png";
-import BelamyDress3 from "../assets/BelamyDress3.png";
-import BelamyDress4 from "../assets/BelamyDress4.png";
+import BelamyDress1 from "./BelamyDress1.png";
+import BelamyDress2 from "./BelamyDress2.png";
+import BelamyDress3 from "./BelamyDress3.png";
+import BelamyDress4 from "./BelamyDress4.png";
 
-import BiddySkirt1 from "../assets/BiddySkirt1.png";
-import BiddySkirt2 from "../assets/BiddySkirt2.png";
-import BiddySkirt3 from "../assets/BiddySkirt3.png";
-import BiddySkirt4 from "../assets/BiddySkirt4.png";
-import BiddySkirt5 from "../assets/BiddySkirt5.png";
+import BiddySkirt1 from "./BiddySkirt1.png";
+import BiddySkirt2 from "./BiddySkirt2.png";
+import BiddySkirt3 from "./BiddySkirt3.png";
+import BiddySkirt4 from "./BiddySkirt4.png";
+import BiddySkirt5 from "./BiddySkirt5.png";
 
-import CandelaDress1 from "../assets/CandelaDress1.png";
-import CandelaDress2 from "../assets/CandelaDress2.png";
-import CandelaDress3 from "../assets/CandelaDress3.png";
-import CandelaDress4 from "../assets/CandelaDress4.png";
+import CandelaDress1 from "./CandelaDress1.png";
+import CandelaDress2 from "./CandelaDress2.png";
+import CandelaDress3 from "./CandelaDress3.png";
+import CandelaDress4 from "./CandelaDress4.png";
 
-import ChiffonEventDress1 from "../assets/ChiffonEventDress1.png";
-import ChiffonEventDress2 from "../assets/ChiffonEventDress2.png";
-import ChiffonEventDress3 from "../assets/ChiffonEventDress3.png";
-import ChiffonEventDress4 from "../assets/ChiffonEventDress4.png";
-import ChiffonEventDress5 from "../assets/ChiffonEventDress5.png";
+import ChiffonEventDress1 from "./ChiffonEventDress1.png";
+import ChiffonEventDress2 from "./ChiffonEventDress2.png";
+import ChiffonEventDress3 from "./ChiffonEventDress3.png";
+import ChiffonEventDress4 from "./ChiffonEventDress4.png";
+import ChiffonEventDress5 from "./ChiffonEventDress5.png";
 
-import DolinoTop1 from "../assets/DolinoTop1.png";
-import DolinoTop2 from "../assets/DolinoTop2.png";
-import DolinoTop3 from "../assets/DolinoTop3.png";
-import DolinoTop4 from "../assets/DolinoTop4.png";
-import DolinoTop5 from "../assets/DolinoTop5.png";
+import DolinoTop1 from "./DolinoTop1.png";
+import DolinoTop2 from "./DolinoTop2.png";
+import DolinoTop3 from "./DolinoTop3.png";
+import DolinoTop4 from "./DolinoTop4.png";
+import DolinoTop5 from "./DolinoTop5.png";
 
-import DoviPant1 from "../assets/DoviPant1.png";
-import DoviPant2 from "../assets/DoviPant2.png";
-import DoviPant3 from "../assets/DoviPant3.png";
-import DoviPant4 from "../assets/DoviPant4.png";
-import DoviPant5 from "../assets/DoviPant5.png";
+import DoviPant1 from "./DoviPant1.png";
+import DoviPant2 from "./DoviPant2.png";
+import DoviPant3 from "./DoviPant3.png";
+import DoviPant4 from "./DoviPant4.png";
+import DoviPant5 from "./DoviPant5.png";
 
-import FelixTop1 from "../assets/FelixTop1.png";
-import FelixTop2 from "../assets/FelixTop2.png";
-import FelixTop3 from "../assets/FelixTop3.png";
-import FelixTop4 from "../assets/FelixTop4.png";
+import FelixTop1 from "./FelixTop1.png";
+import FelixTop2 from "./FelixTop2.png";
+import FelixTop3 from "./FelixTop3.png";
+import FelixTop4 from "./FelixTop4.png";
 
-import GretaBodySuit1 from "../assets/GretaBodySuit1.png";
-import GretaBodySuit2 from "../assets/GretaBodySuit2.png";
-import GretaBodySuit3 from "../assets/GretaBodySuit3.png";
-import GretaBodySuit4 from "../assets/GretaBodySuit4.png";
+import GretaBodySuit1 from "./GretaBodySuit1.png";
+import GretaBodySuit2 from "./GretaBodySuit2.png";
+import GretaBodySuit3 from "./GretaBodySuit3.png";
+import GretaBodySuit4 from "./GretaBodySuit4.png";
 
-import HighWaistBootCutJean1 from "../assets/HighWaitsBootCutJean1.png";
-import HighWaistBootCutJean2 from "../assets/HighWaitsBootCutJean2.png";
-import HighWaistBootCutJean3 from "../assets/HighWaitsBootCutJean3.png";
-import HighWaistBootCutJean4 from "../assets/HighWaitsBootCutJean4.png";
+import HighWaistBootCutJean1 from "./HighWaitsBootCutJean1.png";
+import HighWaistBootCutJean2 from "./HighWaitsBootCutJean2.png";
+import HighWaistBootCutJean3 from "./HighWaitsBootCutJean3.png";
+import HighWaistBootCutJean4 from "./HighWaitsBootCutJean4.png";
 
-import ImogeneJumpsuit1 from "../assets/ImogeneJumpsuit1.png";
-import ImogeneJumpsuit2 from "../assets/ImogeneJumpsuit2.png";
-import ImogeneJumpsuit3 from "../assets/ImogeneJumpsuit3.png";
-import ImogeneJumpsuit4 from "../assets/ImogeneJumpsuit4.png";
+import ImogeneJumpsuit1 from "./ImogeneJumpsuit1.png";
+import ImogeneJumpsuit2 from "./ImogeneJumpsuit2.png";
+import ImogeneJumpsuit3 from "./ImogeneJumpsuit3.png";
+import ImogeneJumpsuit4 from "./ImogeneJumpsuit4.png";
 
-import LongSleeveKnitTop1 from "../assets/LongSleeveKnitTop1.png";
-import LongSleeveKnitTop2 from "../assets/LongSleeveKnitTop2.png";
-import LongSleeveKnitTop3 from "../assets/LongSleeveKnitTop3.png";
-import LongSleeveKnitTop4 from "../assets/LongSleeveKnitTop4.png";
-import LongSleeveKnitTop5 from "../assets/LongSleeveKnitTop5.png";
+import LongSleeveKnitTop1 from "./LongSleeveKnitTop1.png";
+import LongSleeveKnitTop2 from "./LongSleeveKnitTop2.png";
+import LongSleeveKnitTop3 from "./LongSleeveKnitTop3.png";
+import LongSleeveKnitTop4 from "./LongSleeveKnitTop4.png";
+import LongSleeveKnitTop5 from "./LongSleeveKnitTop5.png";
 
-import WideLegJean1 from "../assets/RawHemWideLegJeanwithPocket1.png";
-import WideLegJean2 from "../assets/RawHemWideLegJeanwithPocket2.png";
-import WideLegJean3 from "../assets/RawHemWideLegJeanwithPocket3.png";
-import WideLegJean4 from "../assets/RawHemWideLegJeanwithPocket4.png";
+import WideLegJean1 from "./RawHemWideLegJeanwithPocket1.png";
+import WideLegJean2 from "./RawHemWideLegJeanwithPocket2.png";
+import WideLegJean3 from "./RawHemWideLegJeanwithPocket3.png";
+import WideLegJean4 from "./RawHemWideLegJeanwithPocket4.png";
 
-import RippedFlareJean1 from "../assets/RippedFlareLegJeansandHighWaist1.png";
-import RippedFlareJean2 from "../assets/RippedFlareLegJeansandHighWaist2.png";
-import RippedFlareJean3 from "../assets/RippedFlareLegJeansandHighWaist3.png";
-import RippedFlareJean4 from "../assets/RippedFlareLegJeansandHighWaist4.png";
+import RippedFlareJean1 from "./RippedFlareLegJeansandHighWaist1.png";
+import RippedFlareJean2 from "./RippedFlareLegJeansandHighWaist2.png";
+import RippedFlareJean3 from "./RippedFlareLegJeansandHighWaist3.png";
+import RippedFlareJean4 from "./RippedFlareLegJeansandHighWaist4.png";
 
-import SolidKnittedSweater1 from "../assets/SolidKnitSweater1.png";
-import SolidKnittedSweater2 from "../assets/SolidKnitSweater2.png";
-import SolidKnittedSweater3 from "../assets/SolidKnitSweater3.png";
-import SolidKnittedSweater4 from "../assets/SolidKnitSweater4.png";
-import SolidKnittedSweater5 from "../assets/SolidKnitSweaterRed1.png";
-import SolidKnittedSweater6 from "../assets/SolidKnitSweaterRed2.png";
-import SolidKnittedSweater7 from "../assets/SolidKnitSweaterRed3.png";
-import SolidKnittedSweater8 from "../assets/SolidKnitSweaterRed4.png";
-import SolidKnittedSweater9 from "../assets/SolidKnitSweaterRed5.png";
+import SolidKnittedSweater1 from "./SolidKnitSweater1.png";
+import SolidKnittedSweater2 from "./SolidKnitSweater2.png";
+import SolidKnittedSweater3 from "./SolidKnitSweater3.png";
+import SolidKnittedSweater4 from "./SolidKnitSweater4.png";
+import SolidKnittedSweater5 from "./SolidKnitSweaterRed1.png";
+import SolidKnittedSweater6 from "./SolidKnitSweaterRed2.png";
+import SolidKnittedSweater7 from "./SolidKnitSweaterRed3.png";
+import SolidKnittedSweater8 from "./SolidKnitSweaterRed4.png";
+import SolidKnittedSweater9 from "./SolidKnitSweaterRed5.png";
 
-import TopandPantSet1 from "../assets/SquareNeckTopandWideLegPantSet1.png";
-import TopandPantSet2 from "../assets/SquareNeckTopandWideLegPantSet2.png";
-import TopandPantSet3 from "../assets/SquareNeckTopandWideLegPantSet3.png";
+import TopandPantSet1 from "./SquareNeckTopandWideLegPantSet1.png";
+import TopandPantSet2 from "./SquareNeckTopandWideLegPantSet2.png";
+import TopandPantSet3 from "./SquareNeckTopandWideLegPantSet3.png";
 
-import StraightLegJean1 from "../assets/StraightLegJean1.png";
-import StraightLegJean2 from "../assets/StraightLegJean2.png";
-import StraightLegJean3 from "../assets/StraightLegJean3.png";
-import StraightLegJean4 from "../assets/StraightLegJean4.png";
-import StraightLegJean5 from "../assets/StraightLegJean5.png";
+import StraightLegJean1 from "./StraightLegJean1.png";
+import StraightLegJean2 from "./StraightLegJean2.png";
+import StraightLegJean3 from "./StraightLegJean3.png";
+import StraightLegJean4 from "./StraightLegJean4.png";
+import StraightLegJean5 from "./StraightLegJean5.png";
 
-import StraightLegJeanLightWash1 from "../assets/StraightLegJeansLightWashed1.png";
-import StraightLegJeanLightWash2 from "../assets/StraightLegJeansLightWashed2.png";
-import StraightLegJeanLightWash3 from "../assets/StraightLegJeansLightWashed3.png";
-import StraightLegJeanLightWash4 from "../assets/StraightLegJeansLightWashed4.png";
-import StraightLegJeanLightWash5 from "../assets/StraightLegJeansLightWashed5.png";
-import StraightLegJeanLightWash6 from "../assets/StraightLegJeansLightWashed6.png";
+import StraightLegJeanLightWash1 from "./StraightLegJeansLightWashed1.png";
+import StraightLegJeanLightWash2 from "./StraightLegJeansLightWashed2.png";
+import StraightLegJeanLightWash3 from "./StraightLegJeansLightWashed3.png";
+import StraightLegJeanLightWash4 from "./StraightLegJeansLightWashed4.png";
+import StraightLegJeanLightWash5 from "./StraightLegJeansLightWashed5.png";
+import StraightLegJeanLightWash6 from "./StraightLegJeansLightWashed6.png";
 
 export const colorOptions = [
     { name: "Black", count: 6 },
@@ -160,9 +160,6 @@ export const colorOptions = [
     { name: "Alphabetically, Z-A" },
     { name: "Price, Low to High" },
     { name: "Price, High to Low" },
-    { name: "Date, Old to New" },
-    { name: "Date, New to Old" },
-
   ];
 
   export const products = [
@@ -197,7 +194,7 @@ export const colorOptions = [
             id: 2, 
             name: "Halter Neck Ribbed Cropped Top", 
             price: 1500, 
-            image: [Image2, Image5, Image6], 
+            image: [Image2], 
             color: "Neutral", 
             category: "Top", 
             fabric: "Hemp",
@@ -779,7 +776,7 @@ export const colorOptions = [
       id: 26, 
       name: "Imogene JumpSuit", 
       price: 4500, 
-      image: [ImogeneJumpsuit1. ImogeneJumpsuit2, ImogeneJumpsuit3, ImogeneJumpsuit4], 
+      image: [ImogeneJumpsuit1, ImogeneJumpsuit2, ImogeneJumpsuit3, ImogeneJumpsuit4], 
       color: "Black", 
       category: "Bodysuits & Jumpsuits", 
       fabric: "Nylon" ,
