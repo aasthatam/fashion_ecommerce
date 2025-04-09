@@ -12,22 +12,47 @@ function ProductDetailPage() {
   const [isProductLiked, setIsProductLiked] = useState(false);
   const [selectedSize, setSelectedSize] = useState('S');
   const [selectedImage, setSelectedImage] = useState(0);
-  const thumbnailRef = useRef(null); // Added useRef declaration
-  // Access context values
-  const { products, currency } = useContext (ShopContext); // Correct usage of useContext
+  const thumbnailRef = useRef(null); 
+  const { products, currency, addToCart , addToWishlist } = useContext(ShopContext); 
 
-  // Find the product by id
   const product = products.find((prod) => prod.id === parseInt(id));
 
   if (!product) {
     return <div className="max-w-6xl mx-auto px-4 py-8">Product not found</div>;
   }
 
+  // // Check if the product is in the wishlist
+  // const initialWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+  // const isInWishlistInitially = initialWishlist.some(item => item.id === parseInt(id));
+
+  // useEffect(() => {
+  //   if (id) {
+  //     setIsProductLiked(isInWishlistInitially);
+  //   }
+  // }, [id, isInWishlistInitially]);
+
   const toggleProductLike = () => {
-    setIsProductLiked(!isProductLiked);
+    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+  
+    const existingIndex = wishlist.findIndex(item => item.id === product.id);
+  
+    let updatedWishlist;
+  
+    if (existingIndex !== -1) {
+      updatedWishlist = wishlist.filter(item => item.id !== product.id);
+      setIsProductLiked(false);
+    } else {
+      updatedWishlist = [...wishlist, { id: product.id, size: selectedSize }];
+      setIsProductLiked(true);
+    }
+  
+    localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+  
+    if (addToWishlist) {
+      addToWishlist(product.id, selectedSize); // Modify as needed for global context
+    }
   };
 
-  // Scroll thumbnails left/right
   const scrollThumbnails = (direction) => {
     if (thumbnailRef.current) {
       const scrollAmount = direction === 'left' ? -200 : 200;
@@ -35,7 +60,6 @@ function ProductDetailPage() {
     }
   };
 
-  // Ensure image is always treated as an array
   const productImages = Array.isArray(product.image) ? product.image : [product.image];
 
   return (
@@ -57,7 +81,7 @@ function ProductDetailPage() {
               alt={product.name} 
               className="w-full h-[800px] object-cover"
             />
-            {/* Navigation Buttons (only show if multiple images) */}
+            {/* Navigation Buttons */}
             {productImages.length > 1 && (
               <>
                 <button
@@ -85,7 +109,6 @@ function ProductDetailPage() {
           {/* Thumbnail Carousel */}
           {productImages.length > 1 && (
             <div className="relative mt-4">
-              {/* Left scroll button */}
               <button 
                 onClick={() => scrollThumbnails('left')}
                 className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1 shadow-md z-10"
@@ -93,7 +116,6 @@ function ProductDetailPage() {
                 <ChevronLeft size={16} />
               </button>
               
-              {/* Thumbnail container */}
               <div 
                 ref={thumbnailRef}
                 className="flex space-x-2 overflow-x-auto scrollbar-hide py-2"
@@ -116,7 +138,6 @@ function ProductDetailPage() {
                 ))}
               </div>
               
-              {/* Right scroll button */}
               <button 
                 onClick={() => scrollThumbnails('right')}
                 className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white rounded-full p-1 shadow-md z-10"
@@ -138,7 +159,7 @@ function ProductDetailPage() {
             {product.availability || "In Stock"}
           </p>
 
-          {/* Color Options (if available) */}
+          {/* Color and Size Options */}
           {product.colors && product.colors.length > 0 && (
             <div className="mb-4">
               <p className="text-sm mb-2">Color</p>
@@ -154,7 +175,6 @@ function ProductDetailPage() {
             </div>
           )}
 
-          {/* Size Options (if available) */}
           {product.sizes && product.sizes.length > 0 && (
             <div className="mb-4">
               <p className="text-sm mb-2">Size</p>
@@ -174,30 +194,30 @@ function ProductDetailPage() {
             </div>
           )}
 
+          {/* Quantity and Details */}
           {/* Quantity */}
-            <div className="mb-6">
-              <p className="text-sm mb-2">Quantity</p>
-              <div className="flex items-center border border-gray-300 w-fit rounded-md px-2 py-1">
-                <button 
-                  onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                  className="px-3 py-2 text-lg hover:bg-gray-200 transition focus:outline-none focus:ring-0 active:outline-none"
-                  aria-label="Decrease quantity"
-                >
-                  -
-                </button>
-                <div className="px-6 py-2 text-lg font-medium">{quantity}</div>
-                <button 
-                  onClick={() => setQuantity(prev => prev + 1)}
-                  className="px-3 py-2 text-lg hover:bg-gray-200 transition focus:outline-none focus:ring-0 active:outline-none"
-                  aria-label="Increase quantity"
-                >
-                  +
-                </button>
-              </div>
+          <div className="mb-6">
+            <p className="text-sm mb-2">Quantity</p>
+            <div className="flex items-center border border-gray-300 w-fit rounded-md px-2 py-1">
+              <button 
+                onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
+                className="px-3 py-2 text-lg hover:bg-gray-200 transition focus:outline-none focus:ring-0 active:outline-none"
+                aria-label="Decrease quantity"
+              >
+                -
+              </button>
+              <div className="px-6 py-2 text-lg font-medium">{quantity}</div>
+              <button 
+                onClick={() => setQuantity(prev => prev + 1)}
+                className="px-3 py-2 text-lg hover:bg-gray-200 transition focus:outline-none focus:ring-0 active:outline-none"
+                aria-label="Increase quantity"
+              >
+                +
+              </button>
             </div>
+          </div>
 
-
-          {/* Details (if available) */}
+          {/* Details */}
           {product.details && product.details.length > 0 && (
             <div className="mb-6">
               <h3 className="font-medium mb-2">Details</h3>
@@ -212,11 +232,18 @@ function ProductDetailPage() {
           {/* Buttons */}
           <div className="flex flex-col space-y-4">
             <div className="flex space-x-4">
-              <button className="px-6 py-3 rounded-md border border-black bg-white text-black flex-1 hover:bg-gray-100 transition">
+              <button onClick={() => addToCart(product.id, selectedSize)} className="px-6 py-3 rounded-md border border-black bg-white text-black flex-1 hover:bg-gray-100 transition">
                 Add to bag
               </button>
-              <button className="px-6 py-3 rounded-md bg-black text-white flex-1 hover:bg-gray-800 transition">
-                Add to wishlist
+              <button 
+                onClick={toggleProductLike}
+                className={`px-6 py-3 rounded-md flex-1 transition ${
+                  isProductLiked 
+                    ? "bg-gray-200 text-black border border-black" 
+                    : "bg-black text-white hover:bg-gray-800"
+                }`}
+              >
+                {isProductLiked ? "Remove from wishlist" : "Add to wishlist"}
               </button>
             </div>
             <button className="w-full py-3 rounded-md bg-black text-white hover:bg-gray-800 transition">
