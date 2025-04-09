@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext} from "react";
 import searchIcon from "../assets/iconamoon_search-light.svg";
 import profileIcon from "../assets/iconamoon_profile-light.svg";
 import heartIcon from "../assets/solar_heart-linear.svg";
@@ -7,13 +7,15 @@ import arrowupIcon from "../assets/weui_arrow-outlinedup.svg";
 import menuIcon from "../assets/material-symbols-light_menu-rounded.svg";
 import dropdown from "../assets/dropdown_icon.png";
 import { Link } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext";
 
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [wishlistCount] = useState(3);
-  const [cartCount] = useState(5);
+  
   const dropdownRef = useRef(null);
+
+  const {getCartCount, getWishlistCount} = useContext(ShopContext);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
@@ -58,19 +60,15 @@ const Header = () => {
         <div className="absolute right-0 flex space-x-4 items-center">
           <Link to="/wishlist" className="relative">
             <img src={heartIcon} alt="Wishlist" className="w-5 h-5" />
-            {wishlistCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px] text-center leading-4 bg-black text-white rounded-full">
-                {wishlistCount}
-              </span>
-            )}
+            <p className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
+                {getWishlistCount()}
+              </p>
           </Link>
           <Link to="/cart" className="relative">
             <img src={bagIcon} alt="Cart" className="w-5 h-5" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 text-[10px] text-center leading-4 bg-black text-white rounded-full">
-                {cartCount}
-              </span>
-            )}
+            <p className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
+                {getCartCount()}
+              </p>
           </Link>
         </div>
       </div>
@@ -120,19 +118,16 @@ const Header = () => {
         <div className="flex space-x-6 items-center">
           <Link to="/wishlist" className="relative">
             <img src={heartIcon} alt="Wishlist" className="w-6 h-6" />
-            {wishlistCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
-                {wishlistCount}
-              </span>
-            )}
+            <p className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
+                {getWishlistCount()}
+              </p>
           </Link>
           <Link to="/cart" className="relative">
             <img src={bagIcon} alt="Cart" className="w-6 h-6" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
-                {cartCount}
-              </span>
-            )}
+              <p className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
+                {getCartCount()}
+              </p>
+          
           </Link>
           <Link to="/login">
             <img src={profileIcon} alt="Profile" className="w-6 h-6" />
