@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { ChevronRight } from "lucide-react";
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
-import { colorOptions, categoryOptions, fabricsOptions, sortOptions, products } from "../assets/assets";
+import { colorOptions, categoryOptions, fabricsOptions, sortOptions } from "../assets/assets";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext";
 
 const PRODUCTS_PER_PAGE = 8; // Number of products per page
 
@@ -48,8 +49,8 @@ const FilterDropdown = ({ title, options, selectedOptions, onOptionChange }) => 
 };
 
 const Collection = () => {
+  const { products, currency, wishlistItems, addToWishlist, removeFromWishlist } = useContext(ShopContext); // Using products from ShopContext
   const [currentPage, setCurrentPage] = useState(1);
-  const [liked, setLiked] = useState({});
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedFabrics, setSelectedFabrics] = useState([]);
@@ -82,10 +83,19 @@ const Collection = () => {
     setCurrentPage(1);
   }, [category, selectedColors, selectedFabrics, sortBy]);
 
-  const toggleLike = (id) => {
-    setLiked(prev => ({
-      ...prev,
-      [id]: !prev[id],
+  const handleWishlistToggle = (product) => {
+    const isWishlisted = wishlistItems.some(item => item.id === product.id);
+    const size = product.size || 'default';
+  
+    if (isWishlisted) {
+      removeFromWishlist(product.id, size);
+    } else {
+      addToWishlist(product.id, size);
+    }
+  
+    // Notify other parts of the app
+    window.dispatchEvent(new CustomEvent("wishlistUpdated", {
+      detail: wishlistItems
     }));
   };
 
@@ -194,14 +204,14 @@ const Collection = () => {
         {paginatedProducts.map((item) => (
           <div key={item.id} className="relative group overflow-hidden">
             <Link to={`/product/${item.id}`}>
-            <div className="overflow-hidden">
-            <img 
-             src={Array.isArray(item.image) ? item.image[0] : item.image} 
-             alt={item.name} 
-             className="w-full h-full transition-transform duration-300 group-hover:scale-110" 
-             />
-             </div>
-             </Link>
+              <div className="overflow-hidden">
+                <img 
+                  src={Array.isArray(item.image) ? item.image[0] : item.image} 
+                  alt={item.name} 
+                  className="w-full h-full transition-transform duration-300 group-hover:scale-110" 
+                />
+              </div>
+            </Link>
             {item.tag && (
               <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded-md">
                 {item.tag}
@@ -209,11 +219,15 @@ const Collection = () => {
             )}
             <button
               className="absolute top-2 right-2 text-gray-700"
-              onClick={() => toggleLike(item.id)}
+              onClick={() => handleWishlistToggle(item)}
             >
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
-                <img
-                  src={liked[item.id] ? heartIconFilled : heartIcon}
+              <img
+                  src={
+                    wishlistItems.some(wItem => wItem.id === item.id)
+                      ? heartIconFilled
+                      : heartIcon
+                  }
                   alt="Heart"
                   className="w-5 h-5"
                 />
@@ -221,7 +235,7 @@ const Collection = () => {
             </button>
             <div className="mt-3 text-center">
               <p className="text-sm">{item.name}</p>
-              <p className="text-lg font-medium">Rs. {item.price.toFixed(2)}</p>
+              <p className="text-lg font-medium">{currency}{item.price.toFixed(2)}</p>
             </div>
           </div>
         ))}
@@ -255,9 +269,7 @@ const Collection = () => {
             return (
               <button
                 key={pageNum}
-                className={`px-3 text-lg ${
-                  currentPage === pageNum ? "underline font-semibold" : "text-gray-600 hover:underline"
-                }`}
+                className={`px-3 text-lg ${currentPage === pageNum ? "underline font-semibold" : "text-gray-600 hover:underline"}`}
                 onClick={() => setCurrentPage(pageNum)}
               >
                 {pageNum}
@@ -277,7 +289,6 @@ const Collection = () => {
           </button>
         </div>
       )}
-
     </div>
   );
 };
