@@ -13,12 +13,14 @@ import Search from "./pages/Search";
 import Wishlist from "./pages/Wishlist";
 import CustomerSupport from "./pages/CustomerSupport";
 import StyleGuide from "./pages/StyleGuide";
+import { ToastContainer } from 'react-toastify';
 
 
 const App = () => {
   return (
     
     <div >
+    <ToastContainer/>
     <Header/>
     <Routes>
       <Route path="/" element={<Home />} />
