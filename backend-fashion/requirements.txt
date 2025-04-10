@@ -1,0 +1,12 @@
+tensorflow
+scikit-learn
+streamlit
+numpy
+flask 
+Pillow
+pandas
+flask-cors
+streamlit
+opencv-python
+requests
+gunicorn 
