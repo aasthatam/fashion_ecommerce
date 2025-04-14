@@ -9,4 +9,5 @@ cartRouter.post('/add', authUser, addToCart)
 cartRouter.post('/update', authUser, updateCart)
 cartRouter.post('/remove', authUser, removeFromCart)
 
+
 export default cartRouter

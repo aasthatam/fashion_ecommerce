@@ -5,7 +5,7 @@ const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ["customer", "admin"], default: "customer" },
-    cart: { type: Object, default: {}
+    cartData: { type: Object, default: {}
         // productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
         // quantity: { type: Number, required: true, default: 1 },
         // price: { type: Number, required: true }, // You can store the price at the time of adding to cart.

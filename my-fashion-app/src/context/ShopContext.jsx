@@ -3,7 +3,7 @@ import { products } from "../assets/assets.js";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-// import axios from "axios";
+import axios from "axios";
 
 export const ShopContext = createContext();
 
@@ -58,32 +58,66 @@ const ShopContextProvider = (props) => {
         }
 
         setCartItems(cartData);
-    };
 
-    // Remove item from cart
-    const removeFromCart = (itemId, size) => {
-        let cartData = structuredClone(cartItems);
-
-        if (cartData[itemId] && cartData[itemId][size]) {
-            delete cartData[itemId][size];
-
-            // Remove product entry if no sizes remain
-            if (Object.keys(cartData[itemId]).length === 0) {
-                delete cartData[itemId];
+        if (token) {
+            try {
+                await axios.post(backendUrl + '/api/cart/add', {itemId, size}, {headers: {token}} ) 
+                
+            } catch (error) {
+                console.error(error)
+                toast.error(error.message)
+                
             }
-
-            setCartItems(cartData);
         }
     };
+
+    const removeFromCart = async (itemId, size) => {
+        let cartData = structuredClone(cartItems);
+        const key = String(itemId);
+      
+        if (cartData[key] && cartData[key][size]) {
+          delete cartData[key][size];
+      
+          if (Object.keys(cartData[key]).length === 0) {
+            delete cartData[key];
+          }
+      
+          setCartItems(cartData);
+      
+          if (token) {
+            try {
+              await axios.post(backendUrl + '/api/cart/remove', {
+                itemId,
+                size,
+                userId: localStorage.getItem("userId")
+              }, {
+                headers: { token }
+              });
+            } catch (error) {
+              console.error("Remove cart error:", error);
+              toast.error(error.message);
+            }
+          }
+        }
+      };
+      
 
     // Update cart item quantity
-    const updateCartItem = (itemId, size, quantity) => {
+    const updateCartItem = async (itemId, size, quantity) => {
         let cartData = structuredClone(cartItems);
+        cartData[itemId][size] = quantity;
+        setCartItems(cartData);
 
-        if (cartData[itemId] && cartData[itemId][size]) {
-            cartData[itemId][size] = quantity;
-            setCartItems(cartData);
+        if (token) {
+            try {
+               await axios.post(backendUrl + '/api/cart/update', {itemId, size, quantity}, {headers: {token}})
+            } catch (error) {
+                console.log(error)
+                toast.error(error.message)
+
+            }
         }
+        
     };
 
     // Add item to wishlist
@@ -132,6 +166,27 @@ const ShopContextProvider = (props) => {
         return totalCount;
     };
 
+    const getUserCart = async (token) => {
+        try {
+            const response = await axios.post(backendUrl + '/api/cart/get', {}, {headers: {token}})
+            if (response.data.success) {
+                setCartItems(response.data.cartData)
+            }
+            
+        } catch (error) {
+            console.log(error)
+            toast.error(error.message)
+            
+        }
+    }
+
+    useEffect(() => {
+        if (!token && localStorage.getItem('token')) {
+            setToken(localStorage.getItem('token'))
+            getUserCart(localStorage.getItem('token'))
+        }
+    })
+
     // Get total count of items in wishlist
     const getWishlistCount = () => {
         return wishlistItems.length;
@@ -162,6 +217,12 @@ const ShopContextProvider = (props) => {
         
     //   }
     // }
+
+    useEffect(() => {
+    if (!token && localStorage.getItem('token')) {
+        setToken(localStorage.getItem('token'))
+    }
+    })
 
     const value = {
         products,
