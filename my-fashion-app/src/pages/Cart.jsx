@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
 import removeIcon from "../assets/material-symbols-light_delete-outline.svg";
 import { Link } from "react-router-dom";
+import CartSummary from "../components/CartSummary";
 
 const ShoppingCart = () => {
   const { 
@@ -102,27 +103,12 @@ const ShoppingCart = () => {
               ))}
             </div>
 
-            {/* Cart Summary */}
-            <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-              <div className="flex justify-between">
-                <span className="font-medium">Total Items:</span>
-                <span>{totalItems}</span>
-              </div>
-              <div className="flex justify-between mt-2">
-                <span className="font-medium">Total:</span>
-                <span className="font-semibold">
-                  {currency} {totalPrice.toFixed(2)}
-                </span>
-              </div>
-            </div>
-
-            {/* Checkout Button */}
             {cartList.length > 0 && (
-              <div className="mt-6">
-                <button className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition-colors">
-                  Checkout
-                </button>
-              </div>
+              <CartSummary 
+                totalItems={totalItems} 
+                totalPrice={totalPrice} 
+                currency={currency}
+              />
             )}
           </>
         )}

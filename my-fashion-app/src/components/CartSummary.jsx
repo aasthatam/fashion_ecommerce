@@ -1,3 +1,4 @@
+// CartSummary.jsx
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
@@ -17,7 +18,7 @@ const CartSummary = ({ totalItems, totalPrice, currency }) => {
 
       <div className="flex justify-between mt-2">
         <span className="font-medium">Subtotal:</span>
-        <span>
+        <span className="font-semibold">
           {currency} {totalPrice.toFixed(2)}
         </span>
       </div>

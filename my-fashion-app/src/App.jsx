@@ -13,6 +13,7 @@ import Search from "./pages/Search";
 import Wishlist from "./pages/Wishlist";
 import CustomerSupport from "./pages/CustomerSupport";
 import StyleGuide from "./pages/StyleGuide";
+import PlaceOrder from "./pages/PlaceOrder";
 import { ToastContainer } from 'react-toastify';
 
 
@@ -32,6 +33,7 @@ const App = () => {
       <Route path="/product/:id" element={<ProductDetail/>} />
       <Route path="/search" element={<Search/>} />
       <Route path="/wishlist" element={<Wishlist/>} />
+      <Route path="/place-order" element={<PlaceOrder/>} />
       <Route path="/:section" element={<CustomerSupport/>} />
       <Route path="/styleguide" element={<StyleGuide/>} />
   
