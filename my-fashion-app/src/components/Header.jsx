@@ -49,7 +49,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="flex items-center justify-between px-4 py-4 shadow-md bg-white relative">
+    <header className="flex items-center justify-between px-4 md:px-8 lg:px-10 xl:px-12 py-4 shadow-md bg-white relative">
       {/* Mobile: Menu Icon Left, Logo Center */}
       <div className="relative flex w-full items-center justify-center lg:hidden">
         {/* Menu Icon (left) */}
