@@ -3,6 +3,7 @@ import { products } from "../assets/assets.js";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+// import axios from "axios";
 
 export const ShopContext = createContext();
 
@@ -12,6 +13,7 @@ const ShopContextProvider = (props) => {
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(true);
+    const [token, setToken] = useState('');
     const navigate = useNavigate();
 
     // Load cartItems from localStorage on initial render
@@ -144,6 +146,23 @@ const ShopContextProvider = (props) => {
         console.log("Wishlist updated:", wishlistItems);
     }, [wishlistItems]);
 
+    // Products fetch from backend 
+    // const getProductData = async () => {
+    //   try {
+    //     const response = await axios.get(backendUrl + '/api/product/list')
+    //     if(response.data.success){
+    //       setProducts(response.data.products)
+    //     } else{
+    //       toast.error(response.data.message)
+    //     }
+        
+    //   } catch (error) {
+    //     console.log(error)
+    //     toast.error(error.message)
+        
+    //   }
+    // }
+
     const value = {
         products,
         currency,
@@ -164,7 +183,9 @@ const ShopContextProvider = (props) => {
         removeFromWishlist,
         getWishlistCount, 
         navigate,
-        backendUrl
+        backendUrl,
+        setToken,
+        token
     };
 
     return (
