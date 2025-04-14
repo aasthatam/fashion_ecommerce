@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext} from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import searchIcon from "../assets/iconamoon_search-light.svg";
 import profileIcon from "../assets/iconamoon_profile-light.svg";
 import heartIcon from "../assets/solar_heart-linear.svg";
@@ -8,23 +8,38 @@ import menuIcon from "../assets/material-symbols-light_menu-rounded.svg";
 import dropdown from "../assets/dropdown_icon.png";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [visible, setVisible] = useState(false);
-  
-  const dropdownRef = useRef(null);
+  const [isAccountOpen, setIsAccountOpen] = useState(false);
 
-  const {getCartCount, getWishlistCount} = useContext(ShopContext);
+  const dropdownRef = useRef(null);
+  const accountRef = useRef(null);
+
+  const {
+    getCartCount,
+    getWishlistCount,
+    token,
+    setToken,
+  } = useContext(ShopContext);
 
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
+  };
+
+  const toggleAccountMenu = () => {
+    setIsAccountOpen(!isAccountOpen);
   };
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
+      }
+      if (accountRef.current && !accountRef.current.contains(event.target)) {
+        setIsAccountOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -61,14 +76,14 @@ const Header = () => {
           <Link to="/wishlist" className="relative">
             <img src={heartIcon} alt="Wishlist" className="w-5 h-5" />
             <p className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
-                {getWishlistCount()}
-              </p>
+              {getWishlistCount()}
+            </p>
           </Link>
           <Link to="/cart" className="relative">
             <img src={bagIcon} alt="Cart" className="w-5 h-5" />
             <p className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
-                {getCartCount()}
-              </p>
+              {getCartCount()}
+            </p>
           </Link>
         </div>
       </div>
@@ -86,9 +101,15 @@ const Header = () => {
 
         {/* Navigation */}
         <nav className="flex space-x-8 text-lg font-light">
-          <Link to="/collection" className="hover:underline">Shop Now</Link>
-          <Link to="/about" className="hover:underline">About</Link>
-          <Link to="/Contact-us" className="hover:underline">Contact Us</Link>
+          <Link to="/collection" className="hover:underline">
+            Shop Now
+          </Link>
+          <Link to="/about" className="hover:underline">
+            About
+          </Link>
+          <Link to="/Contact-us" className="hover:underline">
+            Contact Us
+          </Link>
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={toggleDropdown}
@@ -98,16 +119,46 @@ const Header = () => {
               <img
                 src={arrowupIcon}
                 alt="arrow"
-                className={`ml-1 w-4 h-4 transform transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+                className={`ml-1 w-4 h-4 transform transition-transform ${
+                  isDropdownOpen ? "rotate-180" : ""
+                }`}
               />
             </button>
             {isDropdownOpen && (
               <div className="absolute left-0 top-full mt-2 w-48 bg-white shadow-md border border-gray-200 rounded-lg z-50">
                 <ul>
-                  <li><Link to="/styleguide" className="block px-4 py-2 hover:bg-gray-100">Style Guide</Link></li>
-                  <li><Link to="/Customer-support" className="block px-4 py-2 hover:bg-gray-100">Customer Support</Link></li>
-                  <li><Link to="/Returns-and-refunds" className="block px-4 py-2 hover:bg-gray-100">Returns & Exchange</Link></li>
-                  <li><Link to="/Privacy-policy" className="block px-4 py-2 hover:bg-gray-100">Privacy Policy</Link></li>
+                  <li>
+                    <Link
+                      to="/styleguide"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                    >
+                      Style Guide
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/Customer-support"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                    >
+                      Customer Support
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/Returns-and-refunds"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                    >
+                      Returns & Exchange
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/Privacy-policy"
+                      className="block px-4 py-2 hover:bg-gray-100"
+                    >
+                      Privacy Policy
+                    </Link>
+                  </li>
                 </ul>
               </div>
             )}
@@ -119,19 +170,69 @@ const Header = () => {
           <Link to="/wishlist" className="relative">
             <img src={heartIcon} alt="Wishlist" className="w-6 h-6" />
             <p className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
-                {getWishlistCount()}
-              </p>
+              {getWishlistCount()}
+            </p>
           </Link>
           <Link to="/cart" className="relative">
             <img src={bagIcon} alt="Cart" className="w-6 h-6" />
-              <p className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
-                {getCartCount()}
-              </p>
-          
+            <p className="absolute -top-1 -right-1 w-5 h-5 text-xs text-center leading-5 bg-black text-white rounded-full">
+              {getCartCount()}
+            </p>
           </Link>
-          <Link to="/login">
-            <img src={profileIcon} alt="Profile" className="w-6 h-6" />
-          </Link>
+
+          {/* Profile Dropdown */}
+          <div className="relative" ref={accountRef}>
+            {token ? (
+              <>
+                <img
+                  src={profileIcon}
+                  alt="User"
+                  className="w-6 h-6 cursor-pointer"
+                  onClick={toggleAccountMenu}
+                />
+                {isAccountOpen && (
+                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50">
+                    <ul className="text-sm">
+                      <li>
+                        <Link
+                          to="/profile"
+                          className="block px-4 py-2 hover:bg-gray-100"
+                          onClick={() => setIsAccountOpen(false)}
+                        >
+                          My Profile
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to="/orders"
+                          className="block px-4 py-2 hover:bg-gray-100"
+                          onClick={() => setIsAccountOpen(false)}
+                        >
+                          My Orders
+                        </Link>
+                      </li>
+                      <li
+                        className="block px-4 py-2 hover:bg-gray-100 text-red-500 cursor-pointer"
+                        onClick={() => {
+                          setToken("");
+                          localStorage.removeItem("token");
+                          setIsAccountOpen(false);
+                          toast.success("Logged out successfully!");
+                        }}
+                      >
+                        Logout
+                      </li>
+                    </ul>
+                  </div>
+                )}
+              </>
+            ) : (
+              <Link to="/login">
+                <img src={profileIcon} alt="Login" className="w-6 h-6" />
+              </Link>
+            )}
+          </div>
+
           <Link to="/search">
             <img src={searchIcon} alt="Search" className="w-6 h-6" />
           </Link>
@@ -145,19 +246,78 @@ const Header = () => {
         } overflow-hidden`}
       >
         <div className="p-4">
-          <div onClick={() => setVisible(false)} className="flex items-center gap-3 mb-6 cursor-pointer">
+          <div
+            onClick={() => setVisible(false)}
+            className="flex items-center gap-3 mb-6 cursor-pointer"
+          >
             <img src={dropdown} className="h-4 rotate-180" alt="Back" />
             <span>Back</span>
           </div>
           <nav>
             <ul className="flex flex-col space-y-4 text-lg font-light">
-              <li><Link onClick={() => setVisible(false)} to="/collection" className="hover:underline">Shop Now</Link></li>
-              <li><Link onClick={() => setVisible(false)} to="/about" className="hover:underline">About</Link></li>
-              <li><Link onClick={() => setVisible(false)} to="/Contact-us" className="hover:underline">Contact Us</Link></li>
-              <li><Link onClick={() => setVisible(false)} to="/styleguide" className="hover:underline">Style Guide</Link></li>
-              <li><Link onClick={() => setVisible(false)} to="/Customer-support" className="hover:underline">Customer Support</Link></li>
-              <li><Link onClick={() => setVisible(false)} to="/Returns-and-refunds" className="hover:underline">Returns & Exchange</Link></li>
-              <li><Link onClick={() => setVisible(false)} to="/Privacy-policy" className="hover:underline">Privacy Policy</Link></li>
+              <li>
+                <Link
+                  onClick={() => setVisible(false)}
+                  to="/collection"
+                  className="hover:underline"
+                >
+                  Shop Now
+                </Link>
+              </li>
+              <li>
+                <Link
+                  onClick={() => setVisible(false)}
+                  to="/about"
+                  className="hover:underline"
+                >
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link
+                  onClick={() => setVisible(false)}
+                  to="/Contact-us"
+                  className="hover:underline"
+                >
+                  Contact Us
+                </Link>
+              </li>
+              <li>
+                <Link
+                  onClick={() => setVisible(false)}
+                  to="/styleguide"
+                  className="hover:underline"
+                >
+                  Style Guide
+                </Link>
+              </li>
+              <li>
+                <Link
+                  onClick={() => setVisible(false)}
+                  to="/Customer-support"
+                  className="hover:underline"
+                >
+                  Customer Support
+                </Link>
+              </li>
+              <li>
+                <Link
+                  onClick={() => setVisible(false)}
+                  to="/Returns-and-refunds"
+                  className="hover:underline"
+                >
+                  Returns & Exchange
+                </Link>
+              </li>
+              <li>
+                <Link
+                  onClick={() => setVisible(false)}
+                  to="/Privacy-policy"
+                  className="hover:underline"
+                >
+                  Privacy Policy
+                </Link>
+              </li>
             </ul>
           </nav>
         </div>
