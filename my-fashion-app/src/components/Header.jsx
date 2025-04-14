@@ -21,6 +21,7 @@ const Header = () => {
   const {
     getCartCount,
     getWishlistCount,
+    setCartItems,
     token,
     setToken,
   } = useContext(ShopContext);
@@ -217,6 +218,7 @@ const Header = () => {
                           setToken("");
                           localStorage.removeItem("token");
                           setIsAccountOpen(false);
+                          setCartItems({});
                           toast.success("Logged out successfully!");
                         }}
                       >
