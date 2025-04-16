@@ -179,6 +179,7 @@ const ShopContextProvider = (props) => {
             
         }
     }
+      
 
     useEffect(() => {
         if (!token && localStorage.getItem('token')) {

@@ -75,22 +75,39 @@ const registerUser = async (req, res) => {
  }
 
 // Route for admin login
-const adminLogin = async (req, res) =>{
+const adminLogin = async (req, res) => {
    try {
-      const { email, password } = req.body
-      if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD){
-         const token = jwt.sign(email+password, process.env.JWT_SECRET);
-         res.json({ success: true, token })
-      
-      }else{
-         res.json({ success: false, message: "Invalid credentials"})
-      }   
+     const { email, password } = req.body;
+ 
+     if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+       // Check if admin already exists in DB
+       let admin = await userModel.findOne({ email });
+ 
+       if (!admin) {
+         // Save admin to DB with hashed password
+         const salt = await bcrypt.genSalt(10);
+         const hashedPassword = await bcrypt.hash(password, salt);
+ 
+         admin = new userModel({
+           name: "Admin",
+           email,
+           password: hashedPassword
+         });
+ 
+         await admin.save();
+       }
+ 
+       // Create token
+       const token = createToken(admin._id);
+       res.json({ success: true, token });
+     } else {
+       res.json({ success: false, message: "Invalid credentials" });
+     }
+ 
    } catch (error) {
-      console.log(error);
-      res.json({ success: false, message: error.message });
-      
+     console.log(error);
+     res.json({ success: false, message: error.message });
    }
-
-}
-
+ };
+ 
 export { loginUser, registerUser, adminLogin }
