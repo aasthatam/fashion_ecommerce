@@ -2,7 +2,7 @@ import os
 import numpy as np
 import pickle as pkl
 from numpy.linalg import norm
-from flask import Flask, request, jsonify, send_from_directory  # 🔥 NEW
+from flask import Flask, request, jsonify, send_from_directory  # NEW
 from flask_cors import CORS
 from tensorflow.keras.applications.resnet50 import ResNet50, preprocess_input
 from tensorflow.keras.preprocessing import image
