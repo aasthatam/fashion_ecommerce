@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { ChevronRight } from "lucide-react";
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
-import { colorOptions, categoryOptions, fabricsOptions, sortOptions } from "../assets/assets";
+import {  sortOptions, hexToColorName } from "../assets/assets";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
@@ -63,8 +63,9 @@ const Collection = () => {
 
   const pageTitles = {
     "new-arrivals": "New Arrivals",
-    "top": "Tops",
+    "tops": "Tops",
     "shirts": "Shirts",
+    "outerwears": "Outerwears",
     "sweaters": "Sweaters",
     "pants": "Pants",
     "dresses": "Dresses",
@@ -137,21 +138,24 @@ const Collection = () => {
 
   // Filter and sort products
   const filteredProducts = products.filter((product) => {
-    const colorMatch = selectedColors.length === 0 || selectedColors.includes(product.color);
+    const hexColors = Array.isArray(product.colors) ? product.colors : [product.colors].filter(Boolean);
+    const colorNames = hexColors.map(hex => hexToColorName[hex.toLowerCase()] || "").filter(Boolean);
+    const colorMatch = selectedColors.length === 0 || colorNames.some(name => selectedColors.includes(name));
     const fabricMatch = selectedFabrics.length === 0 || selectedFabrics.includes(product.fabric);
-
+  
     if (category === "new-arrivals") {
       return product.isNewArrival && colorMatch && fabricMatch;
     }
-
+  
     if (category !== "collection") {
       const normalize = (str) => str.toLowerCase().replace(/\s+/g, '-').replace('&', 'and');
       const productCategory = normalize(product.category);
       return productCategory === category && colorMatch && fabricMatch;
     }
-
+  
     return colorMatch && fabricMatch;
   });
+  
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     if (sortBy === "Best Selling") return b.bestselling ? 1 : -1;
@@ -168,6 +172,57 @@ const Collection = () => {
   const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
   const paginatedProducts = sortedProducts.slice(startIndex, startIndex + PRODUCTS_PER_PAGE);
 
+  const generateColorCounts = () => {
+    const colorMap = {};
+  
+    products.forEach(product => {
+      const hexColors = Array.isArray(product.colors) ? product.colors : [product.colors].filter(Boolean);
+      hexColors.forEach(hex => {
+        const colorName = hexToColorName[hex.toLowerCase()];
+        if (colorName) {
+          colorMap[colorName] = (colorMap[colorName] || 0) + 1;
+        }
+      });
+    });
+  
+    return Object.entries(colorMap)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count); // Optional: sort by count
+  };
+
+  const generateCategoryCounts = () => {
+    const categoryMap = {};
+    products.forEach(product => {
+      const category = product.category;
+      if (category) {
+        categoryMap[category] = (categoryMap[category] || 0) + 1;
+      }
+    });
+  
+    return Object.entries(categoryMap).map(([name, count]) => ({
+      name,
+      count,
+      key: name.toLowerCase().replace(/\s+/g, '-').replace('&', 'and')
+    }));
+  };
+
+  const generateFabricCounts = () => {
+    const fabricMap = {};
+    products.forEach(product => {
+      const fabric = product.fabric;
+      if (fabric) {
+        fabricMap[fabric] = (fabricMap[fabric] || 0) + 1;
+      }
+    });
+  
+    return Object.entries(fabricMap).map(([name, count]) => ({
+      name,
+      count
+    }));
+  };
+  
+  const dynamicColorOptions = generateColorCounts();
+
   return (
     <div className="font-sans p-6 md:p-10">
       <a href="/" className="text-gray-500 text-sm mb-4 inline-block hover:underline">
@@ -179,19 +234,19 @@ const Collection = () => {
         <div className="flex gap-6">
           <FilterDropdown 
             title="Color" 
-            options={colorOptions} 
+            options={dynamicColorOptions} 
             selectedOptions={selectedColors}
             onOptionChange={handleColorChange}
           />
           <FilterDropdown 
             title="Categories" 
-            options={categoryOptions}
+            options={generateCategoryCounts()}
             selectedOptions={selectedCategories}
             onOptionChange={handleCategoryChange}
           />
           <FilterDropdown 
             title="Fabrics" 
-            options={fabricsOptions}
+            options={generateFabricCounts()}
             selectedOptions={selectedFabrics}
             onOptionChange={handleFabricChange} 
           />

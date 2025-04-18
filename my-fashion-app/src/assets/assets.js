@@ -120,18 +120,45 @@ import StraightLegJeanLightWash5 from "./StraightLegJeansLightWashed5.png";
 import StraightLegJeanLightWash6 from "./StraightLegJeansLightWashed6.png";
 
 export const colorOptions = [
-    { name: "Black", count: 6 },
-    { name: "Blue", count: 20 },
-    { name: "Brown", count: 10 },
-    { name: "Neutral", count: 23 },
-    { name: "Gray", count: 16 },
-    { name: "Green", count: 12 },
-    { name: "Pink", count: 10 },
-    { name: "Red", count: 7 },
-    { name: "White", count: 24 },
-    { name: "Yellow", count: 29 },
-  ];
+  { name: "Black", count: 6 },
+  { name: "White", count: 24 },
+  { name: "Beige", count: 23 },       // Includes Tan, Neutral
+  { name: "Brown", count: 10 },
+  { name: "Red", count: 7 },          // Includes Crimson, Scarlet
+  { name: "Pink", count: 10 },        // Includes Magenta
+  { name: "Blue", count: 20 },        // Includes Navy, Denim
+  { name: "Gray", count: 16 },        // Includes Charcoal
+  { name: "Ivory", count: 5 },        // If needed separately
+  { name: "Sky Blue", count: 3 },     // Optional
+  { name: "Mint", count: 2 },         // Optional
+  { name: "Maroon", count: 1 },       // Optional
+  { name: "Champagne", count: 1 },    // Optional
+];
 
+  export const hexToColorName = {
+    "#17202a": "Black",
+    "#000000": "Black",
+    "#ffffff": "White",
+    "#FFFF": "White",
+    "#f5f5dc": "Beige",
+    "#d3b8a0": "Beige",
+    "#d2b48c": "Beige",
+    "#8b572a": "Brown",
+    "#622F22": "Brown",
+    "#c9b8a4": "Champagne",
+    "#f44336": "Red",
+    "#ff0000": "Red",
+    "#d32f2f": "Red",
+    "#800000": "Maroon",
+    "#F3F8F2": "Mint",
+    "#03256C": "Blue",
+    "#44648D": "Blue",
+    "#79BAEC": "Sky Blue",
+    "#DB3069": "Pink",
+    "#F2EDEB": "Ivory",
+    "#3C3C3B": "Gray"
+  };
+  
   export const categoryOptions = [
     { name: "New Arrivals", key: "new-arrivals", count: 80 },  // Changed from "New-Arrivals"
     { name: "Tops", key: "tops", count: 6 },
