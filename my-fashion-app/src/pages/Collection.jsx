@@ -6,6 +6,7 @@ import { colorOptions, categoryOptions, fabricsOptions, sortOptions } from "../a
 import { useLocation, useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
+import { toast } from "react-toastify";
 
 const PRODUCTS_PER_PAGE = 8; // Number of products per page
 
@@ -84,20 +85,23 @@ const Collection = () => {
   }, [category, selectedColors, selectedFabrics, sortBy]);
 
   const handleWishlistToggle = (product) => {
-    const isWishlisted = wishlistItems.some(item => item.id === product.id);
-    const size = product.size || 'default';
+    const size = product.size || "default";
+    const isWishlisted = wishlistItems.some(item => item._id === product._id && item.size === size);
   
     if (isWishlisted) {
-      removeFromWishlist(product.id, size);
+      removeFromWishlist(product._id, size);
+      toast.info("Removed from wishlist");
     } else {
-      addToWishlist(product.id, size);
+      addToWishlist(product._id, size);
+      toast.success("Added to wishlist");
     }
   
-    // Notify other parts of the app
+    // Notify other components if needed
     window.dispatchEvent(new CustomEvent("wishlistUpdated", {
       detail: wishlistItems
     }));
   };
+  
 
   const handleColorChange = (color) => {
     setSelectedColors(prev =>
@@ -224,7 +228,7 @@ const Collection = () => {
               <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
               <img
                   src={
-                    wishlistItems.some(wItem => wItem.id === item.id)
+                    wishlistItems.some(wItem => wItem._id === item._id)
                       ? heartIconFilled
                       : heartIcon
                   }

@@ -122,33 +122,51 @@ const ShopContextProvider = (props) => {
     };
 
     // Add item to wishlist
-    const addToWishlist = (itemId, size) => {
+    const addToWishlist = async (itemId, size) => {
         if (!size) {
-            toast.error('Select product size');
-            return;
+          toast.error('Select product size');
+          return;
         }
-
-        const alreadyInWishlist = wishlistItems.some(item => item.id === itemId && item.size === size);
+      
+        const alreadyInWishlist = wishlistItems.some(item => item._id === itemId && item.size === size);
         if (alreadyInWishlist) {
-            toast.info('Item is already in wishlist');
-            return;
+          toast.info('Item is already in wishlist');
+          return;
         }
-
-        const product = products.find(p => p.id === itemId);
+      
+        const product = products.find(p => p._id === itemId);
         if (product) {
-            setWishlistItems((prevWishlist) => [
-                ...prevWishlist,
-                { ...product, size }
-            ]);
+          const newItem = { ...product, size };
+          setWishlistItems(prev => [...prev, newItem]);
+      
+          if (token) {
+            try {
+              await axios.post(backendUrl + '/api/wishlist/add', { itemId, size }, { headers: { token } });
+            } catch (error) {
+              toast.error("Failed to sync wishlist.");
+              console.error(error);
+            }
+          }
         }
-    };
+      };
+      
 
     // Remove item from wishlist
-    const removeFromWishlist = (itemId, size) => {
-        setWishlistItems((prevWishlist) =>
-            prevWishlist.filter(item => !(item.id === itemId && item.size === size))
+    const removeFromWishlist = async (itemId, size) => {
+        setWishlistItems(prev =>
+          prev.filter(item => !(item._id === itemId && item.size === size))
         );
-    };
+      
+        if (token) {
+          try {
+            await axios.post(backendUrl + '/api/wishlist/remove', { itemId, size }, { headers: { token } });
+          } catch (error) {
+            toast.error("Failed to remove from wishlist.");
+            console.error(error);
+          }
+        }
+      };
+      
 
     // Get total count of items in cart
     const getCartCount = () => {
@@ -180,6 +198,22 @@ const ShopContextProvider = (props) => {
             
         }
     }
+
+    const getUserWishlist = async (token) => {
+        try {
+          const response = await axios.post(backendUrl + '/api/wishlist/get', {}, { headers: { token } });
+          if (response.data.success) {
+            const wishlistData = response.data.wishlistData;
+            const formatted = wishlistData.map(({ itemId, size }) => {
+              const product = products.find(p => p._id?.toString() === itemId);
+              return product ? { ...product, size } : null;
+            }).filter(Boolean);
+            setWishlistItems(formatted);
+          }
+        } catch (error) {
+          toast.error(error.message);
+        }
+      };
       
 
     // useEffect(() => {
@@ -198,6 +232,7 @@ const ShopContextProvider = (props) => {
       
         if (storedToken) {
           getUserCart(storedToken);
+          getUserWishlist(storedToken);
         }
       }, [token]);
 
@@ -235,11 +270,11 @@ const ShopContextProvider = (props) => {
         getProductsData()
     }, [])
 
-    useEffect(() => {
-    if (!token && localStorage.getItem('token')) {
-        setToken(localStorage.getItem('token'))
-    }
-    })
+    // useEffect(() => {
+    // if (!token && localStorage.getItem('token')) {
+    //     setToken(localStorage.getItem('token'))
+    // }
+    // })
 
     const value = {
         products,
@@ -259,7 +294,8 @@ const ShopContextProvider = (props) => {
         setWishlistItems,
         addToWishlist,
         removeFromWishlist,
-        getWishlistCount, 
+        getWishlistCount,
+        getUserWishlist, 
         navigate,
         backendUrl,
         setToken,
