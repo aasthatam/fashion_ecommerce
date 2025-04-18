@@ -182,12 +182,24 @@ const ShopContextProvider = (props) => {
     }
       
 
+    // useEffect(() => {
+    //     if (!token && localStorage.getItem('token')) {
+    //         setToken(localStorage.getItem('token'))
+    //         getUserCart(localStorage.getItem('token'))
+    //     }
+    // })
+
     useEffect(() => {
-        if (!token && localStorage.getItem('token')) {
-            setToken(localStorage.getItem('token'))
-            getUserCart(localStorage.getItem('token'))
+        const storedToken = localStorage.getItem('token');
+      
+        if (storedToken && token !== storedToken) {
+          setToken(storedToken);
         }
-    })
+      
+        if (storedToken) {
+          getUserCart(storedToken);
+        }
+      }, [token]);
 
     // Get total count of items in wishlist
     const getWishlistCount = () => {
@@ -222,7 +234,7 @@ const ShopContextProvider = (props) => {
     useEffect(() => {
         getProductsData()
     }, [])
-    
+
     useEffect(() => {
     if (!token && localStorage.getItem('token')) {
         setToken(localStorage.getItem('token'))
@@ -251,7 +263,8 @@ const ShopContextProvider = (props) => {
         navigate,
         backendUrl,
         setToken,
-        token
+        token,
+        
     };
 
     return (

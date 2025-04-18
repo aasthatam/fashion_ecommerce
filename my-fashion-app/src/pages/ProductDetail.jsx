@@ -14,7 +14,7 @@ function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState('S');
   const [selectedImage, setSelectedImage] = useState(0);
   const thumbnailRef = useRef(null); 
-  const {  currency, addToCart , addToWishlist, backendUrl } = useContext(ShopContext); 
+  const {  currency, addToCart , addToWishlist, backendUrl} = useContext(ShopContext); 
   const [ product, setProduct ] = useState(null);
 
   useEffect(() => {
@@ -262,7 +262,7 @@ function ProductDetailPage() {
           {/* Buttons */}
           <div className="flex flex-col space-y-4">
             <div className="flex space-x-4">
-              <button onClick={() => addToCart(product.id, selectedSize)} className="px-6 py-3 rounded-md border border-black bg-white text-black flex-1 hover:bg-gray-100 transition">
+              <button onClick={() => addToCart(product._id, selectedSize)} className="px-6 py-3 rounded-md border border-black bg-white text-black flex-1 hover:bg-gray-100 transition">
                 Add to bag
               </button>
               <button 

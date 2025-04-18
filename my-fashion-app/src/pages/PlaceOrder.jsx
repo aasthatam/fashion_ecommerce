@@ -73,7 +73,7 @@ const PlaceOrder = () => {
   for (const productId in cartItems) {
     for (const size in cartItems[productId]) {
       const quantity = cartItems[productId][size];
-      const product = products.find((p) => p.id.toString() === productId);
+      const product = products.find(p => p._id?.toString() === productId);
 
       if (product) {
         cartList.push({
