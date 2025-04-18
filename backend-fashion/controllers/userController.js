@@ -3,9 +3,13 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-const createToken = (id) => {
-    return jwt.sign({id}, process.env.JWT_SECRET)
+// const createToken = (id) => {
+//     return jwt.sign({id}, process.env.JWT_SECRET)
+// }
+const createToken = (payload) => {
+   return jwt.sign(payload, process.env.JWT_SECRET);
 }
+
 // Route for user login
 const loginUser = async (req, res) => {
    try {
@@ -16,7 +20,8 @@ const loginUser = async (req, res) => {
       }
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
-         const token = createToken(user._id)
+         // const token = createToken(user._id)
+         const token = createToken({ id: user._id, role: user.role });
          res.json({success: true, token})
       }
       else{
@@ -63,7 +68,8 @@ const registerUser = async (req, res) => {
        const user = await newUser.save();
  
        // Create JWT token
-       const token = createToken(user._id);
+      //  const token = createToken(user._id);
+      const token = createToken({ id: user._id, role: user.role });
  
        // Send response with token
        res.json({ success: true, token });
@@ -91,14 +97,16 @@ const adminLogin = async (req, res) => {
          admin = new userModel({
            name: "Admin",
            email,
-           password: hashedPassword
+           password: hashedPassword,
+           role: "admin"  
          });
  
          await admin.save();
        }
  
        // Create token
-       const token = createToken(admin._id);
+      //  const token = createToken(admin._id);
+      const token = createToken({ id: admin._id, role: "admin" });
        res.json({ success: true, token });
      } else {
        res.json({ success: false, message: "Invalid credentials" });
@@ -108,6 +116,20 @@ const adminLogin = async (req, res) => {
      console.log(error);
      res.json({ success: false, message: error.message });
    }
+
+   // try{
+   //    const {email, password} = req.body
+   //    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+   //       const json = jwt.sign(email+password, process.env.JWT_SECRET);
+   //       res.json({success: true, token})
+   //    } else {
+   //       res.json({success: false, message: 'Invalid credentials'})
+   //    }
+   // } catch(error){
+   //    console.log(error);
+   //    res.json({ success: false, message: error.message });
+
+   // }
  };
  
 export { loginUser, registerUser, adminLogin }

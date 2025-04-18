@@ -15,12 +15,16 @@ function RecommendationsSection({ currentProductId, category }) {
 
   useEffect(() => {
     console.log('Current Category:', category); // Debugging category value
-  }, [category]);
+  }, [category, products]);
 
   // Get recommended products based on the same category, excluding the current product
   const recommendedProducts = products
-    .filter((product) => product.category === category && product.id !== currentProductId)
-    .slice(0, 8); // Limit to top 8 products
+  .filter((product) => 
+    product.category === category && product._id !== currentProductId
+  )
+  .slice(0, 8);
+ 
+
 
   return (
     <div className="mt-16">
@@ -32,27 +36,27 @@ function RecommendationsSection({ currentProductId, category }) {
         {recommendedProducts.length > 0 ? (
           recommendedProducts.map((product) => {
             const isWishlisted = wishlistItems.some(
-              (item) => item.id === product.id
+              (item) => item.id === product._id
             );
 
             const handleWishlistToggle = () => {
               if (isWishlisted) {
-                removeFromWishlist(product.id, product.size || 'default');
+                removeFromWishlist(product._id, product.size || 'default');
               } else {
-                addToWishlist(product.id, product.size || 'default');
+                addToWishlist(product._id, product.size || 'default');
               }
             };
 
             return (
-              <div key={product.id} className="relative group">
+              <div key={product._id} className="relative group">
                 {/* Product Image with Link */}
-                <Link to={`/product/${product.id}`}>
+                <Link to={`/product/${product._id}`}>
                   <div className="relative">
                     <img
                       src={
-                        Array.isArray(product.image)
-                          ? product.image[0]
-                          : product.image
+                        Array.isArray(product.images)
+                          ? product.images[0]
+                          : product.images
                       }
                       alt={product.name}
                       className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"

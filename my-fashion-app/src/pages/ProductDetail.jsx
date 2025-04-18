@@ -1,10 +1,11 @@
-import React, { useState, useRef, useContext } from 'react'; 
+import React, { useState, useRef, useContext, useEffect } from 'react'; 
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { useParams } from 'react-router-dom';
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
 import { ShopContext } from '../context/ShopContext';
 import RecommendationsSection from '../components/RecommendationsSection';
+import axios from 'axios';
 
 function ProductDetailPage() {
   const { id } = useParams();
@@ -13,9 +14,27 @@ function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState('S');
   const [selectedImage, setSelectedImage] = useState(0);
   const thumbnailRef = useRef(null); 
-  const { products, currency, addToCart , addToWishlist } = useContext(ShopContext); 
+  const {  currency, addToCart , addToWishlist, backendUrl } = useContext(ShopContext); 
+  const [ product, setProduct ] = useState(null);
 
-  const product = products.find((prod) => prod.id === parseInt(id));
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const response = await axios.post(`${backendUrl}/api/product/single`, { productId: id });
+        if (response.data.success) {
+          setProduct(response.data.product);
+        } else {
+          console.error("Product not found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch product:", error);
+      }
+    };
+  
+    fetchProduct();
+  }, [id]);
+
+  // const product = products.find((prod) => prod.id === parseInt(id));
 
   if (!product) {
     return <div className="max-w-6xl mx-auto px-4 py-8">Product not found</div>;
@@ -60,7 +79,7 @@ function ProductDetailPage() {
     }
   };
 
-  const productImages = Array.isArray(product.image) ? product.image : [product.image];
+  const productImages = Array.isArray(product.images) ? product.images : [product.images];
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
@@ -152,9 +171,6 @@ function ProductDetailPage() {
         <div className="w-full md:w-1/2">
           <h1 className="text-2xl font-medium mb-2">{product.name}</h1>
           <p className="text-xl mb-1">{currency}{product.price.toFixed(2)}</p>
-          {product.code && (
-            <p className="text-gray-500 text-sm mb-4">CODE: {product.code}</p>
-          )}
           <p className={`text-sm mb-4 ${product.availability === "In Stock" ? "text-green-600" : "text-red-600"}`}>
             {product.availability || "In Stock"}
           </p>
@@ -164,7 +180,7 @@ function ProductDetailPage() {
             <div className="mb-4">
               <p className="text-sm mb-2">Color</p>
               <div className="flex space-x-2">
-                {product.colors.map((color, index) => (
+              {product.colors.split(',').map((color, index) => (
                   <div 
                     key={index} 
                     className="w-6 h-6 rounded-full border border-gray-300" 
@@ -217,7 +233,7 @@ function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Details */}
+          {/* Details
           {product.details && product.details.length > 0 && (
             <div className="mb-6">
               <h3 className="font-medium mb-2">Details</h3>
@@ -227,7 +243,21 @@ function ProductDetailPage() {
                 ))}
               </ul>
             </div>
-          )}
+          )} */}
+
+            {product.details && (
+              <div className="mb-6">
+                <h3 className="font-medium mb-2">Details</h3>
+                <ul className="text-sm space-y-1">
+                  {product.details
+                    .split(/\r?\n/)
+                    .filter(line => line.trim() !== "")
+                    .map((line, index) => (
+                      <li key={index}>• {line}</li>
+                    ))}
+                </ul>
+              </div>
+            )}
 
           {/* Buttons */}
           <div className="flex flex-col space-y-4">
@@ -253,7 +283,7 @@ function ProductDetailPage() {
         </div>
       </div>
       {/* Recommendations Section */}
-      <RecommendationsSection currentProductId={product.id} category={product.category} />
+      <RecommendationsSection currentProductId={product._id} category={product.category} />
     </div>
   );
 }

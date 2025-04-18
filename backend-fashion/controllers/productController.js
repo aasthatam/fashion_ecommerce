@@ -4,7 +4,7 @@ import productModel from "../models/productModel.js";
 // function for add product
 const addProduct = async (req,res) => {
    try {
-    const { name, details, price, category, sizes, bestselling, fabric, isNewArrival, code, availability, colors } = req.body
+    const { name, details, price, category, sizes, bestselling, fabric, tags, isNewArrival, availability, colors } = req.body
     const image1 = req.files.image1 && req.files.image1[0]
     const image2 = req.files.image2 && req.files.image2[0]
     const image3 = req.files.image3 && req.files.image3[0]
@@ -25,12 +25,12 @@ const addProduct = async (req,res) => {
         price: Number(price),
         category,
         sizes: JSON.parse(sizes),
-        bestselling: bestselling === "true" ? "true" : "false",
+        bestselling: bestselling === "true" ? true : false,
         images: imagesUrl,
         createdAt: Date.now(),
         fabric: fabric || "",
+        tags: tags ? JSON.parse(tags) : [],
         isNewArrival: isNewArrival === "true",
-        code: code && code.trim() !== "" ? code : `${name.replace(/\s+/g, "-")}-${Date.now()}`,
         availability: availability || "In Stock",
         colors: colors || ""
     }
@@ -88,4 +88,4 @@ const singleProduct = async (req,res) => {
 
 }
 
-export { addProduct, listProduct, removeProduct, singleProduct };
+export { addProduct, listProduct, removeProduct, singleProduct};

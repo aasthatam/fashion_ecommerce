@@ -12,7 +12,8 @@ const NewArrivals = ({handleViewNewArrivals}) => {
   const [latestProducts, setLatestProducts] = useState([]);
 
   useEffect(() =>{
-    setLatestProducts(products.slice(0,3));
+    const newArrivals = products.filter(item => item.isNewArrival);
+    setLatestProducts(newArrivals.slice(0, 3));
   }, [products]);
 
   return (
@@ -22,10 +23,10 @@ const NewArrivals = ({handleViewNewArrivals}) => {
         {
         latestProducts.map((item, index) => (
           <div key={index} className="text-center relative">
-            <Link to={`/product/${item.id}`}>
+            <Link to={`/product/${item._id}`}>
               <div className="group overflow-hidden">
                 <img
-                  src={item.image[0]}
+                  src={item.images[0]}
                   alt={item.name}
                   className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110"
                 />

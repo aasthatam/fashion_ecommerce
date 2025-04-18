@@ -43,22 +43,21 @@ const PlaceOrder = () => {
           }
         }
       }
-  
       let orderData = {
+      
         address: formData,
         items: orderItems,
         amount: totalPrice + delivery_fee,
-        paymentMethod: "COD" // optional: for backend clarity
+        paymentMethod: "COD"
       };
   
       const response = await axios.post(backendUrl + '/api/order/place', orderData, {
         headers: { token }
       });
-      console.log(response.data);
   
       if (response.data.success) {
         setCartItems({});
-        localStorage.removeItem("cartItems"); // optional: clear saved cart
+        localStorage.removeItem("cartItems");
         navigate('/orders');
       } else {
         toast.error(response.data.message || "Failed to place order");

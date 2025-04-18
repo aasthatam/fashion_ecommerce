@@ -13,9 +13,14 @@ const Add = ({token}) => {
   const [name, setName] = useState("");
   const [details, setDetails] = useState("");
   const [price, setPrice] = useState("");
-  const [category, setCategory] = useState("Top");
+  const [category, setCategory] = useState("Tops");
   const [bestselling, setBestselling] = useState(false);
   const [sizes, setSizes] = useState([]);
+  const [fabric, setFabric] = useState('');
+  const [isNewArrival, setIsNewArrival] = useState(false);
+  const [availability, setAvailability] = useState('In Stock');
+  const [colors, setColors] = useState('');
+  const [tags, setTags] = useState([]);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -27,6 +32,11 @@ const Add = ({token}) => {
       formData.append("category", category)
       formData.append("bestselling", bestselling)
       formData.append("sizes", JSON.stringify(sizes))
+      formData.append("fabric", fabric)
+      formData.append("tags", JSON.stringify(tags))
+      formData.append("isNewArrival", isNewArrival)
+      formData.append("availability", availability)
+      formData.append("colors", colors)
 
       image1 && formData.append("image1", image1)
       image2 && formData.append("image2", image2)
@@ -43,6 +53,14 @@ const Add = ({token}) => {
         setImage3(false)
         setImage4(false)
         setPrice('')
+        setBestselling(false)
+        setSizes([])
+        setFabric('')
+        setIsNewArrival(false)
+        setAvailability('In Stock')
+        setColors('')
+        setTags([])
+        
       } else {
         toast.error(response.data.message)
       }
@@ -90,9 +108,10 @@ const Add = ({token}) => {
         <div>
           <p className='mb-2'>Product Category</p>
           <select onChange={(e)=>setCategory(e.target.value)} value={category} className='w-full px-3 py-2'>
-             <option value="Top">Top</option>
+             <option value="Tops">Tops</option>
              <option value="Shirts">Shirts</option>
              <option value="Sweaters">Sweaters</option>
+             <option value="Outerwears">Outerwears</option>
              <option value="Pants">Pants</option>
              <option value="Dresses">Dresses</option>
              <option value="Bottoms">Bottoms</option>
@@ -133,9 +152,54 @@ const Add = ({token}) => {
         <input onChange={() => setBestselling(prev => !prev)} checked = {bestselling} type="checkbox" id="bestselling"/>
         <label className ="cursor-pointer" htmlFor="bestselling">Add to bestselling</label>
       </div>
-      <button type='submit' className='w-28 py-3 mt-4 bg-black text-white'> ADD </button>
 
- 
+      {/* New fields start here */}
+      <div className="flex gap-2 mt-2">
+        <input onChange={() => setIsNewArrival(prev => !prev)} checked={isNewArrival} type="checkbox" id="isNewArrival" />
+        <label className="cursor-pointer" htmlFor="isNewArrival">Mark as New Arrival</label>
+      </div>
+
+      <div className='w-full'>
+        <p className="mb-2">Fabric</p>
+        <input onChange={(e) => setFabric(e.target.value)} value={fabric} className="w-full max-w-[500px] px-3 py-2" type="text" placeholder='Cotton, Silk, etc.' />
+      </div>
+
+      <div className='w-full'>
+        <p className="mb-2">Availability</p>
+        <select onChange={(e) => setAvailability(e.target.value)} value={availability} className="w-full max-w-[500px] px-3 py-2">
+          <option value="In Stock">In Stock</option>
+          <option value="Out of Stock">Out of Stock</option>
+          <option value="Preorder">Preorder</option>
+        </select>
+      </div>
+
+      <div className='w-full'>
+        <p className="mb-2">Colors</p>
+        <input
+          onChange={(e) => setColors(e.target.value)}
+          value={colors}
+          className="w-full max-w-[500px] px-3 py-2"
+          type="text"
+          placeholder='#000000, #ffffff, #ff0000'
+        />
+      </div>
+
+      <div className="w-full">
+        <p className="mb-2">Tag</p>
+        <select
+          onChange={(e) => setTags([e.target.value])}
+          value={tags[0] || ""}
+          className="w-full max-w-[500px] px-3 py-2"
+        >
+          <option value="">Select a tag</option>
+          <option value="Save 10%">Save 10%</option>
+          <option value="Save 20%">Save 20%</option>
+          <option value="Save 30%">Save 30%</option>
+          <option value="Save 40%">Save 40%</option>
+          <option value="Save 50%">Save 50%</option>
+        </select>
+      </div>
+      <button type='submit' className='w-28 py-3 mt-4 bg-black text-white rounded-md hover:bg-white hover:text-black hover:border hover:border-black transition duration-200'> ADD </button>
     </form>
     
   )

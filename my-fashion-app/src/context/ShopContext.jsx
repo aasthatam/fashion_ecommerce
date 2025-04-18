@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { products } from "../assets/assets.js";
+// import { products } from "../assets/assets.js";
 import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ const ShopContextProvider = (props) => {
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(true);
     const [token, setToken] = useState('');
+    const [products, setProducts] = useState([]);
     const navigate = useNavigate();
 
     // Load cartItems from localStorage on initial render
@@ -203,22 +204,25 @@ const ShopContextProvider = (props) => {
     }, [wishlistItems]);
 
     // Products fetch from backend 
-    // const getProductData = async () => {
-    //   try {
-    //     const response = await axios.get(backendUrl + '/api/product/list')
-    //     if(response.data.success){
-    //       setProducts(response.data.products)
-    //     } else{
-    //       toast.error(response.data.message)
-    //     }
+    const getProductsData = async () => {
+      try {
+        const response = await axios.get(backendUrl + '/api/product/list')
+        if(response.data.success){
+          setProducts(response.data.products)
+        } else{
+          toast.error(response.data.message)
+        }
         
-    //   } catch (error) {
-    //     console.log(error)
-    //     toast.error(error.message)
+      } catch (error) {
+        console.log(error)
+        toast.error(error.message)
         
-    //   }
-    // }
-
+      }
+    }
+    useEffect(() => {
+        getProductsData()
+    }, [])
+    
     useEffect(() => {
     if (!token && localStorage.getItem('token')) {
         setToken(localStorage.getItem('token'))

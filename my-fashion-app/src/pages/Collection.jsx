@@ -203,10 +203,10 @@ const Collection = () => {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
         {paginatedProducts.map((item) => (
           <div key={item.id} className="relative group overflow-hidden">
-            <Link to={`/product/${item.id}`}>
+            <Link to={`/product/${item._id}`}>
               <div className="overflow-hidden">
                 <img 
-                  src={Array.isArray(item.image) ? item.image[0] : item.image} 
+                  src={Array.isArray(item.images) ? item.images[0] : item.images} 
                   alt={item.name} 
                   className="w-full h-full transition-transform duration-300 group-hover:scale-110" 
                 />
