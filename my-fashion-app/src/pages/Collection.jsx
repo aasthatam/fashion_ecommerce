@@ -271,9 +271,9 @@ const Collection = () => {
                 />
               </div>
             </Link>
-            {item.tag && (
+            {Array.isArray(item.tags) && item.tags.length > 0 && item.tags[0] && (
               <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded-md">
-                {item.tag}
+                {item.tags[0]}
               </span>
             )}
             <button
