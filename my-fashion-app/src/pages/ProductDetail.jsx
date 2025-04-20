@@ -6,6 +6,7 @@ import heartIconFilled from "../assets/heart2.svg";
 import { ShopContext } from '../context/ShopContext';
 import RecommendationsSection from '../components/RecommendationsSection';
 import axios from 'axios';
+import { toast } from "react-toastify";
 
 function ProductDetailPage() {
   const { id } = useParams();
@@ -14,7 +15,7 @@ function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState('S');
   const [selectedImage, setSelectedImage] = useState(0);
   const thumbnailRef = useRef(null); 
-  const {  currency, addToCart , addToWishlist, backendUrl} = useContext(ShopContext); 
+  const { navigate, token, currency, addToCart , addToWishlist, backendUrl} = useContext(ShopContext); 
   const [ product, setProduct ] = useState(null);
 
   useEffect(() => {
@@ -262,9 +263,19 @@ function ProductDetailPage() {
           {/* Buttons */}
           <div className="flex flex-col space-y-4">
             <div className="flex space-x-4">
-              <button onClick={() => addToCart(product._id, selectedSize)} className="px-6 py-3 rounded-md border border-black bg-white text-black flex-1 hover:bg-gray-100 transition">
-                Add to bag
-              </button>
+            <button 
+              onClick={() => {
+                if (!token) {
+                  toast.error("Please login to add items to your cart");
+                  navigate("/login");
+                  return;
+                }
+                addToCart(product._id, selectedSize);
+              }}
+              className="px-6 py-3 rounded-md border border-black bg-white text-black flex-1 hover:bg-gray-100 transition"
+            >
+              Add to bag
+            </button>
               <button 
                 onClick={toggleProductLike}
                 className={`px-6 py-3 rounded-md flex-1 transition ${
