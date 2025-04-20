@@ -138,14 +138,6 @@ const Header = () => {
                   </li>
                   <li>
                     <Link
-                      to="/Customer-support"
-                      className="block px-4 py-2 hover:bg-gray-100"
-                    >
-                      Customer Support
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
                       to="/Returns-and-refunds"
                       className="block px-4 py-2 hover:bg-gray-100"
                     >
