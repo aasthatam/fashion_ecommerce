@@ -36,7 +36,7 @@ function RecommendationsSection({ currentProductId, category }) {
         {recommendedProducts.length > 0 ? (
           recommendedProducts.map((product) => {
             const isWishlisted = wishlistItems.some(
-              (item) => item.id === product._id
+              (item) => item._id === product._id
             );
 
             const handleWishlistToggle = () => {
