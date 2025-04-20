@@ -2,9 +2,12 @@ import React, { useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
 import removeIcon from "../assets/material-symbols-light_delete-outline.svg";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Wishlist = () => {
   const {
+    token,
+    navigate,
     wishlistItems,
     currency,
     removeFromWishlist,
@@ -12,6 +15,11 @@ const Wishlist = () => {
   } = useContext(ShopContext);
 
   const handleAddToCart = (itemId, size) => {
+    if (!token) {
+      toast.error("Please login to add items to your cart");
+      navigate("/login");
+      return;
+    }
     addToCart(itemId, size); // Add item to cart from wishlist
     removeFromWishlist(itemId, size); // Optionally remove it from wishlist after adding to cart
   };
