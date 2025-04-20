@@ -1,6 +1,6 @@
 import React, { useState, useRef, useContext, useEffect } from 'react'; 
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
 import { ShopContext } from '../context/ShopContext';
@@ -15,8 +15,10 @@ function ProductDetailPage() {
   const [selectedSize, setSelectedSize] = useState('S');
   const [selectedImage, setSelectedImage] = useState(0);
   const thumbnailRef = useRef(null); 
-  const { navigate, token, currency, addToCart , addToWishlist, backendUrl} = useContext(ShopContext); 
+  const { token, currency, addToCart , addToWishlist, removeFromWishlist, wishlistItems, backendUrl} = useContext(ShopContext); 
   const [ product, setProduct ] = useState(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -37,39 +39,30 @@ function ProductDetailPage() {
 
   // const product = products.find((prod) => prod.id === parseInt(id));
 
+  useEffect(() => {
+    if (product) {
+      const liked = wishlistItems.some(
+        (item) => item._id === product._id && item.size === selectedSize
+      );
+      setIsProductLiked(liked);
+    }
+  }, [wishlistItems, selectedSize, product]);
+
   if (!product) {
     return <div className="max-w-6xl mx-auto px-4 py-8">Product not found</div>;
   }
 
-  // // Check if the product is in the wishlist
-  // const initialWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-  // const isInWishlistInitially = initialWishlist.some(item => item.id === parseInt(id));
-
-  // useEffect(() => {
-  //   if (id) {
-  //     setIsProductLiked(isInWishlistInitially);
-  //   }
-  // }, [id, isInWishlistInitially]);
-
   const toggleProductLike = () => {
-    const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+    const isLiked = wishlistItems.some(
+      (item) => item._id === product._id && item.size === selectedSize
+    );
   
-    const existingIndex = wishlist.findIndex(item => item.id === product.id);
-  
-    let updatedWishlist;
-  
-    if (existingIndex !== -1) {
-      updatedWishlist = wishlist.filter(item => item.id !== product.id);
-      setIsProductLiked(false);
+    if (isLiked) {
+      removeFromWishlist(product._id, selectedSize);
+      toast.info("Removed from wishlist");
     } else {
-      updatedWishlist = [...wishlist, { id: product.id, size: selectedSize }];
-      setIsProductLiked(true);
-    }
-  
-    localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
-  
-    if (addToWishlist) {
-      addToWishlist(product.id, selectedSize); // Modify as needed for global context
+      addToWishlist(product._id, selectedSize);
+      toast.success("Added to wishlist");
     }
   };
 
@@ -276,7 +269,7 @@ function ProductDetailPage() {
             >
               Add to bag
             </button>
-              <button 
+            <button 
                 onClick={toggleProductLike}
                 className={`px-6 py-3 rounded-md flex-1 transition ${
                   isProductLiked 
