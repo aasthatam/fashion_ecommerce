@@ -7,6 +7,11 @@ const productSchema = new mongoose.Schema({
     images: { type: Array, required: true }, 
     category: { type: String, required: true },
     fabric: { type: String },
+    suitableBodyType: {
+        type: [String],
+        enum: ["peer", "triangle", "oval", "rectangle", "inverted_triangle", "hourglass", "diamond"],
+        required: true,
+    },
     bestselling: { type: Boolean },
     isNewArrival: { type: Boolean },
     tags: { type: [String], default: [] },
