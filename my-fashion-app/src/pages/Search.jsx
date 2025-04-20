@@ -8,9 +8,16 @@ import heartIconFilled from "../assets/heart2.svg";
 const Search = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [liked, setLiked] = useState({});
 
-  const { products, search, setSearch, currency } = useContext(ShopContext);
+  const {
+    products,
+    search,
+    setSearch,
+    currency,
+    wishlistItems,
+    addToWishlist,
+    removeFromWishlist,
+  } = useContext(ShopContext);
 
   const handleInputChange = (e) => {
     setSearch(e.target.value);
@@ -38,17 +45,24 @@ const Search = () => {
 
       const data = await response.json();
       console.log("Search Results:", data);
-      // Optionally set search based on backend response
+      // Update product list if needed
     } catch (error) {
       console.error("Error uploading image:", error);
     }
   };
-  // Toggle like for each product
+
+  const isItemLiked = (item) => {
+    return wishlistItems.some(
+      (w) => w._id === item._id && w.size === (item.size || "default")
+    );
+  };
+
   const toggleLike = (item) => {
-    setLiked((prev) => ({
-      ...prev,
-      [item.id]: !prev[item.id], // Toggle the liked status for the product
-    }));
+    if (isItemLiked(item)) {
+      removeFromWishlist(item._id, item.size || "default");
+    } else {
+      addToWishlist(item._id, item.size || "default");
+    }
   };
 
   const filteredProducts = products.filter((product) =>
@@ -105,28 +119,37 @@ const Search = () => {
       <div className="w-full max-w-6xl mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredProducts.length > 0 ? (
           filteredProducts.slice(0, 8).map((item) => (
-            <div key={item.id} className="relative group overflow-hidden">
-              <Link to={`/product/${item.id}`}>
+            <div key={item._id} className="relative group overflow-hidden">
+              {/* Clicking image navigates to product detail */}
+              <Link to={`/product/${item._id}`}>
                 <div className="overflow-hidden">
                   <img
-                    src={Array.isArray(item.image) ? item.image[0] : item.image}
+                    src={
+                      Array.isArray(item.images)
+                        ? item.images[0]
+                        : item.images
+                    }
                     alt={item.name}
-                    className="w-full h-full transition-transform duration-300 group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
               </Link>
+
+              {/* Wishlist Button */}
               <button
-                className="absolute top-2 right-2 text-gray-700"
+                className="absolute top-2 right-2 text-gray-700 z-10"
                 onClick={() => toggleLike(item)}
               >
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
                   <img
-                    src={liked[item.id] ? heartIconFilled : heartIcon}
+                    src={isItemLiked(item) ? heartIconFilled : heartIcon}
                     alt="Heart"
                     className="w-5 h-5"
                   />
                 </div>
               </button>
+
+              {/* Product Info */}
               <div className="mt-3 text-center">
                 <p className="text-sm">{item.name}</p>
                 <p className="text-lg font-medium">
