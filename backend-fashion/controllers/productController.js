@@ -88,4 +88,52 @@ const singleProduct = async (req,res) => {
 
 }
 
-export { addProduct, listProduct, removeProduct, singleProduct};
+const updateProduct = async (req, res) => {
+    try {
+      const {
+        id,
+        name,
+        details,
+        price,
+        category,
+        fabric,
+        sizes,
+        tags,
+        isNewArrival,
+        availability,
+        colors,
+        bestselling,
+        suitableBodyType
+      } = req.body;
+  
+      const updatedProduct = await productModel.findByIdAndUpdate(
+        id,
+        {
+          name,
+          details,
+          price: Number(price),
+          category,
+          fabric,
+          sizes: JSON.parse(sizes),
+          tags: JSON.parse(tags),
+          isNewArrival: isNewArrival === "true",
+          availability,
+          colors,
+          bestselling: bestselling === "true",
+          suitableBodyType: suitableBodyType ? JSON.parse(suitableBodyType) : [],
+        },
+        { new: true }
+      );
+  
+      if (!updatedProduct) {
+        return res.json({ success: false, message: "Product not found" });
+      }
+  
+      res.json({ success: true, message: "Product updated", product: updatedProduct });
+    } catch (error) {
+      console.log("Update Error:", error);
+      res.json({ success: false, message: error.message });
+    }
+  };
+
+export { addProduct, listProduct, removeProduct, singleProduct, updateProduct};
