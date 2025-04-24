@@ -21,6 +21,13 @@ const Add = ({token}) => {
   const [availability, setAvailability] = useState('In Stock');
   const [colors, setColors] = useState('');
   const [tags, setTags] = useState([]);
+  const [suitableBodyType, setSuitableBodyType] = useState([]);
+
+  const toggleBodyType = (type) => {
+    setSuitableBodyType((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
+  };
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
@@ -34,6 +41,7 @@ const Add = ({token}) => {
       formData.append("sizes", JSON.stringify(sizes))
       formData.append("fabric", fabric)
       formData.append("tags", JSON.stringify(tags))
+      formData.append("suitableBodyType", JSON.stringify(suitableBodyType));
       formData.append("isNewArrival", isNewArrival)
       formData.append("availability", availability)
       formData.append("colors", colors)
@@ -127,23 +135,23 @@ const Add = ({token}) => {
         <p className="mb-2">Product Sizes</p>
         <div className="flex gap-3">
           <div onClick={()=>setSizes(prev => prev.includes("S") ? prev.filter( item => item !== "S" ) : [...prev, "S"])}>
-            <p className= {`${sizes.includes("S") ? "bg-gray-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>S</p>
+            <p className= {`${sizes.includes("S") ? "bg-gray-200" : "bg-slate-300"} px-3 py-1 cursor-pointer`}>S</p>
           </div>
 
           <div onClick={()=>setSizes(prev => prev.includes("M") ? prev.filter( item => item !== "M" ) : [...prev, "M"])}>
-            <p className= {`${sizes.includes("M") ? "bg-gray-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>M</p>
+            <p className= {`${sizes.includes("M") ? "bg-gray-200" : "bg-slate-300"} px-3 py-1 cursor-pointer`}>M</p>
           </div>
 
           <div onClick={()=>setSizes(prev => prev.includes("L") ? prev.filter( item => item !== "L" ) : [...prev, "L"])}>
-            <p className= {`${sizes.includes("L") ? "bg-gray-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>L</p>
+            <p className= {`${sizes.includes("L") ? "bg-gray-200" : "bg-slate-300"} px-3 py-1 cursor-pointer`}>L</p>
           </div>
 
           <div onClick={()=>setSizes(prev => prev.includes("XL") ? prev.filter( item => item !== "XL" ) : [...prev, "XL"])}>
-            <p className= {`${sizes.includes("XL") ? "bg-gray-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>XL</p>
+            <p className= {`${sizes.includes("XL") ? "bg-gray-200" : "bg-slate-300"} px-3 py-1 cursor-pointer`}>XL</p>
           </div>
 
           <div onClick={()=>setSizes(prev => prev.includes("XXL") ? prev.filter( item => item !== "XXL" ) : [...prev, "XXL"])}>
-            <p className= {`${sizes.includes("XXL") ? "bg-gray-100" : "bg-slate-200"} px-3 py-1 cursor-pointer`}>XXL</p>
+            <p className= {`${sizes.includes("XXL") ? "bg-gray-200" : "bg-slate-300"} px-3 py-1 cursor-pointer`}>XXL</p>
           </div>
         </div>
       </div>
@@ -199,6 +207,23 @@ const Add = ({token}) => {
           <option value="Save 50%">Save 50%</option>
         </select>
       </div>
+      <div className="w-full">
+          <p className="mb-2">Suitable Body Types</p>
+          <div className="flex flex-wrap gap-3">
+            {["rectangle", "triangle", "inverted triangle", "spoon", "hourglass"].map((type) => (
+              <div
+                key={type}
+                onClick={() => toggleBodyType(type)}
+                className={`cursor-pointer px-3 py-1 rounded border ${
+                  suitableBodyType.includes(type) ? "bg-gray-200" : "bg-slate-300"
+                }`}
+              >
+                {type}
+              </div>
+            ))}
+          </div>
+        </div>
+
       <button type='submit' className='w-28 py-3 mt-4 bg-black text-white rounded-md hover:bg-white hover:text-black hover:border hover:border-black transition duration-200'> ADD </button>
     </form>
     
