@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
     fabric: { type: String },
     suitableBodyType: {
         type: [String],
-        enum: ["peer", "triangle", "oval", "rectangle", "inverted_triangle", "hourglass", "diamond"],
+        enum: ["rectangle", "triangle", "inverted triangle", "spoon", "hourglass"],
         required: true,
     },
     bestselling: { type: Boolean },
