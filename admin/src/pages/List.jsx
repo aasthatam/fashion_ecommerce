@@ -66,7 +66,16 @@ const List = ({token}) => {
             <p>{item.name}</p>
             <p>{item.category}</p>
             <p>{currency}{item.price}</p>
-            <p onClick={() =>removeProduct(item._id)}className="text-right md:text-center cursor-pointer text-lg">X</p>
+            <p className="flex justify-end md:justify-center gap-2">
+            <button onClick={() => removeProduct(item._id)} className="text-red-600 font-bold">X</button>
+            <a
+              href={`/admin/edit/${item._id}`}
+              className="text-blue-500 underline"
+            >
+              Edit
+            </a>
+          </p>
+
           </div>
         ))}
       </>
