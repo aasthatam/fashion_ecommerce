@@ -75,8 +75,7 @@ const List = ({token}) => {
               Edit
             </a>
           </p>
-
-          </div>
+       </div>  
         ))}
       </>
     )
