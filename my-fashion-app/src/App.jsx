@@ -16,6 +16,7 @@ import StyleGuide from "./pages/StyleGuide";
 import PlaceOrder from "./pages/PlaceOrder";
 import OrderDetails from "./pages/OrderDetails";
 import { ToastContainer } from 'react-toastify';
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 
 const App = () => {
@@ -38,6 +39,7 @@ const App = () => {
       <Route path="/orders" element={<OrderDetails/>} />
       <Route path="/:section" element={<CustomerSupport/>} />
       <Route path="/styleguide" element={<StyleGuide/>} />
+      <Route path="/reset-password" element={<ResetPasswordPage/>} />
   
     </Routes>
     <Footer/>
