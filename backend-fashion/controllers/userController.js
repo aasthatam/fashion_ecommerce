@@ -52,6 +52,11 @@ const registerUser = async (req, res) => {
        if (password.length < 8) {
           return res.json({ success: false, message: "Password must be at least 8 characters long" });
        }
+
+       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+         if (!passwordRegex.test(password)) {
+            return res.json({ success: false, message: "Password must be stronger: 8 characters, uppercase, lowercase, number, special character." });
+         }
  
        // Hash user password
        const salt = await bcrypt.genSalt(10);
@@ -131,5 +136,32 @@ const adminLogin = async (req, res) => {
 
    // }
  };
+
+ // Add this function in userController.js
+
+const resetPassword = async (req, res) => {
+   try {
+       const { email, newPassword } = req.body;
+
+       const user = await userModel.findOne({ email });
+
+       if (!user) {
+           return res.status(400).json({ success: false, message: "User not found" });
+       }
+
+       // Hash the new password before saving (very important)
+       const salt = await bcrypt.genSalt(10);
+       const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+       user.password = hashedPassword;
+       await user.save();
+
+       res.status(200).json({ success: true, message: "Password updated successfully" });
+   } catch (error) {
+       console.error(error);
+       res.status(500).json({ success: false, message: "Server error" });
+   }
+};
+
  
-export { loginUser, registerUser, adminLogin }
+export { loginUser, registerUser, adminLogin, resetPassword }
