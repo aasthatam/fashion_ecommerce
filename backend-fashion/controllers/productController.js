@@ -117,10 +117,10 @@ const updateProduct = async (req, res) => {
           fabric,
           sizes: JSON.parse(sizes),
           tags: JSON.parse(tags),
-          isNewArrival: isNewArrival === "true",
           availability,
           colors,
-          bestselling: bestselling === "true",
+          isNewArrival: isNewArrival === true || isNewArrival === "true",
+          bestselling: bestselling === true || bestselling === "true",
           suitableBodyType: suitableBodyType ? JSON.parse(suitableBodyType) : [],
         },
         { new: true }
