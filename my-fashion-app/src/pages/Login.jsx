@@ -3,6 +3,7 @@ import axios from "axios";
 import { ShopContext } from "../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
 
 const LoginPage = () => {
   const [mode, setMode] = useState("login"); // "login" or "register"
@@ -17,10 +18,23 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (mode === "register" && password !== confirmPassword) {
+    // if (mode === "register" && password !== confirmPassword) {
+    //   toast.error("Passwords do not match!");
+    //   return;
+    // }
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  if (mode === "register") {
+    if (password !== confirmPassword) {
       toast.error("Passwords do not match!");
       return;
     }
+    if (!passwordRegex.test(password)) {
+      toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+      return;
+    }
+  }
 
     try {
       if (mode === "login") {
@@ -137,9 +151,9 @@ const LoginPage = () => {
           )}
           {mode === "login" && (
             <div className="mb-6 text-right">
-              <a href="/forgot-password" className="text-sm text-gray-500 hover:underline">
-                Forgot your password?
-              </a>
+              <Link to="/reset-password" className="text-sm text-gray-500 hover:underline">
+               Forgot your password?
+              </Link>
             </div>
           )}
           <button
