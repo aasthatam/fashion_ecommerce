@@ -121,7 +121,7 @@ const updateProduct = async (req, res) => {
           colors,
           isNewArrival: isNewArrival === true || isNewArrival === "true",
           bestselling: bestselling === true || bestselling === "true",
-          suitableBodyType: suitableBodyType ? JSON.parse(suitableBodyType) : [],
+          suitableBodyType: suitableBodyType ? JSON.parse(suitableBodyType) : []
         },
         { new: true }
       );
@@ -137,4 +137,22 @@ const updateProduct = async (req, res) => {
     }
   };
 
-export { addProduct, listProduct, removeProduct, singleProduct, updateProduct};
+  const recommendProduct = async (req, res) => {
+    try {
+        const { shape } = req.query; // for example: "hourglass"
+        if (!shape) {
+            return res.json({ success: false, message: "Shape parameter missing" });
+        }
+
+        const products = await productModel.find({
+            suitableBodyType: { $in: [shape.toLowerCase()] }
+        });
+
+        res.json({ success: true, products });
+    } catch (error) {
+        console.error(error);
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, recommendProduct};
