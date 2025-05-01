@@ -41,7 +41,7 @@ const NewArrivals = ({handleViewNewArrivals}) => {
         }
       </div>
       <button
-        className="mt-6 border border-gray-900 px-6 py-2 rounded-md text-gray-900 hover:bg-gray-900 hover:text-white transition"
+        className="mt-6 border border-gray-900 px-6 py-2 rounded-md text-gray-900 hover:bg-gray-900 hover:text-white transition cursor-pointer"
         onClick={handleViewNewArrivals}
       >
         View More

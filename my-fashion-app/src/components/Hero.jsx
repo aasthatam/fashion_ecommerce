@@ -12,7 +12,7 @@ const Hero = () => {
       <div className="absolute inset-0 flex flex-col items-center justify-center text-black">
         <h1 className="text-4xl font-bold">Effortless style, timeless fashion</h1>
         <button
-          className="mt-4 bg-black text-white py-2 px-4 rounded transition hover:bg-white hover:text-black hover:scale-105"
+          className="mt-4 bg-black text-white py-2 px-4 rounded transition hover:bg-white hover:text-black hover:scale-105 cursor-pointer"
           onClick={() => navigate("/collection")}
         >
           Shop Now
