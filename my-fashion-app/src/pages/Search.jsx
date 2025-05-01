@@ -1,14 +1,11 @@
 import React, { useState, useContext } from "react";
 import { ShopContext } from "../context/ShopContext";
-import plusButton from "../assets/ei_plus.svg";
 import { Link } from "react-router-dom";
+import plusButton from "../assets/ei_plus.svg";
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
 
 const Search = () => {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
-
   const {
     products,
     search,
@@ -18,6 +15,11 @@ const Search = () => {
     addToWishlist,
     removeFromWishlist,
   } = useContext(ShopContext);
+
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e) => {
     setSearch(e.target.value);
@@ -34,21 +36,44 @@ const Search = () => {
 
   const handleUpload = async () => {
     if (!selectedFile) return;
+
+    setLoading(true);
+
     const formData = new FormData();
-    formData.append("image", selectedFile);
+    formData.append("file", selectedFile);
+    formData.append("upload_preset", "fashion_upload");
 
     try {
-      const response = await fetch("http://localhost:4000/api/upload", {
+      // 1. Upload image to Cloudinary
+      const cloudinaryResponse = await fetch(
+        "https://api.cloudinary.com/v1_1/dyplzxqu8/image/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const cloudinaryData = await cloudinaryResponse.json();
+      const imageUrl = cloudinaryData.secure_url;
+
+      // 2. Call backend to find similar products
+      const response = await fetch("http://localhost:4000/api/product/similar", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageUrl }),
       });
 
-      const data = await response.json();
-      console.log("Search Results:", data);
-      // Update product list if needed
+      const result = await response.json();
+      if (result.success) {
+        setRecommendedProducts(result.similar_products);
+      } else {
+        console.error("Search failed:", result.message);
+      }
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("Error during image search:", error);
     }
+
+    setLoading(false);
   };
 
   const isItemLiked = (item) => {
@@ -71,7 +96,7 @@ const Search = () => {
 
   return (
     <div className="flex flex-col items-center px-4 py-10">
-      {/* Search Bar with Upload */}
+      {/* Search bar and image upload trigger */}
       <div className="relative flex items-center px-4 py-2 w-full max-w-md border-b border-gray-400">
         <input
           type="text"
@@ -84,8 +109,8 @@ const Search = () => {
           src={plusButton}
           className="ml-2 w-7 h-7 md:w-8 md:h-8 flex items-center justify-center text-xl font-bold hover:bg-gray-100 rounded-full transition-colors"
           onClick={togglePopup}
+          alt="Upload"
         />
-
         {showPopup && (
           <div className="absolute top-12 right-0 bg-white p-4 w-52 z-10 shadow">
             <p className="text-sm text-gray-700 mb-2">Upload image to search</p>
@@ -111,31 +136,65 @@ const Search = () => {
           className="mt-4 bg-black text-white px-5 py-2 rounded-full text-sm hover:bg-gray-800 transition-colors"
           onClick={handleUpload}
         >
-          Search by Image
+          {loading ? "Searching..." : "Search by Image"}
         </button>
       )}
 
-      {/* Filtered Product Results (Limit to 8) */}
+      {/* Recommended Products Section */}
+      {recommendedProducts.length > 0 && (
+        <div className="w-full max-w-6xl mt-14">
+          <h2 className="text-xl font-semibold mb-4 text-center">Recommended Products</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {recommendedProducts.map((item) => (
+              <div key={item._id} className="relative group overflow-hidden">
+                <Link to={`/product/${item._id}`}>
+                  <div className="overflow-hidden">
+                    <img
+                      src={Array.isArray(item.images) ? item.images[0] : item.images}
+                      alt={item.name}
+                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+                    />
+                  </div>
+                </Link>
+                <button
+                  className="absolute top-2 right-2 text-gray-700 z-10"
+                  onClick={() => toggleLike(item)}
+                >
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
+                    <img
+                      src={isItemLiked(item) ? heartIconFilled : heartIcon}
+                      alt="Heart"
+                      className="w-5 h-5"
+                    />
+                  </div>
+                </button>
+                <div className="mt-3 text-center">
+                  <p className="text-sm">{item.name ?? "Unnamed"}</p>
+                  <p className="text-lg font-medium">
+                    {currency}
+                    {typeof item.price === "number" ? item.price.toFixed(2) : "N/A"}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Filtered Product Results */}
       <div className="w-full max-w-6xl mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {filteredProducts.length > 0 ? (
           filteredProducts.slice(0, 8).map((item) => (
             <div key={item._id} className="relative group overflow-hidden">
-              {/* Clicking image navigates to product detail */}
               <Link to={`/product/${item._id}`}>
                 <div className="overflow-hidden">
                   <img
-                    src={
-                      Array.isArray(item.images)
-                        ? item.images[0]
-                        : item.images
-                    }
+                    src={Array.isArray(item.images) ? item.images[0] : item.images}
                     alt={item.name}
                     className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                   />
                 </div>
               </Link>
-
-              {/* Wishlist Button */}
               <button
                 className="absolute top-2 right-2 text-gray-700 z-10"
                 onClick={() => toggleLike(item)}
@@ -148,13 +207,11 @@ const Search = () => {
                   />
                 </div>
               </button>
-
-              {/* Product Info */}
               <div className="mt-3 text-center">
-                <p className="text-sm">{item.name}</p>
+                <p className="text-sm">{item.name ?? "Unnamed"}</p>
                 <p className="text-lg font-medium">
                   {currency}
-                  {item.price.toFixed(2)}
+                  {typeof item.price === "number" ? item.price.toFixed(2) : "N/A"}
                 </p>
               </div>
             </div>
