@@ -75,6 +75,13 @@ function ProductDetailPage() {
 
   const productImages = Array.isArray(product.images) ? product.images : [product.images];
 
+  const calculateDiscountedPrice = (price, tag) => {
+    if (!tag || !tag.toLowerCase().includes("save")) return null;
+    const match = tag.match(/(\d+)%/);
+    const percent = match ? parseInt(match[1]) : 0;
+    return price - (price * percent) / 100;
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       {/* Breadcrumb */}
@@ -164,7 +171,21 @@ function ProductDetailPage() {
         {/* Product Information */}
         <div className="w-full md:w-1/2">
           <h1 className="text-2xl font-medium mb-2">{product.name}</h1>
-          <p className="text-xl mb-1">{currency}{product.price.toFixed(2)}</p>
+          {Array.isArray(product.tags) && product.tags[0]?.toLowerCase().includes("save") ? (
+            <>
+              <p className="text-sm text-gray-500 line-through">
+                {currency}{product.price.toFixed(2)}
+              </p>
+              <p className="text-xl font-semibold text-red-600">
+                {currency}{calculateDiscountedPrice(product.price, product.tags[0]).toFixed(2)}
+              </p>
+            </>
+          ) : (
+            <p className="text-xl mb-1">
+              {currency}{product.price.toFixed(2)}
+            </p>
+          )}
+
           <p className={`text-sm mb-4 ${product.availability === "In Stock" ? "text-green-600" : "text-red-600"}`}>
             {product.availability || "In Stock"}
           </p>
