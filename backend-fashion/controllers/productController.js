@@ -1,10 +1,24 @@
 import { v2 as cloudinary } from "cloudinary";
 import productModel from "../models/productModel.js";
+import axios from "axios";
+import crypto from "crypto";
+
+
+// FastAPI service URL
+const FASTAPI_URL = process.env.FASTAPI_URL || "http://localhost:8000";
+
+// Generate UUID from string for Qdrant compatibility
+function generateUUID(str) {
+    // Create MD5 hash from the string
+    const md5Hash = crypto.createHash('md5').update(str).digest('hex');
+    // Format it as a UUID
+    return `${md5Hash.substring(0, 8)}-${md5Hash.substring(8, 12)}-${md5Hash.substring(12, 16)}-${md5Hash.substring(16, 20)}-${md5Hash.substring(20, 32)}`;
+}
 
 // function for add product
 const addProduct = async (req,res) => {
    try {
-    const { name, details, price, category, sizes, bestselling, fabric, tags, isNewArrival, availability, colors, suitableBodyType} = req.body
+    const { name, details, price, category, sizes, bestselling, fabric, tags, isNewArrival, availability, colors } = req.body
     const image1 = req.files.image1 && req.files.image1[0]
     const image2 = req.files.image2 && req.files.image2[0]
     const image3 = req.files.image3 && req.files.image3[0]
@@ -32,13 +46,44 @@ const addProduct = async (req,res) => {
         tags: tags ? JSON.parse(tags) : [],
         isNewArrival: isNewArrival === "true",
         availability: availability || "In Stock",
-        colors: colors || "",
-        suitableBodyType: suitableBodyType ? JSON.parse(suitableBodyType) : []
+        colors: colors || ""
     }
     console.log(productData);
 
     const product = new productModel(productData);
     await product.save()
+
+    // Send images to FastAPI for embedding storage after product is saved
+    try {
+        // Get the product ID
+        const productId = product._id.toString();
+        
+        // Send each image to FastAPI service for embedding generation and storage
+        const embedPromises = imagesUrl.map(async (imageUrl, index) => {
+            try {
+                const originalId = `${productId}_${index}`;
+                const uuid = generateUUID(originalId);
+                
+                const response = await axios.post(`${FASTAPI_URL}/store_embedding`, {
+                    product_id: uuid,
+                    original_id: originalId,
+                    image_url: imageUrl
+                });
+                
+                return response.data;
+            } catch (error) {
+                console.error(`Error sending image ${index + 1} to embedding service:`, error.message);
+                return null;
+            }
+        });
+        
+        // Wait for all embedding requests to complete
+        await Promise.all(embedPromises);
+        console.log(`Embeddings created for product ${productId}`);
+    } catch (embedError) {
+        // Don't fail the product creation if embedding fails
+        console.error("Error generating embeddings:", embedError.message);
+    }
 
     res.json({ success: true, message: "Product Added"})
    } catch (error) {
@@ -153,6 +198,66 @@ const updateProduct = async (req, res) => {
         console.error(error);
         res.json({ success: false, message: error.message });
     }
+    
+};
+// function to find similar products
+const findSimilarProducts = async (req, res) => {
+    try {
+        const { productId, imageUrl, limit = 5 } = req.body;
+        
+        if (!productId && !imageUrl) {
+            return res.json({ 
+                success: false, 
+                message: "Either productId or imageUrl must be provided" 
+            });
+        }
+        
+        // Call FastAPI service to find similar products
+        const requestData = {
+            image_url: imageUrl,
+            top_k: limit
+        };
+        
+        // If productId is provided, convert it to UUID for Qdrant
+        if (productId) {
+            // Handle the case where we need to check which image index to use
+            // If only searching by product ID, use the first image (index 0)
+            const originalId = `${productId}_0`;
+            requestData.product_id = generateUUID(originalId);
+        }
+        
+        const response = await axios.post(`${FASTAPI_URL}/find_similar`, requestData);
+        
+        if (response.data && response.data.success) {
+            // Get product details for the similar products
+            const similarProductIds = response.data.similar_products
+                .map(item => {
+                    // Extract the base product ID (remove the _index suffix)
+                    const parts = item.product_id.split('_');
+                    return parts[0]; // Return just the MongoDB ID part
+                })
+                .filter((value, index, self) => self.indexOf(value) === index); // Remove duplicates
+            
+            // Fetch full product details from MongoDB
+            const similarProducts = await productModel.find({
+                _id: { $in: similarProductIds }
+            });
+            
+            return res.json({
+                success: true,
+                similar_products: similarProducts,
+                similarity_info: response.data.similar_products
+            });
+        } else {
+            return res.json({
+                success: false,
+                message: "Failed to find similar products"
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: error.message });
+    }
 };
 
-export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, recommendProduct};
+export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, recommendProduct, findSimilarProducts };
