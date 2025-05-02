@@ -22,7 +22,7 @@ const Essentials = () => {
 
         {/* Sweaters */}
         <div
-          className="relative cursor-pointer overflow-hidden rounded"
+          className="relative cursor-pointer overflow-hidden rounded transition-transform duration-200 hover:scale-105 active:scale-95"
           onClick={() => navigateToCategory("sweaters")}
         >
           <img
@@ -38,7 +38,7 @@ const Essentials = () => {
 
         {/* Dresses */}
         <div
-          className="relative cursor-pointer row-span-2 overflow-hidden rounded"
+          className="relative cursor-pointer row-span-2 overflow-hidden rounded transition-transform duration-200 hover:scale-105 active:scale-95"
           onClick={() => navigateToCategory("dresses")}
         >
           <img
@@ -54,7 +54,7 @@ const Essentials = () => {
 
         {/* Shirts */}
         <div
-          className="relative cursor-pointer overflow-hidden rounded"
+          className="relative cursor-pointer overflow-hidden rounded transition-transform duration-200 hover:scale-105 active:scale-95"
           onClick={() => navigateToCategory("shirts")}
         >
           <img
@@ -70,7 +70,7 @@ const Essentials = () => {
 
         {/* Pants */}
         <div
-          className="relative cursor-pointer overflow-hidden rounded"
+          className="relative cursor-pointer overflow-hidden rounded transition-transform duration-200 hover:scale-105 active:scale-95"
           onClick={() => navigateToCategory("pants")}
         >
           <img
