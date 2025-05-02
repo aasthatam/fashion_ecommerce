@@ -22,7 +22,14 @@ const loginUser = async (req, res) => {
       if (isMatch) {
          // const token = createToken(user._id)
          const token = createToken({ id: user._id, role: user.role });
-         res.json({success: true, token})
+         res.json({success: true, token,
+            user: {
+               _id: user._id,
+               name: user.name,
+               email: user.email,
+               role: user.role
+             }
+         })
       }
       else{
          res.json({success: false, message: "Invalid credentials"})
@@ -77,7 +84,14 @@ const registerUser = async (req, res) => {
       const token = createToken({ id: user._id, role: user.role });
  
        // Send response with token
-       res.json({ success: true, token });
+       res.json({ success: true, token,
+         user: {
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+          }
+        });
  
     } catch (error) {
        console.log(error);
