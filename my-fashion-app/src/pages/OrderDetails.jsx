@@ -82,7 +82,13 @@ const OrderDetails = () => {
                 </p>
                 <p className='mt-1'>
                   Payment:{' '}
-                  <span className='text-gray-400'>{item.paymentMethod || "COD"}</span>
+                  <span className='text-gray-400'>
+                  {item.paymentMethod === "PayPal"
+                    ? "PayPal"
+                    : item.paymentMethod === "COD"
+                    ? "Cash on Delivery"
+                    : "Not Specified"}
+                </span>
                 </p>
               </div>
             </div>

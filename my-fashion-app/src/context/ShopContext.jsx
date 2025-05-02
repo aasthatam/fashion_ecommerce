@@ -8,7 +8,7 @@ import axios from "axios";
 export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
-    const currency = 'Rs.';
+    const currency = '$';
     const delivery_fee = 10;
     const backendUrl = import.meta.env.VITE_BACKEND_URL
     const [search, setSearch] = useState('');
@@ -31,8 +31,12 @@ const ShopContextProvider = (props) => {
 
     // Save cartItems and wishlistItems to localStorage whenever they change
     useEffect(() => {
-        localStorage.setItem("cartItems", JSON.stringify(cartItems));
-    }, [cartItems]);
+      if (Object.keys(cartItems).length === 0) {
+          localStorage.removeItem("cartItems");
+      } else {
+          localStorage.setItem("cartItems", JSON.stringify(cartItems));
+      }
+  }, [cartItems]);
 
     useEffect(() => {
         localStorage.setItem("wishlistItems", JSON.stringify(wishlistItems));
