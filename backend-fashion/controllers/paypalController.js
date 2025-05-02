@@ -29,7 +29,7 @@ export const createPayment = (req, res) => {
 
   paypal.payment.create(create_payment_json, (err, payment) => {
     if (err) {
-      console.error("❌ PayPal payment creation error:", err);
+      console.error("PayPal payment creation error:", err);
       return res.status(500).json({ success: false, message: err.message });
     }
 
@@ -44,20 +44,20 @@ export const executePayment = async (req, res) => {
 
   paypal.payment.execute(paymentId, { payer_id: PayerID }, async (err, payment) => {
     if (err) {
-      console.error("🚨 PayPal execution error:", err.response || err.message || err);
+      console.error("PayPal execution error:", err.response || err.message || err);
       return res.status(500).json({ success: false, message: err.message || "PayPal error" });
     }
 
     const paypalPaymentId = payment?.id;
     if (!paypalPaymentId) {
-      console.error("❌ Missing PayPal payment ID");
+      console.error("Missing PayPal payment ID");
       return res.status(400).json({ success: false, message: "Invalid PayPal ID" });
     }
 
     try {
       const existingOrder = await orderModel.findOne({ paymentId: paypalPaymentId });
       if (existingOrder) {
-        console.log("⚠️ Duplicate order detected, skipping...");
+        console.log("Duplicate order detected, skipping...");
         return res.json({ success: true, message: "Order already exists" });
       }
 
@@ -79,12 +79,12 @@ export const executePayment = async (req, res) => {
       });
 
       const savedOrder = await newOrder.save();
-      console.log("✅ Order saved with ID:", savedOrder._id);
+      console.log("Order saved with ID:", savedOrder._id);
 
-      // ✅ Respond first to avoid frontend hang
+      // Respond first to avoid frontend hang
       res.json({ success: true, message: "Order placed successfully" });
 
-      // ✅ Send email asynchronously
+      // Send email asynchronously
       const transporter = nodemailer.createTransport({
         service: "Gmail",
         auth: {
@@ -108,13 +108,13 @@ export const executePayment = async (req, res) => {
         subject: "Your Order Confirmation",
         html: emailBody
       }).then(() => {
-        console.log("✅ Email sent successfully");
+        console.log("Email sent successfully");
       }).catch((emailErr) => {
-        console.error("❌ Failed to send email:", emailErr.message);
+        console.error("Failed to send email:", emailErr.message);
       });
 
     } catch (e) {
-      console.error("🚨 Order creation error:", e);
+      console.error("Order creation error:", e);
       return res.status(500).json({ success: false, message: e.message });
     }
   });
