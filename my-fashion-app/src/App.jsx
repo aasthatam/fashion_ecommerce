@@ -17,6 +17,7 @@ import PlaceOrder from "./pages/PlaceOrder";
 import OrderDetails from "./pages/OrderDetails";
 import { ToastContainer } from 'react-toastify';
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import PaymentSuccess from "./pages/PaymentSuccess";
 
 
 const App = () => {
@@ -40,6 +41,7 @@ const App = () => {
       <Route path="/:section" element={<CustomerSupport/>} />
       <Route path="/styleguide" element={<StyleGuide/>} />
       <Route path="/reset-password" element={<ResetPasswordPage/>} />
+      <Route path="/payment-success" element={<PaymentSuccess />} />
   
     </Routes>
     <Footer/>

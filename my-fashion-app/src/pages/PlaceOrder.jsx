@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 const PlaceOrder = () => {
   const { navigate, cartItems, products, currency, backendUrl, token, setCartItems, delivery_fee } = useContext(ShopContext);
 
+  const [paymentMethod, setPaymentMethod] = useState("COD");
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -26,47 +27,114 @@ const PlaceOrder = () => {
     setFormData(data => ({...data, [name]:value}))
   }
 
-  const onSubmitHandler = async (event) => {
-    event.preventDefault();
+  // const onSubmitHandler = async (event) => {
+  //   event.preventDefault();
+  //   try {
+  //     let orderItems = [];
+  
+  //     for (const items in cartItems) {
+  //       for (const item in cartItems[items]) {
+  //         if (cartItems[items][item] > 0) {
+  //           const itemInfo = structuredClone(products.find(product => product._id === items));
+  //           if (itemInfo) {
+  //             itemInfo.size = item;
+  //             itemInfo.quantity = cartItems[items][item];
+  //             orderItems.push(itemInfo);
+  //           }
+  //         }
+  //       }
+  //     }
+  //     let orderData = {
+      
+  //       address: formData,
+  //       items: orderItems,
+  //       amount: totalPrice + delivery_fee,
+  //       paymentMethod: "COD"
+  //     };
+  
+  //     const response = await axios.post(backendUrl + '/api/order/place', orderData, {
+  //       headers: { token }
+  //     });
+  
+  //     if (response.data.success) {
+  //       setCartItems({});
+  //       localStorage.removeItem("cartItems");
+  //       navigate('/orders');
+  //     } else {
+  //       toast.error(response.data.message || "Failed to place order");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error(error.message);
+  //   }
+  // };
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+  
     try {
       let orderItems = [];
-  
-      for (const items in cartItems) {
-        for (const item in cartItems[items]) {
-          if (cartItems[items][item] > 0) {
-            const itemInfo = structuredClone(products.find(product => product._id === items));
-            if (itemInfo) {
-              itemInfo.size = item;
-              itemInfo.quantity = cartItems[items][item];
-              orderItems.push(itemInfo);
+        for (const items in cartItems) {
+          for (const item in cartItems[items]) {
+            if (cartItems[items][item] > 0) {
+              const product = products.find(p => p._id === items);
+              if (product) {
+                orderItems.push({
+                  _id: product._id,
+                  name: product.name,
+                  price: product.price,
+                  category: product.category,
+                  images: product.images,
+                  size: item, // ✅ selected size only
+                  quantity: cartItems[items][item]
+                });
+              }
             }
           }
         }
-      }
-      let orderData = {
       
-        address: formData,
-        items: orderItems,
-        amount: totalPrice + delivery_fee,
-        paymentMethod: "COD"
-      };
   
-      const response = await axios.post(backendUrl + '/api/order/place', orderData, {
-        headers: { token }
-      });
+      const amount = totalPrice + delivery_fee;
   
-      if (response.data.success) {
-        setCartItems({});
-        localStorage.removeItem("cartItems");
-        navigate('/orders');
-      } else {
-        toast.error(response.data.message || "Failed to place order");
+      if (paymentMethod === "COD") {
+        // COD order logic
+        const orderData = {
+          address: formData,
+          items: orderItems,
+          amount,
+          paymentMethod: "COD"
+        };
+  
+        const response = await axios.post(backendUrl + '/api/order/place', orderData, {
+          headers: { token }
+        });
+  
+        if (response.data.success) {
+          setCartItems({});
+          localStorage.removeItem("cartItems");
+          navigate('/orders');
+        } else {
+          toast.error(response.data.message || "Failed to place order");
+        }
+      } else if (paymentMethod === "PayPal") {
+        localStorage.setItem("paypalData", JSON.stringify({
+          userId: JSON.parse(localStorage.getItem("user"))._id,
+          items: orderItems,        
+          address: formData,
+          amount,
+          email: formData.email,
+          paymentMethod: "PayPal"
+        }));
+        const response = await axios.post(backendUrl + '/api/order/paypal/create', { total: amount }, { headers: { token } });
+        if (response.data.success) {
+          window.location.href = response.data.approvalUrl;
+        }
       }
     } catch (error) {
       console.error(error);
       toast.error(error.message);
     }
   };
+  
   
 
   const cartList = [];
@@ -136,8 +204,13 @@ const PlaceOrder = () => {
             <div className="mt-6">
               <h2 className="text-lg font-semibold mb-2">Payment Method</h2>
               <div className="flex items-center gap-2">
-                <input type="radio" name="paymentMethod" id="cod" defaultChecked />
-                <label htmlFor="cod" className="text-gray-700">Cash on Delivery</label>
+                {/* <input type="radio" name="paymentMethod" id="cod" defaultChecked />
+                <label htmlFor="cod" className="text-gray-700">Cash on Delivery</label> */}
+                <input type="radio" name="paymentMethod" value="COD" checked={paymentMethod === "COD"} onChange={e => setPaymentMethod(e.target.value)} />
+                <label>Cash on Delivery</label>
+
+                <input type="radio" name="paymentMethod" value="PayPal" checked={paymentMethod === "PayPal"} onChange={e => setPaymentMethod(e.target.value)} />
+                <label>PayPal</label>
               </div>
             </div>
             <div className="w-full text-end mt-8">
