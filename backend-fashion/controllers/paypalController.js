@@ -94,13 +94,40 @@ export const executePayment = async (req, res) => {
       });
 
       const emailBody = `
-        <h2>Order Confirmation - WearNova</h2>
-        <p>Thank you for your order!</p>
-        <ul>
-          ${formattedItems.map(item => `<li>${item.name} x${item.quantity} - $${item.price}</li>`).join("")}
-        </ul>
-        <p><strong>Total Paid: $${amount}</strong></p>
-      `;
+      <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+        <div style="text-align: center; margin-bottom: 20px;">
+          <h1 style="color: #222; margin: 0;">WearNova</h1>
+          <p style="font-size: 18px; color: #777; margin: 0;">Order Confirmation</p>
+        </div>
+    
+        <p>Hi there! Thank you for shopping with <strong>WearNova</strong>.</p>
+        <p>Here are your order details:</p>
+    
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+          <thead>
+            <tr>
+              <th style="text-align: left; border-bottom: 1px solid #ddd; padding: 8px;">Item</th>
+              <th style="text-align: center; border-bottom: 1px solid #ddd; padding: 8px;">Qty</th>
+              <th style="text-align: right; border-bottom: 1px solid #ddd; padding: 8px;">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${formattedItems.map(item => `
+              <tr>
+                <td style="padding: 8px; border-bottom: 1px solid #eee;">${item.name}</td>
+                <td style="text-align: center; padding: 8px; border-bottom: 1px solid #eee;">${item.quantity}</td>
+                <td style="text-align: right; padding: 8px; border-bottom: 1px solid #eee;">$${item.price}</td>
+              </tr>
+            `).join("")}
+          </tbody>
+        </table>
+    
+        <p style="margin-top: 20px; font-size: 16px;"><strong>Total Paid: $${amount}</strong></p>
+    
+        <p style="margin-top: 30px;">We’ll notify you once your items are on their way.</p>
+        <p style="color: #777;">Thank you for shopping with us!<br>— The WearNova Team</p>
+      </div>
+    `;
 
       transporter.sendMail({
         from: `"WearNova" <${process.env.GMAIL_USER}>`,
