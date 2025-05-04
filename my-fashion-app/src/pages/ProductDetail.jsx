@@ -284,7 +284,7 @@ function ProductDetailPage() {
                   navigate("/login");
                   return;
                 }
-                addToCart(product._id, selectedSize);
+                addToCart(product._id, selectedSize, quantity);
               }}
               className="px-6 py-3 rounded-md border border-black bg-white text-black flex-1 hover:bg-gray-100 transition"
             >
@@ -301,7 +301,17 @@ function ProductDetailPage() {
                 {isProductLiked ? "Remove from wishlist" : "Add to wishlist"}
               </button>
             </div>
-            <button className="w-full py-3 rounded-md bg-black text-white hover:bg-gray-800 transition">
+            <button
+            onClick={() => {
+              if (!token) {
+                toast.error("Please login to proceed");
+                navigate("/login");
+                return;
+              }
+              addToCart(product._id, selectedSize, quantity);
+              navigate("/place-order"); // redirect to PlaceOrder
+            }} 
+            className="w-full py-3 rounded-md bg-black text-white hover:bg-gray-800 transition">
               Buy it now
             </button>
           </div>

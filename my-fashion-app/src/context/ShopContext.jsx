@@ -43,38 +43,64 @@ const ShopContextProvider = (props) => {
     }, [wishlistItems]);
 
     // Add item to cart
-    const addToCart = async (itemId, size) => {
-        if (!size) {
-            toast.error('Select product size');
-            return;
-        }
+    // const addToCart = async (itemId, size) => {
+    //     if (!size) {
+    //         toast.error('Select product size');
+    //         return;
+    //     }
 
-        let cartData = structuredClone(cartItems);
+    //     let cartData = structuredClone(cartItems);
 
-        if (cartData[itemId]) {
-            if (cartData[itemId][size]) {
-                cartData[itemId][size] += 1;
-            } else {
-                cartData[itemId][size] = 1;
-            }
-        } else {
-            cartData[itemId] = {};
-            cartData[itemId][size] = 1;
-        }
+    //     if (cartData[itemId]) {
+    //         if (cartData[itemId][size]) {
+    //             cartData[itemId][size] += 1;
+    //         } else {
+    //             cartData[itemId][size] = 1;
+    //         }
+    //     } else {
+    //         cartData[itemId] = {};
+    //         cartData[itemId][size] = 1;
+    //     }
 
-        setCartItems(cartData);
+    //     setCartItems(cartData);
 
-        if (token) {
-            try {
-                await axios.post(backendUrl + '/api/cart/add', {itemId, size}, {headers: {token}} ) 
+    //     if (token) {
+    //         try {
+    //             await axios.post(backendUrl + '/api/cart/add', {itemId, size}, {headers: {token}} ) 
                 
-            } catch (error) {
-                console.error(error)
-                toast.error(error.message)
+    //         } catch (error) {
+    //             console.error(error)
+    //             toast.error(error.message)
                 
-            }
-        }
-    };
+    //         }
+    //     }
+    // };
+    const addToCart = async (itemId, size, quantity = 1) => {
+      if (!size) {
+          toast.error('Select product size');
+          return;
+      }
+  
+      let cartData = structuredClone(cartItems);
+  
+      if (!cartData[itemId]) {
+          cartData[itemId] = {};
+      }
+  
+      cartData[itemId][size] = (cartData[itemId][size] || 0) + quantity;
+  
+      setCartItems(cartData);
+      localStorage.setItem("cartItems", JSON.stringify(cartData));
+  
+      if (token) {
+          try {
+              await axios.post(backendUrl + '/api/cart/add', { itemId, size, quantity }, { headers: { token } });
+          } catch (error) {
+              console.error(error);
+              toast.error(error.message);
+          }
+      }
+  };
 
     const removeFromCart = async (itemId, size) => {
         let cartData = structuredClone(cartItems);
