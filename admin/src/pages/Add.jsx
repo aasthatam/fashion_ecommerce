@@ -68,6 +68,7 @@ const Add = ({token}) => {
         setAvailability('In Stock')
         setColors('')
         setTags([])
+        setSuitableBodyType([])
         
       } else {
         toast.error(response.data.message)
