@@ -18,7 +18,7 @@ function generateUUID(str) {
 // function for add product
 const addProduct = async (req,res) => {
    try {
-    const { name, details, price, category, sizes, bestselling, fabric, tags, isNewArrival, availability, colors } = req.body
+    const { name, details, price, category, sizes, bestselling, fabric, tags, isNewArrival, availability, colors, suitableBodyType } = req.body
     const image1 = req.files.image1 && req.files.image1[0]
     const image2 = req.files.image2 && req.files.image2[0]
     const image3 = req.files.image3 && req.files.image3[0]
@@ -46,7 +46,8 @@ const addProduct = async (req,res) => {
         tags: tags ? JSON.parse(tags) : [],
         isNewArrival: isNewArrival === "true",
         availability: availability || "In Stock",
-        colors: colors || ""
+        colors: colors || "",
+        suitableBodyType: suitableBodyType ? JSON.parse(suitableBodyType) : []
     }
     console.log(productData);
 

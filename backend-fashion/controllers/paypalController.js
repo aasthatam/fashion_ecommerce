@@ -2,6 +2,7 @@ import paypal from "paypal-rest-sdk";
 import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import orderModel from "../models/orderModel.js";
+import userModel from "../models/userModel.js"; 
 
 dotenv.config();
 
@@ -80,6 +81,12 @@ export const executePayment = async (req, res) => {
 
       const savedOrder = await newOrder.save();
       console.log("Order saved with ID:", savedOrder._id);
+
+      await userModel.updateOne(
+        { _id: userId },
+        { $set: { cartData: {} } }
+      );
+      console.log("Cart cleared from user data");
 
       // Respond first to avoid frontend hang
       res.json({ success: true, message: "Order placed successfully" });
