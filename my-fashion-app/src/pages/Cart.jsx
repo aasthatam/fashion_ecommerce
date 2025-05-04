@@ -36,8 +36,17 @@ const Cart = () => {
     setCartList(tempData);
   }, [cartItems, products]);
 
+  const getDiscountedPrice = (item) => {
+    const tag = Array.isArray(item.tags) ? item.tags.find(tag => tag.toLowerCase().includes("save")) : null;
+    if (!tag) return item.price;
+
+    const match = tag.match(/(\d+)%/);
+    const percent = match ? parseInt(match[1]) : 0;
+    return item.price - (item.price * percent) / 100;
+  };
+
   const totalItems = cartList.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = cartList.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalPrice = cartList.reduce((sum, item) => sum + getDiscountedPrice(item) * item.quantity, 0);
 
   const handleQuantityChange = (itemId, size, newQuantity) => {
     const quantity = Math.max(1, parseInt(newQuantity) || 1);
@@ -74,12 +83,27 @@ const Cart = () => {
                       <img
                         src={item.images?.[0] || item.images} // fallback
                         alt={item.name}
-                       className="w-24 h-32 object-cover rounded"
+                        className="w-24 h-32 object-cover rounded"
                       />
                       <div>
                         <h3 className="text-xs sm:text-lg font-medium">{item.name}</h3>
                         <div className='flex items-center gap-5 mt-2'>
-                          <p>{currency}{item.price.toFixed(2)}</p>
+                          <div>
+                            {Array.isArray(item.tags) && item.tags[0]?.toLowerCase().includes("save") ? (
+                              <>
+                                <p className="text-sm text-gray-500 line-through">
+                                  {currency}{item.price.toFixed(2)}
+                                </p>
+                                <p className="text-md font-semibold text-red-600">
+                                  {currency}{getDiscountedPrice(item).toFixed(2)}
+                                </p>
+                              </>
+                            ) : (
+                              <p className="text-md font-semibold">
+                                {currency}{item.price.toFixed(2)}
+                              </p>
+                            )}
+                          </div>
                           <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">{item.size}</p>
                         </div>
                       </div>
@@ -111,6 +135,7 @@ const Cart = () => {
               totalItems={totalItems} 
               totalPrice={totalPrice} 
               currency={currency}
+              cartList={cartList} 
             />
           </>
         )}
