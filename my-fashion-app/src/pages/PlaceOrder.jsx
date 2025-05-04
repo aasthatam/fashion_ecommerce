@@ -84,7 +84,7 @@ const PlaceOrder = () => {
                   price: product.price,
                   category: product.category,
                   images: product.images,
-                  size: item, // ✅ selected size only
+                  size: item, // selected size only
                   quantity: cartItems[items][item]
                 });
               }
@@ -187,7 +187,17 @@ const PlaceOrder = () => {
               <input required onChange={onChangeHandler} name='country' value = {formData.country} className="border border-gray-300 rounded py-1.5 px-3.5 w-full" type="text" placeholder="Country" />
             </div>
 
-            <input required onChange={onChangeHandler} name='phone' value = {formData.phone} className="border border-gray-300 rounded py-1.5 px-3.5 w-full" type="number" placeholder="Phone" />
+            <input
+            required
+            type="tel"
+            name="phone"
+            value={formData.phone}
+            onChange={onChangeHandler}
+            pattern="[0-9]{10}"
+            title="Phone number must be exactly 10 digits"
+            className="border border-gray-300 rounded py-1.5 px-3.5 w-full"
+            placeholder="Phone"
+          />
           </div>
 
           {/* ----------- Right: Cart Summary ----------- */}

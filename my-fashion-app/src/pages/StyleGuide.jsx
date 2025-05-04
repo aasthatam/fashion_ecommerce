@@ -15,8 +15,8 @@ const StyleGuide = () => {
   const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
-  // Load data from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem("styleGuideData");
     if (stored) {
@@ -37,6 +37,7 @@ const StyleGuide = () => {
       reader.onloadend = async () => {
         setImagePreview(reader.result);
         setImageUploaded(true);
+        setErrorMessage(null); // clear previous error
 
         const formData = new FormData();
         formData.append("image", file);
@@ -59,7 +60,6 @@ const StyleGuide = () => {
           );
           setRecommendedProducts(recResponse.data.products);
 
-          // Save to localStorage
           localStorage.setItem("styleGuideData", JSON.stringify({
             imagePreview: reader.result,
             resultImageBase64: response.data.result_image_base64,
@@ -69,6 +69,18 @@ const StyleGuide = () => {
           }));
         } catch (error) {
           console.error("Error uploading image or fetching recommendations:", error);
+          let msg = "An error occurred. Please try again.";
+          if (error.response && error.response.data) {
+            if (error.response.data.error) {
+              msg = error.response.data.error;
+            } else if (error.response.data.detail) {
+              msg = error.response.data.detail;
+            }
+          }
+          setErrorMessage(msg);
+          setBodyShape(null);
+          setDescription(null);
+          setRecommendedProducts([]);
         } finally {
           setLoading(false);
           setLoadingRecommendations(false);
@@ -86,6 +98,7 @@ const StyleGuide = () => {
     setDescription(null);
     setResultImageBase64(null);
     setRecommendedProducts([]);
+    setErrorMessage(null);
   };
 
   return (
@@ -118,10 +131,8 @@ const StyleGuide = () => {
 
           {!imageUploaded && (
             <div className="mt-3 text-sm text-gray-600 text-center px-2">
-              <p>Please upload a clear, front-facing full body photo.</p>
-              <p>Stand straight with arms slightly away from the body.</p>
-              <p>Use a plain or uncluttered background for better accuracy.</p>
-              <p>Avoid sitting, angled poses, or group photos.</p>
+               <p>Upload a clear, front-facing full body photo.</p>
+               <p>Avoid sitting, angled poses, or group shots.</p>
             </div>
           )}
 
@@ -136,62 +147,71 @@ const StyleGuide = () => {
           )}
         </div>
 
-        {/* Right: Result */}
-        {imageUploaded && bodyShape && (
+        {/* Right: Result & Recommendations */}
+        {imageUploaded && (
           <div className="flex flex-col w-full md:w-2/3">
-            <h2 className="text-lg font-light text-gray-800 mb-3 text-center md:text-left">
-              Your Body Type: <strong>{bodyShape}</strong>
-            </h2>
-
-            <p className="text-gray-600 mb-6">{description}</p>
-
-            <h3 className="text-lg font-semibold text-gray-900 text-center mb-4">
-              Our Recommendations
-            </h3>
-
-            {loadingRecommendations ? (
-              <div className="text-center text-gray-500 animate-pulse">Loading Recommendations...</div>
+            {errorMessage ? (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-center text-base font-medium">{errorMessage}</div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {recommendedProducts.length > 0 ? (
-                  recommendedProducts.map((product) => {
-                    const isWishlisted = wishlistItems.some(item => item._id === product._id);
-                    const handleWishlistToggle = (e) => {
-                      e.preventDefault();
-                      if (isWishlisted) {
-                        removeFromWishlist(product._id, "default");
-                      } else {
-                        addToWishlist(product._id, "default");
-                      }
-                    };
-
-                    return (
-                      <div key={product._id} className="relative group flex flex-col items-center">
-                        <button className="absolute top-2 right-2 z-10" onClick={handleWishlistToggle}>
-                          <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center">
-                            <img src={isWishlisted ? heartIconFilled : heartIcon} alt="Wishlist" className="w-5 h-5" />
-                          </div>
-                        </button>
-                        <Link to={`/product/${product._id}`} className="group w-full flex flex-col items-center transition">
-                          <div className="w-full overflow-hidden">
-                            <img
-                              src={product.images[0]}
-                              alt={product.name}
-                              className="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-110"
-                            />
-                          </div>
-                          <div className="mt-2 text-center">
-                            <p className="text-sm font-medium text-gray-800">{product.name}</p>
-                            <p className="text-sm text-gray-600 mt-1">{currency} {product.price}</p>
-                          </div>
-                        </Link>
-                      </div>
-                    );
-                  })
-                ) : (
-                  <p className="text-center text-gray-500 col-span-2 md:col-span-3">No Recommendations Found</p>
+              <>
+                {bodyShape && (
+                  <>
+                    <h2 className="text-lg font-light text-gray-800 mb-3 text-center md:text-left">
+                      Your Body Type: <strong>{bodyShape}</strong>
+                    </h2>
+                    <p className="text-gray-600 mb-6">{description}</p>
+                  </>
                 )}
-              </div>
+
+                <h3 className="text-lg font-semibold text-gray-900 text-center mb-4">
+                  Our Recommendations
+                </h3>
+
+                {loadingRecommendations ? (
+                  <div className="text-center text-gray-500 animate-pulse">Loading Recommendations...</div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                    {recommendedProducts.length > 0 ? (
+                      recommendedProducts.map((product) => {
+                        const isWishlisted = wishlistItems.some(item => item._id === product._id);
+                        const handleWishlistToggle = (e) => {
+                          e.preventDefault();
+                          if (isWishlisted) {
+                            removeFromWishlist(product._id, "default");
+                          } else {
+                            addToWishlist(product._id, "default");
+                          }
+                        };
+
+                        return (
+                          <div key={product._id} className="relative group flex flex-col items-center">
+                            <button className="absolute top-2 right-2 z-10" onClick={handleWishlistToggle}>
+                              <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center">
+                                <img src={isWishlisted ? heartIconFilled : heartIcon} alt="Wishlist" className="w-5 h-5" />
+                              </div>
+                            </button>
+                            <Link to={`/product/${product._id}`} className="group w-full flex flex-col items-center transition">
+                              <div className="w-full overflow-hidden">
+                                <img
+                                  src={product.images[0]}
+                                  alt={product.name}
+                                  className="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-110"
+                                />
+                              </div>
+                              <div className="mt-2 text-center">
+                                <p className="text-sm font-medium text-gray-800">{product.name}</p>
+                                <p className="text-sm text-gray-600 mt-1">{currency} {product.price}</p>
+                              </div>
+                            </Link>
+                          </div>
+                        );
+                      })
+                    ) : (
+                      <p className="text-center text-gray-500 col-span-2 md:col-span-3">No Recommendations Found</p>
+                    )}
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}

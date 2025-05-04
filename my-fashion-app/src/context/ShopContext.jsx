@@ -166,7 +166,7 @@ const ShopContextProvider = (props) => {
       
         const product = products.find(p => p._id === itemId);
         if (product) {
-          const newItem = { ...product, size };
+          const newItem = { ...product, size, sizes: product.sizes || [] };
           setWishlistItems(prev => [...prev, newItem]);
       
           if (token) {
@@ -179,7 +179,8 @@ const ShopContextProvider = (props) => {
           }
         }
       };
-      
+  
+    
 
     // Remove item from wishlist
     const removeFromWishlist = async (itemId, size) => {
@@ -196,7 +197,6 @@ const ShopContextProvider = (props) => {
           }
         }
       };
-      
 
     // Get total count of items in cart
     const getCartCount = () => {
@@ -272,13 +272,13 @@ const ShopContextProvider = (props) => {
     };
 
     // Debugging cart and wishlist updates
-    useEffect(() => {
-        console.log("Cart updated:", cartItems);
-    }, [cartItems]);
+    // useEffect(() => {
+    //     console.log("Cart updated:", cartItems);
+    // }, [cartItems]);
 
-    useEffect(() => {
-        console.log("Wishlist updated:", wishlistItems);
-    }, [wishlistItems]);
+    // useEffect(() => {
+    //     console.log("Wishlist updated:", wishlistItems);
+    // }, [wishlistItems]);
 
     // Products fetch from backend 
     const getProductsData = async () => {

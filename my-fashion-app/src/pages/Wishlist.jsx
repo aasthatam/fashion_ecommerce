@@ -3,15 +3,18 @@ import { ShopContext } from "../context/ShopContext";
 import removeIcon from "../assets/material-symbols-light_delete-outline.svg";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const Wishlist = () => {
   const {
     token,
     navigate,
     wishlistItems,
+    setWishlistItems,
     currency,
     removeFromWishlist,
-    addToCart
+    addToCart,
+    backendUrl
   } = useContext(ShopContext);
 
   const handleAddToCart = (itemId, size) => {
@@ -54,22 +57,72 @@ const Wishlist = () => {
                       <img
                         src={item.image || item.images?.[0]}
                         alt={item.name}
-                        className="w-16 h-16 object-cover rounded"
+                        className="w-24 h-32 object-cover rounded"
                       />
                       <div>
                         <h3 className="text-xs sm:text-lg font-medium">{item.name}</h3>
                         <div className='flex items-center gap-5 mt-2'>
                           <p>{currency}{item.price.toFixed(2)}</p>
-                          <p className="px-2 sm:px-3 sm:py-1 border bg-slate-50">{item.size}</p>
+                          <select
+                            value={item.size}
+                            onChange={async (e) => {
+                              const newSize = e.target.value;
+                              const oldSize = wishlistItems[index].size;
+                              const updatedWishlist = [...wishlistItems];
+                              updatedWishlist[index].size = newSize;
+                              setWishlistItems(updatedWishlist);
+                              localStorage.setItem("wishlistItems", JSON.stringify(updatedWishlist));
+                            
+                              if (token) {
+                                try {
+                                  // Remove old entry
+                                  await axios.post(backendUrl + '/api/wishlist/remove', {
+                                    itemId: item._id,
+                                    size: oldSize
+                                  }, {
+                                    headers: { token }
+                                  });
+                            
+                                  // Add new entry with updated size
+                                  await axios.post(backendUrl + '/api/wishlist/add', {
+                                    itemId: item._id,
+                                    size: newSize
+                                  }, {
+                                    headers: { token }
+                                  });
+                                } catch (error) {
+                                  toast.error("Failed to sync wishlist size change.");
+                                  console.error(error);
+                                }
+                              }
+                            }}
+                            className="px-2 py-1 border bg-slate-50 text-sm rounded"
+                          >
+                            <option disabled value="default">Select Size</option>
+                            {item.sizes?.map(sz => (
+                              <option key={sz} value={sz}>{sz}</option>
+                            ))}
+                          </select>
                         </div>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
                       {/* Add to Cart Button */}
                       <button
-                        onClick={() => handleAddToCart(item._id, item.size)}
-                        className="text-white bg-black py-1 px-3 rounded hover:bg-gray-700 transition-colors"
-                      >
+                            onClick={() => {
+                              if (item.size === "default") {
+                                toast.error("Please select a size before adding to cart");
+                                return;
+                              }
+                              handleAddToCart(item._id, item.size);
+                            }}
+                            className={`py-1 px-3 rounded transition-colors ${
+                              item.size === "default" 
+                                ? "bg-gray-400 cursor-not-allowed text-white" 
+                                : "bg-black text-white hover:bg-gray-700"
+                            }`}
+                            disabled={item.size === "default"}
+                          >
                         Add to Cart
                       </button>
 

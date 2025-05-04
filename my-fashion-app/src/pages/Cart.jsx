@@ -74,7 +74,7 @@ const Cart = () => {
                       <img
                         src={item.images?.[0] || item.images} // fallback
                         alt={item.name}
-                        className="w-16 h-16 object-cover rounded"
+                       className="w-24 h-32 object-cover rounded"
                       />
                       <div>
                         <h3 className="text-xs sm:text-lg font-medium">{item.name}</h3>

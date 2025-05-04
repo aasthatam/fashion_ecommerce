@@ -4,6 +4,8 @@ import { ShopContext } from "../context/ShopContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import EyeIcon from "../assets/image120.svg";
+import EyeSlashIcon from "../assets/image121.svg";
 
 const LoginPage = () => {
   const [mode, setMode] = useState("login"); // "login" or "register"
@@ -11,6 +13,8 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const { token, setToken, backendUrl } = useContext(ShopContext);
   const navigate = useNavigate();
@@ -18,30 +22,22 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // if (mode === "register" && password !== confirmPassword) {
-    //   toast.error("Passwords do not match!");
-    //   return;
-    // }
-
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-  if (mode === "register") {
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match!");
-      return;
+    if (mode === "register") {
+      if (password !== confirmPassword) {
+        toast.error("Passwords do not match!");
+        return;
+      }
+      if (!passwordRegex.test(password)) {
+        toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
+        return;
+      }
     }
-    if (!passwordRegex.test(password)) {
-      toast.error("Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.");
-      return;
-    }
-  }
 
     try {
       if (mode === "login") {
-        const response = await axios.post(`${backendUrl}/api/user/login`, {
-          email,
-          password,
-        });
+        const response = await axios.post(`${backendUrl}/api/user/login`, { email, password });
 
         if (response.data?.success && response.data?.token) {
           setToken(response.data.token);
@@ -53,11 +49,7 @@ const LoginPage = () => {
           toast.error(response.data?.message || "Invalid login credentials");
         }
       } else {
-        const response = await axios.post(`${backendUrl}/api/user/register`, {
-          name,
-          email,
-          password,
-        });
+        const response = await axios.post(`${backendUrl}/api/user/register`, { name, email, password });
 
         if (response.data?.success) {
           toast.success("Account created successfully! Please login.");
@@ -71,8 +63,7 @@ const LoginPage = () => {
         }
       }
     } catch (error) {
-      const msg =
-        error.response?.data?.message || error.message || "Something went wrong.";
+      const msg = error.response?.data?.message || error.message || "Something went wrong.";
       toast.error(msg);
     }
   };
@@ -106,6 +97,7 @@ const LoginPage = () => {
               />
             </div>
           )}
+
           <div className="mb-4">
             <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
               Email
@@ -120,43 +112,67 @@ const LoginPage = () => {
               required
             />
           </div>
-          <div className="mb-4">
+
+          <div className="mb-4 relative">
             <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
               Password
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Enter your password"
               required
             />
+            <span
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-9 cursor-pointer"
+            >
+              <img
+                src={showPassword ? EyeIcon : EyeSlashIcon}
+                alt="Toggle password visibility"
+                className="w-5 h-5"
+              />
+            </span>
           </div>
+
           {mode === "register" && (
-            <div className="mb-4">
+            <div className="mb-4 relative">
               <label htmlFor="confirmPassword" className="block text-gray-700 text-sm font-bold mb-2">
                 Confirm Password
               </label>
               <input
-                type="password"
+                type={showConfirmPassword ? "text" : "password"}
                 id="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 pr-10 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Confirm your password"
                 required
               />
+              <span
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-9 cursor-pointer"
+              >
+                <img
+                  src={showConfirmPassword ? EyeIcon : EyeSlashIcon}
+                  alt="Toggle confirm password visibility"
+                  className="w-5 h-5"
+                />
+              </span>
             </div>
           )}
+
           {mode === "login" && (
             <div className="mb-6 text-right">
               <Link to="/reset-password" className="text-sm text-gray-500 hover:underline">
-               Forgot your password?
+                Forgot your password?
               </Link>
             </div>
           )}
+
           <button
             type="submit"
             className="w-full bg-black text-white py-2 px-4 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -164,24 +180,19 @@ const LoginPage = () => {
             {mode === "login" ? "Sign In" : "Create Account"}
           </button>
         </form>
+
         <div className="mt-6 text-center">
           {mode === "login" ? (
             <p className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <button
-                className="text-gray-500 hover:underline"
-                onClick={() => setMode("register")}
-              >
+              <button className="text-gray-500 hover:underline" onClick={() => setMode("register")}>
                 Create account
               </button>
             </p>
           ) : (
             <p className="text-sm text-gray-600">
               Already have an account?{" "}
-              <button
-                className="text-gray-500 hover:underline"
-                onClick={() => setMode("login")}
-              >
+              <button className="text-gray-500 hover:underline" onClick={() => setMode("login")}>
                 Sign In
               </button>
             </p>
