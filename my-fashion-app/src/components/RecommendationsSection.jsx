@@ -48,10 +48,10 @@ function RecommendationsSection({ currentProductId, category }) {
             };
 
             return (
-              <div key={product._id} className="relative group">
+              <div key={product._id} className="relative group overflow-hidden">
                 {/* Product Image with Link */}
                 <Link to={`/product/${product._id}`}>
-                  <div className="relative">
+                  <div className="overflow-hidden">
                     <img
                       src={
                         Array.isArray(product.images)
@@ -59,7 +59,7 @@ function RecommendationsSection({ currentProductId, category }) {
                           : product.images
                       }
                       alt={product.name}
-                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                      className="w-full h-full transition-transform duration-300 group-hover:scale-110"
                     />
                   </div>
                 </Link>

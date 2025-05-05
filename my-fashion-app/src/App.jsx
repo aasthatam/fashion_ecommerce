@@ -18,6 +18,8 @@ import OrderDetails from "./pages/OrderDetails";
 import { ToastContainer } from 'react-toastify';
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import PaymentSuccess from "./pages/PaymentSuccess";
+import ProfilePage from "./pages/ProfilePage";
+
 
 
 const App = () => {
@@ -42,6 +44,7 @@ const App = () => {
       <Route path="/styleguide" element={<StyleGuide/>} />
       <Route path="/reset-password" element={<ResetPasswordPage/>} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
+      <Route path="/profile" element={<ProfilePage />} />
   
     </Routes>
     <Footer/>

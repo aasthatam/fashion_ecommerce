@@ -51,6 +51,23 @@ const StyleGuide = () => {
 
           const shape = response.data.shape;
           setBodyShape(shape);
+          try {
+            const token = localStorage.getItem("token");
+            if (token) {
+              await axios.put(
+                "http://localhost:4000/api/user/body-shape",  // or update URL as per your route setup
+                { bodyShape: shape },
+                {
+                  headers: {
+                    token: token,  // your `authUser` middleware expects this key
+                  },
+                }
+              );
+            }
+          } catch (err) {
+            console.error("Failed to store body shape:", err);
+          }
+          
           setDescription(response.data.description);
           setResultImageBase64(response.data.result_image_base64);
 
