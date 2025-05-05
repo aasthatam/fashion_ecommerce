@@ -177,5 +177,50 @@ const resetPassword = async (req, res) => {
    }
 };
 
+const updateBodyShape = async (req, res) => {
+   try {
+     const { userId } = req.body; // from JWT
+     const { bodyShape } = req.body;
  
-export { loginUser, registerUser, adminLogin, resetPassword }
+     if (!bodyShape) {
+       return res.status(400).json({ success: false, message: "Body shape is required" });
+     }
+ 
+     const user = await userModel.findByIdAndUpdate(
+       userId,
+       { bodyShape },
+       { new: true }
+     ).select("-password");
+ 
+     if (!user) {
+       return res.status(404).json({ success: false, message: "User not found" });
+     }
+ 
+     res.json({ success: true, user });
+   } catch (err) {
+     console.error(err);
+     res.status(500).json({ success: false, message: "Server error" });
+   }
+ };
+
+ const getProfile = async (req, res) => {
+   try {
+     const { userId } = req.body; // set by authUser middleware
+ 
+     const user = await userModel.findById(userId).select("name email role bodyShape");
+ 
+     if (!user) {
+       return res.status(404).json({ success: false, message: "User not found" });
+     }
+ 
+     res.json({ success: true, user });
+   } catch (err) {
+     console.error(err);
+     res.status(500).json({ success: false, message: "Server error" });
+   }
+ };
+ 
+ 
+
+ 
+export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile }
