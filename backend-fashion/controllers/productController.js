@@ -2,6 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import productModel from "../models/productModel.js";
 import axios from "axios";
 import crypto from "crypto";
+import userBehaviorModel from "../models/userBehaviorModel.js";
 
 
 // FastAPI service URL
@@ -124,8 +125,19 @@ const removeProduct = async (req,res) => {
 // function for single product info
 const singleProduct = async (req,res) => {
     try {
-        const { productId } = req.body
+        const { productId, userId } = req.body;
         const product = await productModel.findById(productId)
+        if (userId) {
+            try {
+                await userBehaviorModel.create({
+                    userId,
+                    productId,
+                    action: "view"
+                });
+            } catch (logError) {
+                console.log("View logging failed:", logError.message);
+            }
+        }
         res.json({success: true, product})
 
     } catch (error) {

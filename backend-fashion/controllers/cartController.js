@@ -1,5 +1,7 @@
 import userModel from "../models/userModel.js";
 import mongoose from "mongoose";
+import userBehaviorModel from "../models/userBehaviorModel.js";
+
 //add products to user
 const addToCart = async (req,res) => {
     try {
@@ -20,6 +22,16 @@ const addToCart = async (req,res) => {
             cartData[itemId][size] = 1
         }
         await userModel.findByIdAndUpdate(userId, {cartData})
+        try {
+            await userBehaviorModel.create({
+              userId,
+              productId: itemId,
+              action: "cart",
+              size
+            });
+          } catch (logError) {
+            console.error("Cart behavior log failed:", logError.message);
+          }
 
         res.json({ success: true, message: "Added To Cart" })
 
@@ -89,7 +101,17 @@ const removeFromCart = async (req, res) => {
   
         await userModel.findByIdAndUpdate(userId, { cartData });
       }
-  
+      try {
+        await userBehaviorModel.create({
+          userId,
+          productId: itemId,
+          action: "cart remove",
+          size
+        });
+      } catch (logError) {
+        console.error("Cart remove log failed:", logError.message);
+      }
+
       res.json({ success: true, message: "Item removed from cart" });
     } catch (error) {
       console.log(error);
