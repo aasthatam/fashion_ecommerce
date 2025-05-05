@@ -1,4 +1,5 @@
 import userModel from '../models/userModel.js';
+import userBehaviorModel from "../models/userBehaviorModel.js";
 
 const addToWishlist = async (req, res) => {
   try {
@@ -10,6 +11,16 @@ const addToWishlist = async (req, res) => {
 
     const wishlistData = [...user.wishlistData, { itemId, size }];
     await userModel.findByIdAndUpdate(userId, { wishlistData });
+    try {
+      await userBehaviorModel.create({
+        userId,
+        productId: itemId,
+        action: "wishlist",
+        size
+      });
+    } catch (logError) {
+      console.error("Wishlist behavior log failed:", logError.message);
+    }
 
     res.json({ success: true, message: "Added to wishlist" });
   } catch (error) {
@@ -24,6 +35,17 @@ const removeFromWishlist = async (req, res) => {
 
     const wishlistData = user.wishlistData.filter(item => !(item.itemId === itemId && item.size === size));
     await userModel.findByIdAndUpdate(userId, { wishlistData });
+    try {
+      await userBehaviorModel.create({
+        userId,
+        productId: itemId,
+        action: "wishlist remove",
+        size
+      });
+    } catch (logError) {
+      console.error("Wishlist remove log failed:", logError.message);
+    }
+
 
     res.json({ success: true, message: "Removed from wishlist" });
   } catch (error) {
