@@ -7,6 +7,7 @@ import { ShopContext } from '../context/ShopContext';
 import RecommendationsSection from '../components/RecommendationsSection';
 import axios from 'axios';
 import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
 
 function ProductDetailPage() {
   const { id } = useParams();
@@ -23,7 +24,12 @@ function ProductDetailPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.post(`${backendUrl}/api/product/single`, { productId: id });
+        let userId = null;
+        if (token) {
+          const decoded = jwtDecode(token);
+          userId = decoded.id;
+        }
+        const response = await axios.post(`${backendUrl}/api/product/single`, { productId: id,  userId: userId });
         if (response.data.success) {
           setProduct(response.data.product);
         } else {

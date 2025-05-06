@@ -72,6 +72,7 @@ const PlaceOrder = () => {
       const amount = totalPrice + delivery_fee;
 
       const orderData = {
+        userId: JSON.parse(localStorage.getItem("user"))._id,
         address: formData,
         items: orderItems,
         amount,
