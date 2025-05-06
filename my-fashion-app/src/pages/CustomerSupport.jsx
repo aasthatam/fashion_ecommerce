@@ -11,308 +11,314 @@ const CustomerSupport = () => {
 
   const [selectedSection, setSelectedSection] = useState(decodedSection);
   const [openSubSection, setOpenSubSection] = useState(null);
+  const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState("");
+
+  const handleFeedback = (message) => {
+    setFeedbackMessage(message);
+    setShowFeedbackPopup(true);
+    setTimeout(() => {
+      setShowFeedbackPopup(false);
+    }, 1000); // Auto close after 1 seconds
+  };
 
   useEffect(() => {
     setSelectedSection(decodedSection);
   }, [decodedSection]);
 
-  // Sidebar items
-  const sidebarItems = [
-    "Contact us",
-    "How to shop",
-    "Orders and delivery",
-    "Payment and pricing",
-    "Returns and refunds",
-    "FAQs",
-    "Terms and conditions",
-    "Privacy policy",
-  ];
+ // Sidebar items
+const sidebarItems = [
+  "Contact us",
+  "How to shop",
+  "Orders and delivery",
+  "Payment and pricing",
+  "Returns and refunds",
+  "FAQs",
+  "Terms and conditions",
+  "Privacy policy",
+];
 
-  // Subsections for each section
-  const sectionSubSections = {
-    "Contact us": [
-      { 
-        title: "Customer Support", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Email service hours:</h3>
-            <ul className="list-disc pl-5 mb-4">
-              <li>Sunday to Friday: 9am to 6pm NPT</li>
-              <li>Closed on Saturdays and public holidays</li>
-            </ul>
-            <p>You can reach our support team at: <span className="font-medium">support@example.com.np</span></p>
-          </div>
-        ) 
-      },
-      { 
-        title: "Phone Support", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Phone service hours:</h3>
-            <ul className="list-disc pl-5 mb-4">
-              <li>Sunday to Friday: 10am to 5pm NPT</li>
-            </ul>
-            <p>Call us at: <span className="font-medium">+977-1-1234567</span> (Kathmandu)</p>
-            <p className="mt-2">Toll-free: <span className="font-medium">1660-01-12345</span></p>
-          </div>
-        ) 
-      },
-    ],
-    "How to shop": [
-      { 
-        title: "Creating an Account", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Getting started is easy:</h3>
-            <ol className="list-decimal pl-5 space-y-2">
-              <li>Click 'Sign Up' in the top right corner</li>
-              <li>Enter your email and create a password</li>
-              <li>Verify your mobile number via SMS</li>
-              <li>Complete your profile information</li>
-            </ol>
-            <p className="mt-3">You'll receive <span className="font-medium">Rs. 200 off</span> your first order when you sign up!</p>
-          </div>
-        ) 
-      },
-      { 
-        title: "Finding Products", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Browse our collection:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Use the search bar for specific items</li>
-              <li>Filter by category, price, or location</li>
-              <li>Check our 'Dashain Special Offers'</li>
-              <li>Save items to your wishlist for later</li>
-            </ul>
-            <p className="mt-3">Need help? Message us on <span className="font-medium">Viber or WhatsApp</span>!</p>
-          </div>
-        ) 
-      },
-    ],
-    "Orders and delivery": [
-      { 
-        title: "Order Processing", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">What to expect after ordering:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Order confirmation SMS immediately</li>
-              <li>Processing time: 1-2 business days</li>
-              <li>Delivery timeframe depends on your location</li>
-              <li>Kathmandu Valley: 1-3 days</li>
-              <li>Outside Valley: 3-7 days</li>
-            </ul>
-            <p className="mt-3">Note: Delivery may delay during festivals and road blockades.</p>
-          </div>
-        ) 
-      },
-      { 
-        title: "Delivery Options", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Available shipping methods:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li><span className="font-medium">Standard:</span> 2-4 business days (Rs. 100)</li>
-              <li><span className="font-medium">Express:</span> Next business day (Rs. 200)</li>
-              <li><span className="font-medium">Same-Day:</span> Available in Kathmandu (Rs. 300)</li>
-            </ul>
-            <p className="mt-3">Free standard shipping on orders over <span className="font-medium">Rs. 2,000</span> in Kathmandu Valley!</p>
-          </div>
-        ) 
-      },
-    ],
-    "Payment and pricing": [
-      { 
-        title: "Accepted Payment Methods", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">We accept:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Cash on Delivery (COD)</li>
-              <li>eSewa</li>
-              <li>Khalti</li>
-              <li>Bank Transfer (Nepali Banks)</li>
-              <li>Credit/Debit Cards (Visa, MasterCard)</li>
-            </ul>
-            <p className="mt-3">All transactions are in Nepalese Rupees.</p>
-          </div>
-        ) 
-      },
-      { 
-        title: "Currency & Pricing", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Pricing information:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>All prices displayed in Nepalese Rupees (Rs.)</li>
-              <li>Inclusive of all taxes (VAT)</li>
-              <li>No hidden charges at checkout</li>
-              <li>Prices fixed as per Nepal government regulations</li>
-            </ul>
-            <p className="mt-3">Contact us for wholesale pricing.</p>
-          </div>
-        ) 
-      },
-      { 
-        title: "Discounts & Coupons", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Ways to save:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Festival season special discounts</li>
-              <li>Bank offers (NIC Asia, NMB, Prabhu Bank)</li>
-              <li>eSewa/Khalti cashback offers</li>
-              <li>Refer friends and get Rs. 150 credit</li>
-            </ul>
-            <p className="mt-3">Enter promo codes at checkout to apply discounts.</p>
-          </div>
-        ) 
-      },
-    ],
-    "Returns and refunds": [
-      { 
-        title: "Returns Policy", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Our return guidelines:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>7-day return window from delivery date</li>
-              <li>Items must be unused with original packaging</li>
-              <li>Original invoice required</li>
-              <li>Electronics have different return policy</li>
-            </ul>
-            <p className="mt-3">Return shipping charges apply (Rs. 100 within Valley).</p>
-          </div>
-        ) 
-      },
-      { 
-        title: "How to Return", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Return process:</h3>
-            <ol className="list-decimal pl-5 space-y-2">
-              <li>Call our support number</li>
-              <li>Provide order details and return reason</li>
-              <li>Wait for pickup confirmation</li>
-              <li>Get refund after quality check</li>
-            </ol>
-            <p className="mt-3">Refunds processed within 3-5 business days to original payment method.</p>
-          </div>
-        ) 
-      },
-    ],
-    "FAQs": [
-      { 
-        title: "Common Questions", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Frequently asked:</h3>
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-medium">Do you deliver to my area?</h4>
-                <p className="text-gray-600">We deliver to all major cities in Nepal. Enter your location at checkout to verify.</p>
-              </div>
-              <div>
-                <h4 className="font-medium">What is your COD limit?</h4>
-                <p className="text-gray-600">Cash on Delivery available up to Rs. 5,000 per order outside Kathmandu.</p>
-              </div>
-              <div>
-                <h4 className="font-medium">How can I track my order?</h4>
-                <p className="text-gray-600">We will SMS you the tracking details with delivery agent contact.</p>
-              </div>
+// Subsections for each section
+const sectionSubSections = {
+  "Contact us": [
+    {
+      title: "Customer Support",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Email service hours:</h3>
+          <ul className="list-disc pl-5 mb-4">
+            <li>Sunday to Friday: 9am to 6pm NPT</li>
+            <li>Closed on Saturdays and public holidays</li>
+          </ul>
+          <p>You can reach our support team at: <span className="font-medium">support@fashionfit.np</span></p>
+        </div>
+      )
+    },
+    {
+      title: "Phone Support",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Phone service hours:</h3>
+          <ul className="list-disc pl-5 mb-4">
+            <li>Sunday to Friday: 10am to 5pm NPT</li>
+          </ul>
+          <p>Call us at: <span className="font-medium">+977-1-9876543</span> (Kathmandu)</p>
+          <p className="mt-2">Toll-free: <span className="font-medium">1660-01-FAFASH</span></p>
+        </div>
+      )
+    },
+  ],
+  "How to shop": [
+    {
+      title: "Creating an Account",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Getting started is easy:</h3>
+          <ol className="list-decimal pl-5 space-y-2">
+            <li>Click 'Sign Up' in the top right corner</li>
+            <li>Enter your email and create a password</li>
+          </ol>
+        </div>
+      )
+    },
+    {
+      title: "Finding Products",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Browse our collection:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Use the search bar for specific items</li>
+            <li>Filter by category, fabric, color, or body shape</li>
+            <li>Explore AI-recommended fashion styles</li>
+            <li>Save items to your wishlist—even without logging in</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      title: "Get personalized style suggestions",
+      content: (
+        <div>
+          <p>Upload a full-body photo and let our AI suggest outfits tailored to your body shape, preferences, and the latest trends.</p>
+        </div>
+      ),
+    },
+    {
+      title: "Save your favorites",
+      content: (
+        <div>
+          <p>You can add products to your wishlist with a single tap—even without logging in! Create an account later to save your list permanently.</p>
+        </div>
+      ),
+    },
+  ],
+  "Orders and delivery": [
+    {
+      title: "Order Processing",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">What to expect after ordering:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Order confirmation email immediately</li>
+            <li>Processing time: 1-2 business days</li>
+            <li>Kathmandu Valley: 1–3 days</li>
+            <li>Outside Valley: 3–6 days</li>
+            <li>AI bundle processing may take slightly longer</li>
+          </ul>
+          <p className="mt-3">Note: Delivery may delay during festivals and road blockades.</p>
+        </div>
+      )
+    },
+    {
+      title: "Delivery support",
+      content: (
+        <div>
+          <p>If your delivery is delayed or you face any issues, contact our support team with your order ID or AI request reference. We’ll resolve it promptly.</p>
+        </div>
+      ),
+    },
+  ],
+  "Payment and pricing": [
+    {
+      title: "Accepted Payment Methods",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">We currently support:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>PayPal (international payment)</li>
+          </ul>
+          <p className="mt-3">All transactions are securely processed via PayPal in US Dollars ($).</p>
+        </div>
+      )
+    },
+    {
+      title: "Currency & Pricing",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Pricing details:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>All prices are displayed in US Dollars ($)</li>
+            <li>PayPal handles currency conversion if your local currency is NPR</li>
+            <li>Prices include applicable taxes and service fees</li>
+            <li>Exchange rates may vary based on PayPal’s conversion rate</li>
+          </ul>
+          <p className="mt-3">Tip: You can use an exchange rate calculator to estimate NPR costs.</p>
+        </div>
+      )
+    },
+    {
+      title: "Discounts & Coupons",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Available offers:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Festival promotions up to 30% off</li>
+            <li>AI-recommended outfit bundle discounts</li>
+            <li>Refer a friend and earn $1.50 in credits</li>
+          </ul>
+          <p className="mt-3">Enter promo codes during checkout to apply discounts.</p>
+        </div>
+      )
+    },
+  ],
+  "Returns and refunds": [
+    {
+      title: "Returns Policy",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Our return guidelines:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>7-day return window from delivery date</li>
+            <li>Items must be unused with original packaging</li>
+            <li>Original invoice required</li>
+            <li>Customized AI-recommended outfits are exchangeable only</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      title: "How to Return",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Return process:</h3>
+          <ol className="list-decimal pl-5 space-y-2">
+            <li>Request a return via profile page or call us</li>
+            <li>Provide order details and reason</li>
+            <li>Wait for pickup confirmation</li>
+            <li>Refund issued after item quality check</li>
+          </ol>
+        </div>
+      )
+    },
+  ],
+  "FAQs": [
+    {
+      title: "Common Questions",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Frequently asked:</h3>
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-medium">Do I need an account to use AI suggestions?</h4>
+              <p className="text-gray-600">No, but login helps save your preferences permanently.</p>
+            </div>
+            <div>
+              <h4 className="font-medium">What is your COD limit?</h4>
+              <p className="text-gray-600">We do not support COD currently. All payments go through PayPal.</p>
+            </div>
+            <div>
+              <h4 className="font-medium">Can I track my AI outfit order?</h4>
+              <p className="text-gray-600">Yes. We will SMS/email tracking details once shipped.</p>
             </div>
           </div>
-        ) 
-      },
-      { 
-        title: "Troubleshooting", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Problem solving:</h3>
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-medium">I didn't receive order confirmation</h4>
-                <p className="text-gray-600">Check your SMS inbox. If not received within 15 minutes, please call us.</p>
-              </div>
-              <div>
-                <h4 className="font-medium">Payment failed but amount deducted</h4>
-                <p className="text-gray-600">Amount will be auto-refunded in 2-3 working days. Contact your bank if not credited.</p>
-              </div>
-              <div>
-                <h4 className="font-medium">Received wrong/damaged item</h4>
-                <p className="text-gray-600">We apologize! Please contact us within 24 hours with photos.</p>
-              </div>
+        </div>
+      )
+    },
+    {
+      title: "Troubleshooting",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Problem solving:</h3>
+          <div className="space-y-4">
+            <div>
+              <h4 className="font-medium">Didn’t receive order confirmation?</h4>
+              <p className="text-gray-600">Check your SMS or email. If not received, please contact support.</p>
+            </div>
+            <div>
+              <h4 className="font-medium">AI suggestion doesn't look accurate?</h4>
+              <p className="text-gray-600">Try re-uploading your image or contact us for manual suggestions.</p>
+            </div>
+            <div>
+              <h4 className="font-medium">Received damaged/wrong item?</h4>
+              <p className="text-gray-600">Please send us a photo within 24 hours of delivery.</p>
             </div>
           </div>
-        ) 
-      },
-    ],
-    "Terms and conditions": [
-      { 
-        title: "Usage Policies", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Website terms:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>By using our site, you agree to these terms</li>
-              <li>Content is for personal, non-commercial use only</li>
-              <li>You must be 18+ to purchase</li>
-              <li>We comply with Nepal government regulations</li>
-            </ul>
-            <p className="mt-3">As per Nepalese laws.</p>
-          </div>
-        ) 
-      },
-      { 
-        title: "Legal Agreements", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Important notices:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>All products sold "as is"</li>
-              <li>Limitation of liability applies</li>
-              <li>Dispute resolution jurisdiction: Kathmandu</li>
-              <li>Governing law: Nepal laws</li>
-            </ul>
-            <p className="mt-3">Consult the full agreement for complete details.</p>
-          </div>
-        ) 
-      },
-    ],
-    "Privacy policy": [
-      { 
-        title: "Data Collection", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Information we collect:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Personal information provided during checkout</li>
-              <li>Mobile number for verification</li>
-              <li>Delivery address details</li>
-              <li>Order history for service improvement</li>
-            </ul>
-            <p className="mt-3">We comply with Nepal's privacy guidelines.</p>
-          </div>
-        ) 
-      },
-      { 
-        title: "Your Rights", 
-        content: (
-          <div>
-            <h3 className="font-medium mb-2">Your privacy controls:</h3>
-            <ul className="list-disc pl-5 space-y-2">
-              <li>Right to access your data</li>
-              <li>Right to request correction</li>
-              <li>Right to opt-out of marketing</li>
-              <li>Right to delete account</li>
-            </ul>
-            <p className="mt-3">Contact our support to exercise these rights.</p>
-          </div>
-        ) 
-      },
-    ],
-  };
+        </div>
+      )
+    },
+  ],
+  "Terms and conditions": [
+    {
+      title: "Usage Policies",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Website terms:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>By using our site, you agree to these terms</li>
+            <li>Content is for personal, non-commercial use only</li>
+            <li>You must be 18+ to place an order</li>
+            <li>Uploading images for AI suggestions implies data processing consent</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      title: "Legal Agreements",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Important notices:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>All products are sold "as is"</li>
+            <li>AI suggestions are advisory and not guaranteed to fit</li>
+            <li>Disputes resolved under Kathmandu jurisdiction</li>
+            <li>Governing law: Nepal laws</li>
+          </ul>
+        </div>
+      )
+    },
+  ],
+  "Privacy policy": [
+    {
+      title: "Data Collection",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Information we collect:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Email and contact info</li>
+            <li>Shipping address</li>
+            <li>Body images for AI suggestions (deleted after 24 hrs unless consented)</li>
+            <li>Order and search history</li>
+          </ul>
+        </div>
+      )
+    },
+    {
+      title: "Your Rights",
+      content: (
+        <div>
+          <h3 className="font-medium mb-2">Your privacy controls:</h3>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>Access and modify your data</li>
+            <li>Request account or data deletion</li>
+            <li>Revoke image processing consent</li>
+            <li>Unsubscribe from email promotions</li>
+          </ul>
+        </div>
+      )
+    },
+  ],
+};
+
 
   return (
     <div className="flex flex-col md:flex-row p-8 space-x-10">
@@ -369,14 +375,31 @@ const CustomerSupport = () => {
           <h2 className="text-lg font-semibold mb-3">Tell us what you think</h2>
           <p className="text-gray-600">Was this content helpful?</p>
           <div className="mt-2 space-x-4">
-            <button className="px-4 py-2 border rounded-md hover:bg-gray-200">
-              Yes
-            </button>
-            <button className="px-4 py-2 border rounded-md hover:bg-gray-200">
-              Not really
-            </button>
+          <button
+            onClick={() => handleFeedback("Thank you so much for your positive feedback! We're glad this information was helpful to you.")}
+            className="px-4 py-2 border rounded-md hover:bg-gray-200 cursor-pointer"
+          >
+            Yes
+          </button>
+          <button
+            onClick={() => handleFeedback("Thank you for your feedback. We're sorry this wasn't helpful - we'll keep working to improve your experience.")}
+            className="px-4 py-2 border rounded-md hover:bg-gray-200 cursor-pointer"
+          >
+            Not really
+          </button>
+        </div>
+        </div>
+        {showFeedbackPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Semi-transparent background to reduce brightness */}
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
+
+          {/* Actual popup */}
+          <div className="relative bg-white px-6 py-4 rounded-lg shadow-lg z-10 max-w-sm w-full text-center">
+            <p className="text-gray-800 font-medium">{feedbackMessage}</p>
           </div>
         </div>
+      )}
       </div>
     </div>
   );
