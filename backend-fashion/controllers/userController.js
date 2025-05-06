@@ -23,7 +23,7 @@ const loginUser = async (req, res) => {
       const isMatch = await bcrypt.compare(password, user.password);
       if (isMatch) {
          // const token = createToken(user._id)
-         const token = createToken({ id: user._id, role: user.role });
+         const token = createToken({ id: user._id, role: user.role, name: user.name });
          res.json({success: true, token,
             user: {
                _id: user._id,
@@ -83,7 +83,7 @@ const registerUser = async (req, res) => {
  
        // Create JWT token
       //  const token = createToken(user._id);
-      const token = createToken({ id: user._id, role: user.role });
+      const token = createToken({ id: user._id, role: user.role, name: user.name });
  
        // Send response with token
        res.json({ success: true, token,
