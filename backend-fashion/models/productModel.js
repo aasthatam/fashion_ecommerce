@@ -18,7 +18,16 @@ const productSchema = new mongoose.Schema({
     availability: { type: String, default: "In Stock" },
     colors: { type: String }, 
     sizes: { type: Array, required: true }, 
-    createdAt: { type: Date, default: Date.now }
+    createdAt: { type: Date, default: Date.now },
+    reviews: [
+        {
+          userId: { type: mongoose.Schema.Types.ObjectId, ref: 'user' },
+          username: String,
+          rating: { type: Number, required: true },
+          comment: String,
+          createdAt: { type: Date, default: Date.now }
+        }
+      ],
     
 
 
