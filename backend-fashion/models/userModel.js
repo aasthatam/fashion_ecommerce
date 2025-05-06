@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
     // cartTotal: { type: Number, default: 0 } // Optional, you can update it on each cart change.
     wishlistData: { type: Array, default: [] }, 
     bodyShape: { type: String, default: "" },
+    recentSearches: {
+        type: [String],
+        default: []
+      },
 }, { minimize: false })
 
 const userModel = mongoose.models.user || mongoose.model('user', userSchema);

@@ -2,6 +2,8 @@ import userModel from "../models/userModel.js";
 import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import productModel from "../models/productModel.js"; 
+
 
 // const createToken = (id) => {
 //     return jwt.sign({id}, process.env.JWT_SECRET)
@@ -230,8 +232,51 @@ const updateBodyShape = async (req, res) => {
   }
 };
 
- 
+const saveSearchKeyword = async (req, res) => {
+  try {
+    const { userId, keyword } = req.body;
+
+    if (!userId || !keyword) {
+      return res.status(400).json({ success: false, message: "Missing fields" });
+    }
+
+    const user = await userModel.findById(userId);
+    if (!user) return res.status(404).json({ success: false, message: "User not found" });
+
+    const updatedSearches = [keyword, ...user.recentSearches.filter(k => k !== keyword)].slice(0, 5);
+    user.recentSearches = updatedSearches;
+    await user.save();
+
+    res.json({ success: true, message: "Search saved", recentSearches: updatedSearches });
+  } catch (err) {
+    console.error("Search log error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+const recommendFromSearch = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const user = await userModel.findById(userId);
+
+    if (!user || !user.recentSearches.length) {
+      return res.json({ success: true, products: [] });
+    }
+
+    const searchRegex = user.recentSearches.map(keyword => ({
+      name: { $regex: keyword, $options: "i" }
+    }));
+
+    const matchedProducts = await productModel.find({ $or: searchRegex }).limit(12);
+
+    res.json({ success: true, products: matchedProducts });
+  } catch (err) {
+    console.error("Recommend error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
  
 
  
-export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile, getAllCustomers }
+export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile, getAllCustomers, saveSearchKeyword, recommendFromSearch }
