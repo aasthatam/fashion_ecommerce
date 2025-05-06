@@ -38,9 +38,11 @@ const ShopContextProvider = (props) => {
       }
   }, [cartItems]);
 
-    useEffect(() => {
-        localStorage.setItem("wishlistItems", JSON.stringify(wishlistItems));
-    }, [wishlistItems]);
+  useEffect(() => {
+    if (!token) {
+      localStorage.setItem("wishlistItems", JSON.stringify(wishlistItems));
+    } 
+  }, [wishlistItems, token]);
 
     // Add item to cart
     // const addToCart = async (itemId, size) => {
@@ -75,6 +77,22 @@ const ShopContextProvider = (props) => {
     //         }
     //     }
     // };
+    const logoutUser = () => {
+      setToken('');
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+    
+      // Clear cart and wishlist for the logged-in user
+      setCartItems({});
+      setWishlistItems([]);
+      localStorage.removeItem('cartItems');
+      localStorage.removeItem('wishlistItems');
+    
+      toast.success("Logged out successfully");
+      navigate("/login");
+    };
+
+
     const addToCart = async (itemId, size, quantity = 1) => {
       if (!size) {
           toast.error('Select product size');
@@ -253,24 +271,37 @@ const ShopContextProvider = (props) => {
     //     }
     // })
 
+    // useEffect(() => {
+    //     const storedToken = localStorage.getItem('token');
+      
+    //     if (storedToken && token !== storedToken) {
+    //       setToken(storedToken);
+    //     }
+      
+    //     if (storedToken && products.length > 0) {
+    //       getUserCart(storedToken);
+    //       getUserWishlist(storedToken);
+    //     }
+    //   }, [token, products]);
+
     useEffect(() => {
-        const storedToken = localStorage.getItem('token');
-      
-        if (storedToken && token !== storedToken) {
-          setToken(storedToken);
-        }
-      
-        if (storedToken) {
-          getUserCart(storedToken);
-          getUserWishlist(storedToken);
-        }
-      }, [token]);
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        setToken(storedToken);
+      }
+    }, []);
+
+    useEffect(() => {
+      if (token && products.length > 0) {
+        getUserCart(token);
+        getUserWishlist(token);
+      }
+    }, [token, products]);
 
     // Get total count of items in wishlist
     const getWishlistCount = () => {
         return wishlistItems.length;
     };
-
     // Debugging cart and wishlist updates
     // useEffect(() => {
     //     console.log("Cart updated:", cartItems);
@@ -330,6 +361,7 @@ const ShopContextProvider = (props) => {
         backendUrl,
         setToken,
         token,
+        logoutUser
         
     };
 

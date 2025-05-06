@@ -8,7 +8,7 @@ import menuIcon from "../assets/material-symbols-light_menu-rounded.svg";
 import dropdown from "../assets/dropdown_icon.png";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
@@ -18,14 +18,19 @@ const Header = () => {
   const dropdownRef = useRef(null);
   const accountRef = useRef(null);
 
+  // const {
+  //   getCartCount,
+  //   getWishlistCount,
+  //   setCartItems,
+  //   token,
+  //   setToken,
+  // } = useContext(ShopContext);
   const {
     getCartCount,
     getWishlistCount,
-    setCartItems,
     token,
-    setToken,
+    logoutUser,
   } = useContext(ShopContext);
-
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
@@ -221,12 +226,16 @@ const Header = () => {
                       </li>
                       <li
                         className="block px-4 py-2 hover:bg-gray-100 text-red-500 cursor-pointer"
+                        // onClick={() => {
+                        //   setToken("");
+                        //   localStorage.removeItem("token");
+                        //   setIsAccountOpen(false);
+                        //   setCartItems({});
+                        //   toast.success("Logged out successfully!");
+                        // }}
                         onClick={() => {
-                          setToken("");
-                          localStorage.removeItem("token");
+                          logoutUser();
                           setIsAccountOpen(false);
-                          setCartItems({});
-                          toast.success("Logged out successfully!");
                         }}
                       >
                         Logout
