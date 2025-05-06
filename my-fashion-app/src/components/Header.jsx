@@ -86,6 +86,21 @@ const Header = () => {
               {getCartCount()}
             </p>
           </Link>
+          {
+            token ? (
+              <Link to="/profile">
+                <img src={profileIcon} alt="Profile" className="w-5 h-5" />
+              </Link>
+            ) : (
+              <Link to="/login">
+                <img src={profileIcon} alt="Login" className="w-5 h-5" />
+              </Link>
+            )
+          }
+          <Link to="/search">
+            <img src={searchIcon} alt="Search" className="w-5 h-5" />
+          </Link>
+
         </div>
       </div>
 
