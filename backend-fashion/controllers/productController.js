@@ -273,4 +273,23 @@ const findSimilarProducts = async (req, res) => {
     }
 };
 
-export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, recommendProduct, findSimilarProducts };
+const addReview = async (req, res) => {
+    try {
+      const { productId, userId, username, rating, comment } = req.body;
+  
+      const product = await productModel.findById(productId);
+      if (!product) return res.json({ success: false, message: "Product not found" });
+  
+      const review = { userId, username, rating, comment };
+  
+      product.reviews.push(review);
+      await product.save();
+  
+      res.json({ success: true, message: "Review added" });
+    } catch (err) {
+      res.json({ success: false, message: err.message });
+    }
+  };
+  
+
+export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, recommendProduct, findSimilarProducts, addReview};
