@@ -323,6 +323,72 @@ function ProductDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Review Section */}
+<div className="mt-12">
+  <h2 className="text-2xl font-semibold mb-4">Customer Reviews</h2>
+
+  {product.reviews && product.reviews.length > 0 ? (
+    <div className="space-y-4">
+      {product.reviews.map((review, index) => (
+        <div key={index} className="border p-4 rounded-md shadow-sm">
+          <div className="font-medium">{review.username}</div>
+          <div className="text-yellow-500">
+            {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+          </div>
+          <p className="text-sm mt-1">{review.comment}</p>
+        </div>
+      ))}
+    </div>
+  ) : (
+    <p className="text-sm text-gray-500">No reviews yet. Be the first to review!</p>
+  )}
+
+  {token && (
+    <form
+    onSubmit={async (e) => {
+      e.preventDefault();
+      const rating = e.target.rating.value;
+      const comment = e.target.comment.value;
+      const decoded = jwtDecode(token);
+    
+      try {
+        await axios.post(`${backendUrl}/api/product/review`, {
+          productId: product._id,
+          userId: decoded.id,
+          username: decoded.name || "User",
+          rating,
+          comment,
+        });
+        toast.success("Review submitted!");
+        window.location.reload();
+      } catch (err) {
+        toast.error("Failed to submit review");
+        console.error("Review submission error:", err);
+      }
+    }}
+      className="mt-8 space-y-4"
+    >
+      <h3 className="text-lg font-semibold">Write a Review</h3>
+      <div>
+        <label className="block text-sm mb-1">Rating</label>
+        <select name="rating" required className="border p-2 rounded w-full">
+          <option value="">Select Rating</option>
+          {[5, 4, 3, 2, 1].map((star) => (
+            <option key={star} value={star}>{star} Star{star > 1 && "s"}</option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm mb-1">Comment</label>
+        <textarea name="comment" rows="3" required className="border p-2 rounded w-full" />
+      </div>
+      <button type="submit" className="bg-black text-white px-4 py-2 rounded">
+        Submit Review
+      </button>
+    </form>
+  )}
+</div>
       {/* Recommendations Section */}
       <RecommendationsSection currentProductId={product._id} category={product.category} />
     </div>
