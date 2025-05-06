@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import { Link } from "react-router-dom";
 import plusButton from "../assets/ei_plus.svg";
@@ -18,25 +18,79 @@ const Search = () => {
 
   const [selectedFile, setSelectedFile] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
-  const [recommendedProducts, setRecommendedProducts] = useState([]);
+  const [searchBasedRecommendations, setSearchBasedRecommendations] = useState([]);
+  const [imageBasedRecommendations, setImageBasedRecommendations] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [debouncedSearch, setDebouncedSearch] = useState(search);
+  const token = localStorage.getItem("token");
 
   const handleInputChange = (e) => {
     setSearch(e.target.value);
   };
 
-  const togglePopup = () => {
-    setShowPopup(!showPopup);
-  };
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    const saveKeyword = async () => {
+      const keyword = debouncedSearch.trim();
+      if (!token || keyword.length < 2) return;
+
+      try {
+        const userId = JSON.parse(atob(token.split('.')[1])).id;
+        await fetch("http://localhost:4000/api/user/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", token },
+          body: JSON.stringify({ userId, keyword })
+        });
+      } catch (err) {
+        console.error("Search keyword save failed:", err);
+      }
+    };
+
+    saveKeyword();
+  }, [debouncedSearch, token]);
+
+  useEffect(() => {
+    const fetchSearchBasedRecommendations = async () => {
+      if (!token) return;
+
+      try {
+        const userId = JSON.parse(atob(token.split('.')[1])).id;
+        const res = await fetch("http://localhost:4000/api/user/recent-search-recommendations", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", token },
+          body: JSON.stringify({ userId })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          setSearchBasedRecommendations(data.products);
+        }
+      } catch (error) {
+        console.error("Failed to fetch keyword recommendations:", error);
+      }
+    };
+
+    fetchSearchBasedRecommendations();
+  }, [token]);
+
+  const togglePopup = () => setShowPopup(!showPopup);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setSelectedFile(file);
+    if (file) {
+      setSelectedFile(file);
+      setShowPopup(false); // close popup immediately after choosing file
+    }
   };
 
   const handleUpload = async () => {
     if (!selectedFile) return;
-
     setLoading(true);
 
     const formData = new FormData();
@@ -44,19 +98,14 @@ const Search = () => {
     formData.append("upload_preset", "fashion_upload");
 
     try {
-      // 1. Upload image to Cloudinary
       const cloudinaryResponse = await fetch(
         "https://api.cloudinary.com/v1_1/dyplzxqu8/image/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
+        { method: "POST", body: formData }
       );
 
       const cloudinaryData = await cloudinaryResponse.json();
       const imageUrl = cloudinaryData.secure_url;
 
-      // 2. Call backend to find similar products
       const response = await fetch("http://localhost:4000/api/product/similar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -65,7 +114,7 @@ const Search = () => {
 
       const result = await response.json();
       if (result.success) {
-        setRecommendedProducts(result.similar_products);
+        setImageBasedRecommendations(result.similar_products);
       } else {
         console.error("Search failed:", result.message);
       }
@@ -74,6 +123,7 @@ const Search = () => {
     }
 
     setLoading(false);
+    setSelectedFile(null);
   };
 
   const isItemLiked = (item) => {
@@ -94,9 +144,42 @@ const Search = () => {
     product.name.toLowerCase().includes(search.toLowerCase())
   );
 
+  const renderProductCard = (item) => (
+    <div key={item._id} className="relative group overflow-hidden">
+      <Link to={`/product/${item._id}`}>
+        <div className="overflow-hidden">
+          <img
+            src={Array.isArray(item.images) ? item.images[0] : item.images}
+            alt={item.name}
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          />
+        </div>
+      </Link>
+      <button
+        className="absolute top-2 right-2 text-gray-700 z-10"
+        onClick={() => toggleLike(item)}
+      >
+        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
+          <img
+            src={isItemLiked(item) ? heartIconFilled : heartIcon}
+            alt="Heart"
+            className="w-5 h-5"
+          />
+        </div>
+      </button>
+      <div className="mt-3 text-center">
+        <p className="text-sm">{item.name ?? "Unnamed"}</p>
+        <p className="text-lg font-medium">
+          {currency}
+          {typeof item.price === "number" ? item.price.toFixed(2) : "N/A"}
+        </p>
+      </div>
+    </div>
+  );
+
   return (
     <div className="flex flex-col items-center px-4 py-10">
-      {/* Search bar and image upload trigger */}
+      {/* Search Bar + Upload */}
       <div className="relative flex items-center px-4 py-2 w-full max-w-md border-b border-gray-400">
         <input
           type="text"
@@ -114,16 +197,8 @@ const Search = () => {
         {showPopup && (
           <div className="absolute top-12 right-0 bg-white p-4 w-52 z-10 shadow">
             <p className="text-sm text-gray-700 mb-2">Upload image to search</p>
-            <input
-              type="file"
-              className="hidden"
-              id="fileInput"
-              onChange={handleFileChange}
-            />
-            <label
-              htmlFor="fileInput"
-              className="block text-sm text-gray-600 cursor-pointer hover:underline"
-            >
+            <input type="file" className="hidden" id="fileInput" onChange={handleFileChange} />
+            <label htmlFor="fileInput" className="block text-sm text-gray-600 cursor-pointer hover:underline">
               Choose File
             </label>
           </div>
@@ -140,88 +215,48 @@ const Search = () => {
         </button>
       )}
 
-      {/* Recommended Products Section */}
-      {recommendedProducts.length > 0 && (
+      {/* Image-Based Results */}
+      {search.length === 0 && imageBasedRecommendations.length > 0 && (
         <div className="w-full max-w-6xl mt-14">
-          <h2 className="text-xl font-semibold mb-4 text-center">Recommended Products</h2>
+          <h2 className="text-xl font-semibold mb-4 text-center">Visually Similar Products</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {recommendedProducts.map((item) => (
-              <div key={item._id} className="relative group overflow-hidden">
-                <Link to={`/product/${item._id}`}>
-                  <div className="overflow-hidden">
-                    <img
-                      src={Array.isArray(item.images) ? item.images[0] : item.images}
-                      alt={item.name}
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                    />
-                  </div>
-                </Link>
-                <button
-                  className="absolute top-2 right-2 text-gray-700 z-10"
-                  onClick={() => toggleLike(item)}
-                >
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
-                    <img
-                      src={isItemLiked(item) ? heartIconFilled : heartIcon}
-                      alt="Heart"
-                      className="w-5 h-5"
-                    />
-                  </div>
-                </button>
-                <div className="mt-3 text-center">
-                  <p className="text-sm">{item.name ?? "Unnamed"}</p>
-                  <p className="text-lg font-medium">
-                    {currency}
-                    {typeof item.price === "number" ? item.price.toFixed(2) : "N/A"}
-                  </p>
-                </div>
-              </div>
-            ))}
+            {imageBasedRecommendations.map(renderProductCard)}
           </div>
         </div>
       )}
 
-      {/* Filtered Product Results */}
-      <div className="w-full max-w-6xl mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.slice(0, 8).map((item) => (
-            <div key={item._id} className="relative group overflow-hidden">
-              <Link to={`/product/${item._id}`}>
-                <div className="overflow-hidden">
-                  <img
-                    src={Array.isArray(item.images) ? item.images[0] : item.images}
-                    alt={item.name}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                  />
-                </div>
-              </Link>
-              <button
-                className="absolute top-2 right-2 text-gray-700 z-10"
-                onClick={() => toggleLike(item)}
-              >
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
-                  <img
-                    src={isItemLiked(item) ? heartIconFilled : heartIcon}
-                    alt="Heart"
-                    className="w-5 h-5"
-                  />
-                </div>
-              </button>
-              <div className="mt-3 text-center">
-                <p className="text-sm">{item.name ?? "Unnamed"}</p>
-                <p className="text-lg font-medium">
-                  {currency}
-                  {typeof item.price === "number" ? item.price.toFixed(2) : "N/A"}
-                </p>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500 text-center col-span-full mt-10">
-            No results found for "<span className="font-medium">{search}</span>"
-          </p>
-        )}
-      </div>
+      {/* Logged-in Personalized Recommendations */}
+      {token && search.length === 0 && searchBasedRecommendations.length > 0 && (
+        <div className="w-full max-w-6xl mt-14">
+          <h2 className="text-xl font-semibold mb-4 text-center">Based on Your Recent Searches</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {searchBasedRecommendations.map(renderProductCard)}
+          </div>
+        </div>
+      )}
+
+      {/* Guest Default View */}
+      {!token && search.length === 0 && products.length > 0 && (
+        <div className="w-full max-w-6xl mt-14">
+          <h2 className="text-xl font-semibold mb-4 text-center">Explore Our Latest Products</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {products.slice(0, 8).map(renderProductCard)}
+          </div>
+        </div>
+      )}
+
+      {/* Filtered Search Results */}
+      {search.length > 0 && (
+        <div className="w-full max-w-6xl mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.slice(0, 8).map(renderProductCard)
+          ) : (
+            <p className="text-gray-500 text-center col-span-full mt-10">
+              No results found for "<span className="font-medium">{search}</span>"
+            </p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
