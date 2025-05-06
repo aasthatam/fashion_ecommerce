@@ -46,6 +46,11 @@ const Analytics = () => {
     };
 
     fetchAnalytics();
+      // Set up polling every 10 seconds
+      const interval = setInterval(fetchAnalytics, 10000); // 10,000ms = 10 sec
+
+      // Clean up on unmount
+      return () => clearInterval(interval);
   }, [selectedUser]);
 
   // Extract unique dates and actions
