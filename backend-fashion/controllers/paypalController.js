@@ -3,6 +3,8 @@ import dotenv from "dotenv";
 import nodemailer from "nodemailer";
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js"; 
+import userBehaviorModel from "../models/userBehaviorModel.js";
+
 
 dotenv.config();
 
@@ -81,6 +83,16 @@ export const executePayment = async (req, res) => {
 
       const savedOrder = await newOrder.save();
       console.log("Order saved with ID:", savedOrder._id);
+
+      // Track purchase behavior
+      for (const item of formattedItems) {
+        await userBehaviorModel.create({
+          userId,
+          productId: item._id,
+          action: "purchase",
+          size: item.size
+        });
+      }
 
       await userModel.updateOne(
         { _id: userId },

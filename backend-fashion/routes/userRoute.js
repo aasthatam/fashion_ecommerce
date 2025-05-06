@@ -1,5 +1,5 @@
 import express from 'express';
-import { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile} from '../controllers/userController.js';
+import { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile, getAllCustomers} from '../controllers/userController.js';
 import authUser from "../middleware/auth.js";
 
 const userRouter = express.Router();
@@ -10,5 +10,6 @@ userRouter.post('/admin', adminLogin);
 userRouter.post('/reset-password', resetPassword);
 userRouter.put("/body-shape", authUser, updateBodyShape);
 userRouter.get("/profile", authUser, getProfile);
+userRouter.get("/all", getAllCustomers);
 
 export default userRouter;

@@ -1,6 +1,7 @@
 import orderModel from "../models/orderModel.js";
 import userModel from "../models/userModel.js";
 import nodemailer from "nodemailer";
+import userBehaviorModel from "../models/userBehaviorModel.js";
 
 // Place order using COP method
 const placeOrder = async (req, res) => {
@@ -18,6 +19,16 @@ const placeOrder = async (req, res) => {
 
         const newOrder = new orderModel(orderData)
         await newOrder.save()
+
+        // Log user purchase behavior
+            for (const item of items) {
+                await userBehaviorModel.create({
+                userId,
+                productId: item._id,
+                action: "purchase",
+                size: item.size
+                });
+            }
 
         await userModel.findByIdAndUpdate(userId, {cartData:{}})
 

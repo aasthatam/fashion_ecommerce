@@ -219,8 +219,19 @@ const updateBodyShape = async (req, res) => {
      res.status(500).json({ success: false, message: "Server error" });
    }
  };
+
+ const getAllCustomers = async (req, res) => {
+  try {
+    const users = await userModel.find({ role: "customer" }).select("_id name email");
+    res.json({ success: true, users });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
  
  
 
  
-export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile }
+export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile, getAllCustomers }
