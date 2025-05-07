@@ -8,15 +8,22 @@ import menuIcon from "../assets/material-symbols-light_menu-rounded.svg";
 import dropdown from "../assets/dropdown_icon.png";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
+import { useLocation } from "react-router-dom";
 // import { toast } from "react-toastify";
 
 const Header = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [isAccountOpen, setIsAccountOpen] = useState(false);
+  // const [isAccountOpen, setIsAccountOpen] = useState(false);
+
+  const [isAccountOpenDesktop, setIsAccountOpenDesktop] = useState(false);
+  const [isAccountOpenMobile, setIsAccountOpenMobile] = useState(false);
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(false);
 
   const dropdownRef = useRef(null);
-  const accountRef = useRef(null);
+  // const accountRef = useRef(null);
+  const accountRefDesktop = useRef(null);
+  const accountRefMobile = useRef(null);
 
   // const {
   //   getCartCount,
@@ -30,13 +37,22 @@ const Header = () => {
     getWishlistCount,
     token,
     logoutUser,
+    backendUrl
   } = useContext(ShopContext);
   const toggleDropdown = () => {
     setDropdownOpen(!isDropdownOpen);
   };
 
-  const toggleAccountMenu = () => {
-    setIsAccountOpen(!isAccountOpen);
+  // const toggleAccountMenu = () => {
+  //   setIsAccountOpen(!isAccountOpen);
+  // };
+
+  const toggleAccountMenuDesktop = () => {
+    setIsAccountOpenDesktop((prev) => !prev);
+  };
+  
+  const toggleAccountMenuMobile = () => {
+    setIsAccountOpenMobile((prev) => !prev);
   };
 
   useEffect(() => {
@@ -44,8 +60,20 @@ const Header = () => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
-      if (accountRef.current && !accountRef.current.contains(event.target)) {
-        setIsAccountOpen(false);
+      // if (accountRef.current && !accountRef.current.contains(event.target)) {
+      //   setIsAccountOpen(false);
+      // }
+      if (
+        accountRefDesktop.current &&
+        !accountRefDesktop.current.contains(event.target)
+      ) {
+        setIsAccountOpenDesktop(false);
+      }
+      if (
+        accountRefMobile.current &&
+        !accountRefMobile.current.contains(event.target)
+      ) {
+        setIsAccountOpenMobile(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -53,6 +81,36 @@ const Header = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    const fetchUnreadNotifications = async () => {
+      if (!token) return;
+      try {
+        const response = await fetch(`${backendUrl}/api/user/notifications`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', token },
+        });
+        const data = await response.json();
+        if (data.success) {
+          const unread = data.notifications?.some(n => !n.read);
+          setHasUnreadNotifications(unread);
+        }
+      } catch (err) {
+        console.error("Failed to fetch notifications", err);
+      }
+    };
+
+    fetchUnreadNotifications();
+  }, [token, backendUrl]);
+
+  const location = useLocation();
+
+    useEffect(() => {
+      if (location.pathname === "/notifications") {
+        setHasUnreadNotifications(false);
+      }
+    }, [location.pathname]);
+
 
   return (
     <header className="flex items-center justify-between px-4 md:px-8 lg:px-10 xl:px-12 py-4 shadow-md bg-white relative">
@@ -92,16 +150,67 @@ const Header = () => {
             </p>
           </Link>
           {
-            token ? (
-              <Link to="/profile">
-                <img src={profileIcon} alt="Profile" className="w-5 h-5" />
-              </Link>
-            ) : (
-              <Link to="/login">
-                <img src={profileIcon} alt="Login" className="w-5 h-5" />
-              </Link>
-            )
-          }
+        token ? (
+          <div className="relative" ref={accountRefMobile}>
+            <img
+              src={profileIcon}
+              alt="User"
+              className="w-5 h-5 cursor-pointer"
+              onClick={toggleAccountMenuMobile}
+            />
+            {isAccountOpenMobile && (
+              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50">
+                <ul className="text-sm">
+                  <li>
+                                <Link
+                                  to="/profile"
+                                  className="block px-4 py-2 hover:bg-gray-100"
+                                  onClick={() => setIsAccountOpenMobile(false)}
+                                >
+                                  My Profile
+                                </Link>
+                              </li>
+                              <li>
+                                <Link
+                                  to="/orders"
+                                  className="block px-4 py-2 hover:bg-gray-100"
+                                  onClick={() => setIsAccountOpenMobile(false)}
+                                >
+                                  My Orders
+                                </Link>
+                              </li>
+                              <li className="relative">
+                              <Link
+                                to="/notifications"
+                                className="block px-4 py-2 hover:bg-gray-100"
+                                onClick={() => setIsAccountOpenDesktop(false)}
+                              >
+                                Notifications
+                                {hasUnreadNotifications && (
+                                  <span className="absolute top-2 right-3 w-2 h-2 bg-red-500 rounded-full"></span>
+                                )}
+                              </Link>
+                            </li>
+                              <li
+                                className="block px-4 py-2 hover:bg-gray-100 text-red-500 cursor-pointer"
+                                onClick={() => {
+                                  logoutUser();
+                                  setIsAccountOpenMobile(false);
+                                }}
+                              >
+                                Logout
+                              </li>
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <Link to="/login">
+                        <img src={profileIcon} alt="Login" className="w-5 h-5" />
+                      </Link>
+                    )
+                  }
+
           <Link to="/search">
             <img src={searchIcon} alt="Search" className="w-5 h-5" />
           </Link>
@@ -194,23 +303,26 @@ const Header = () => {
           </Link>
 
           {/* Profile Dropdown */}
-          <div className="relative" ref={accountRef}>
+          <div className="relative" ref={accountRefDesktop}>
             {token ? (
               <>
                 <img
                   src={profileIcon}
                   alt="User"
                   className="w-6 h-6 cursor-pointer"
-                  onClick={toggleAccountMenu}
+                  onClick={toggleAccountMenuDesktop}
                 />
-                {isAccountOpen && (
+                {isAccountOpenDesktop && (
                   <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded shadow-lg z-50">
                     <ul className="text-sm">
                       <li>
                         <Link
                           to="/profile"
                           className="block px-4 py-2 hover:bg-gray-100"
-                          onClick={() => setIsAccountOpen(false)}
+                          onClick={() => {
+                            setIsAccountOpenDesktop(false);
+                
+                          }}
                         >
                           My Profile
                         </Link>
@@ -219,9 +331,23 @@ const Header = () => {
                         <Link
                           to="/orders"
                           className="block px-4 py-2 hover:bg-gray-100"
-                          onClick={() => setIsAccountOpen(false)}
+                          onClick={() => {
+                            setIsAccountOpenDesktop(false);
+                        }}
                         >
                           My Orders
+                        </Link>
+                      </li>
+                      <li className="relative">
+                        <Link
+                          to="/notifications"
+                          className="block px-4 py-2 hover:bg-gray-100"
+                          onClick={() => setIsAccountOpenDesktop(false)}
+                        >
+                          Notifications
+                          {hasUnreadNotifications && (
+                            <span className="absolute top-2 right-3 w-2 h-2 bg-red-500 rounded-full"></span>
+                          )}
                         </Link>
                       </li>
                       <li
@@ -235,7 +361,7 @@ const Header = () => {
                         // }}
                         onClick={() => {
                           logoutUser();
-                          setIsAccountOpen(false);
+                          setIsAccountOpenDesktop(false);
                         }}
                       >
                         Logout
