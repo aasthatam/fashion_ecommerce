@@ -337,6 +337,18 @@ const ShopContextProvider = (props) => {
     // }
     // })
 
+    // Add this right here
+      useEffect(() => {
+        const syncToken = () => {
+          const storedToken = localStorage.getItem("token");
+          if (!storedToken && token) {
+            setToken("");
+          }
+        };
+        window.addEventListener("focus", syncToken);
+        return () => window.removeEventListener("focus", syncToken);
+      }, [token]);
+
     const value = {
         products,
         currency,
@@ -364,6 +376,7 @@ const ShopContextProvider = (props) => {
         logoutUser
         
     };
+
 
     return (
         <ShopContext.Provider value={value}>
