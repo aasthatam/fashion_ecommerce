@@ -15,7 +15,7 @@ const Essentials = () => {
 
   return (
     <section className="py-16 px-10">
-      <div className="grid grid-cols-3 grid-rows-2 gap-4">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 grid-rows-none">
         <div className="mb-8">
           <h2 className="text-3xl font-semibold text-left">Essentials of Seasons</h2>
         </div>
