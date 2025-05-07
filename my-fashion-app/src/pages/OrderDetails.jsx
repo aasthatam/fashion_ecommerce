@@ -6,6 +6,12 @@ import axios from 'axios';
 const OrderDetails = () => {
   const { backendUrl, token, currency } = useContext(ShopContext);
   const [orderData, setOrderData] = useState([]);
+  const getDiscountedPrice = (item) => {
+    const tag = Array.isArray(item.tags) ? item.tags.find(tag => tag.toLowerCase().includes("save")) : null;
+    const match = tag?.match(/(\d+)%/);
+    const percent = match ? parseInt(match[1]) : 0;
+    return item.price - (item.price * percent / 100);
+  };
 
   const loadOrderData = async () => {
     try {
@@ -67,9 +73,9 @@ const OrderDetails = () => {
               <div>
                 <p className="sm:text-base font-medium">{item.name}</p>
                 <div className="flex items-center gap-3 mt-1 text-base text-gray-700">
-                  <p className='text-lg'>
+                <p className='text-lg'>
                     {currency}
-                    {(item.price ?? 0).toFixed(2)}
+                    {(getDiscountedPrice(item) * item.quantity + 10).toFixed(2)}
                   </p>
                   <p>Quantity: {item.quantity}</p>
                   <p>Size: {item.size}</p>
@@ -113,4 +119,3 @@ const OrderDetails = () => {
 };
 
 export default OrderDetails;
-
