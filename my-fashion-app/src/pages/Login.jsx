@@ -131,7 +131,7 @@ const LoginPage = () => {
               className="absolute right-3 top-9 cursor-pointer"
             >
               <img
-                src={showPassword ? EyeIcon : EyeSlashIcon}
+                src={showPassword ? EyeSlashIcon : EyeIcon}
                 alt="Toggle password visibility"
                 className="w-5 h-5"
               />
@@ -157,7 +157,7 @@ const LoginPage = () => {
                 className="absolute right-3 top-9 cursor-pointer"
               >
                 <img
-                  src={showConfirmPassword ? EyeIcon : EyeSlashIcon}
+                  src={showConfirmPassword ? EyeSlashIcon : EyeIcon}
                   alt="Toggle confirm password visibility"
                   className="w-5 h-5"
                 />
