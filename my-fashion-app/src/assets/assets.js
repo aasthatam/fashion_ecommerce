@@ -134,30 +134,65 @@ export const colorOptions = [
   { name: "Maroon", count: 1 },       // Optional
   { name: "Champagne", count: 1 },    // Optional
 ];
+export const hexToColorName = {
+  "#000000": "Black",
+  "#ffffff": "White",
+  "#ffff": "White",
+  "#17202a": "Black",
+  "#1d1d1d": "Charcoal",
+  "#141213": "Charcoal Black",
 
-  export const hexToColorName = {
-    "#17202a": "Black",
-    "#000000": "Black",
-    "#ffffff": "White",
-    "#FFFF": "White",
-    "#f5f5dc": "Beige",
-    "#d3b8a0": "Beige",
-    "#d2b48c": "Beige",
-    "#8b572a": "Brown",
-    "#622F22": "Brown",
-    "#c9b8a4": "Champagne",
-    "#f44336": "Red",
-    "#ff0000": "Red",
-    "#d32f2f": "Red",
-    "#800000": "Maroon",
-    "#F3F8F2": "Mint",
-    "#03256C": "Blue",
-    "#44648D": "Blue",
-    "#79BAEC": "Sky Blue",
-    "#DB3069": "Pink",
-    "#F2EDEB": "Ivory",
-    "#3C3C3B": "Gray"
-  };
+  "#8b572a": "Brown",
+  "#622f22": "Brown",
+  "#a25d41": "Brown",
+  "#4f2710": "Dark Coffee",
+  "#2a1b13": "Dark Brown",
+
+  "#d3b8a0": "Beige",
+  "#d2b48c": "Beige",
+  "#d3b9a2": "Beige",
+  "#d2d3be": "Beige",
+  "#a9a196": "Taupe",
+  "#ded7cb": "Light Beige",
+  "#eae6e3": "Cream",
+  "#eae9e7": "Off White",
+  "#d9d2c7": "Light Taupe",
+  "#f8efdd": "Light Cream",
+
+  "#c9b8a4": "Champagne",
+  "#9a7957": "Tan",
+  "#946850": "Clay",
+  "#d89769": "Peach Brown",
+
+  "#f44336": "Red",
+  "#ff0000": "Red",
+  "#d32f2f": "Red",
+  "#800000": "Maroon",
+
+  "#db3069": "Pink",
+
+  "#f3f8f2": "Mint",
+
+  "#79baec": "Sky Blue",
+  "#03256c": "Blue",
+  "#597695": "Slate Blue",
+  "#50647d": "Steel Blue",
+  "#aebbcb": "Cool Gray",
+
+  "#355140": "Forest Green",
+
+  "#f2edeb": "Ivory",
+  "#999a94": "Muted Olive",
+
+  "#6c5c5c": "Warm Gray",
+  "#9e9e9e": "Gray",
+  "#3c3c3b": "Gray",
+
+  "#c9c0c1": "Soft Mauve",
+  "#371f28": "Plum"
+};
+   
+  
   
   export const categoryOptions = [
     { name: "New Arrivals", key: "new-arrivals", count: 80 },  // Changed from "New-Arrivals"
