@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from "react-router-dom"
 import facebookIcon from "../assets/ic_baseline-facebook.svg";
 import instagramIcon from "../assets/mdi_instagram.svg";
 import twitterIcon from "../assets/proicons_x-twitter.svg";
 
 const Footer = () => {
+  const [showSubscribePopup, setShowSubscribePopup] = useState(false);
+const [subscribeMessage, setSubscribeMessage] = useState("");
+
+const handleSubscribe = () => {
+  setSubscribeMessage("Thank you for subscribing to WearNova!");
+  setShowSubscribePopup(true);
+  setTimeout(() => setShowSubscribePopup(false), 1500);
+};
   return (
     <footer className="bg-white px-4 py-6 sm:px-16 sm:py-10">
       <div className="border-t border-black-300 w-full mb-8"></div>
@@ -25,7 +33,6 @@ const Footer = () => {
             <ul className="text-gray-600 space-y-1">
               <li><Link to="/collection" className="hover:underline">Shop Now</Link></li>
               <li><Link to="/collection/new-arrivals" className="hover:underline">New Arrivals</Link></li>
-              <li><Link to="#" className="hover:underline">Trending Styles</Link></li>
             </ul>
           </div>
 
@@ -52,9 +59,12 @@ const Footer = () => {
               placeholder="Enter your email" 
               className="border rounded-full px-4 py-2 flex-grow mb-2 sm:mb-0 focus:outline-none"
             />
-            <button className="bg-black text-white px-6 py-2 rounded-full">
-              Subscribe
-            </button>
+            <button
+            onClick={handleSubscribe}
+            className="bg-black text-white px-6 py-2 rounded-full border border-transparent hover:bg-white hover:text-black hover:border-black transition duration-300"
+          >
+            Subscribe
+          </button>
           </div>
 
           {/* Follow Us Section Below Newsletter */}
@@ -70,6 +80,17 @@ const Footer = () => {
       <div className="flex justify-center items-center mt-6 text-sm text-gray-600">
         <p>© 2025 WearNova. All Rights Reserved.</p>
       </div>
+      {showSubscribePopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Semi-transparent background */}
+          <div className="absolute inset-0 bg-black/20 backdrop-blur-sm"></div>
+
+          {/* Actual popup */}
+          <div className="relative bg-white px-6 py-4 rounded-lg shadow-lg z-10 max-w-sm w-full text-center">
+            <p className="text-gray-800 font-medium">{subscribeMessage}</p>
+          </div>
+        </div>
+      )}
     </footer>
   );
 };
