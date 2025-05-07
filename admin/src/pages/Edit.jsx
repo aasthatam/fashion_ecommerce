@@ -56,6 +56,17 @@ const Edit = ({ token }) => {
       });
 
       if (res.data.success) {
+        // Check if there's a discount tag (e.g., "Save 20%") and call update-tag API
+        const discountTag = product.tags.find(tag =>
+          tag.toLowerCase().includes("save")
+        );
+  
+        if (discountTag) {
+          await axios.put(backendUrl + "/api/product/update-tag", {
+            productId: id,
+            tags: product.tags,
+          });
+        }
         toast.success("Product updated successfully");
         navigate("/admin");
       } else {
