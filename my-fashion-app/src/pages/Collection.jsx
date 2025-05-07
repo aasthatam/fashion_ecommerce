@@ -230,7 +230,7 @@ const Collection = () => {
       </a>
       <h1 className="text-2xl font-semibold">{pageTitle}</h1>
 
-      <div className="flex justify-between items-center mt-4">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mt-4 gap-4">
         <div className="flex gap-6">
           <FilterDropdown 
             title="Color" 
