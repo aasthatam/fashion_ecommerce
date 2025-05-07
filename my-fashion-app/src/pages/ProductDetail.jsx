@@ -126,7 +126,7 @@ function ProductDetailPage() {
             )}
             {/* Like Button */}
             <button className="absolute top-2 right-2 text-gray-700" onClick={toggleProductLike}>
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white cursor-pointer">
                 <img src={isProductLiked ? heartIconFilled : heartIcon} alt="Heart" className="w-5 h-5" />
               </div>
             </button>
