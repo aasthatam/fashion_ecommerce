@@ -263,9 +263,11 @@ const recommendFromSearch = async (req, res) => {
       return res.json({ success: true, products: [] });
     }
 
-    const searchRegex = user.recentSearches.map(keyword => ({
-      name: { $regex: keyword, $options: "i" }
-    }));
+    const searchRegex = user.recentSearches.flatMap(keyword => [
+      { name: { $regex: keyword, $options: "i" } },
+      { category: { $regex: keyword, $options: "i" } },
+      { tags: { $elemMatch: { $regex: keyword, $options: "i" } } }
+    ]);
 
     const matchedProducts = await productModel.find({ $or: searchRegex }).limit(12);
 
@@ -276,7 +278,25 @@ const recommendFromSearch = async (req, res) => {
   }
 };
 
+const getNotifications = async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    const user = await userModel.findById(userId).select("notifications");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, notifications: user.notifications });
+  } catch (error) {
+    console.error("Fetch notification error:", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
  
 
  
-export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile, getAllCustomers, saveSearchKeyword, recommendFromSearch }
+export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile, getAllCustomers, saveSearchKeyword, recommendFromSearch, getNotifications }
