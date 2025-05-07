@@ -143,4 +143,27 @@ const updateStatus = async (req, res) => {
     
 }
 
-export { placeOrder, allOrders, userOrders, updateStatus }
+const cancelOrder = async (req, res) => {
+    try {
+      const { orderId } = req.body;
+      const order = await orderModel.findById(orderId);
+  
+      if (!order) {
+        return res.json({ success: false, message: "Order not found" });
+      }
+  
+      if (order.status !== "Order Placed" && order.status !== "Packing") {
+        return res.json({ success: false, message: "Cannot cancel at this stage" });
+      }
+  
+      order.status = "Cancelled";
+      await order.save();
+  
+      res.json({ success: true, message: "Order cancelled successfully" });
+    } catch (error) {
+      res.json({ success: false, message: error.message });
+    }
+  };
+  
+
+export { placeOrder, allOrders, userOrders, updateStatus, cancelOrder };
