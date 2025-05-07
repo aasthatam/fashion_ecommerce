@@ -3,6 +3,7 @@ import { ShopContext } from '../context/ShopContext';
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify"; 
 
 function RecommendationsSection({ currentProductId, category }) {
   const {
@@ -23,8 +24,6 @@ function RecommendationsSection({ currentProductId, category }) {
     product.category === category && product._id !== currentProductId
   )
   .slice(0, 8);
- 
-
 
   return (
     <div className="mt-16">
@@ -42,8 +41,10 @@ function RecommendationsSection({ currentProductId, category }) {
             const handleWishlistToggle = () => {
               if (isWishlisted) {
                 removeFromWishlist(product._id, product.size || 'default');
+                toast.info("Removed from wishlist");
               } else {
                 addToWishlist(product._id, product.size || 'default');
+                toast.success("Added to wishlist");
               }
             };
 
@@ -69,7 +70,7 @@ function RecommendationsSection({ currentProductId, category }) {
                   className="absolute top-2 right-2 text-gray-700 z-10"
                   onClick={handleWishlistToggle}
                 >
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white cursor-pointer">
                     <img
                       src={isWishlisted ? heartIconFilled : heartIcon}
                       alt="Heart"
