@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import plusButton from "../assets/ei_plus.svg";
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
+import { toast } from "react-toastify";
 
 const Search = () => {
   const {
@@ -24,6 +25,8 @@ const Search = () => {
   const [debouncedSearch, setDebouncedSearch] = useState(search);
   const token = localStorage.getItem("token");
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   const handleInputChange = (e) => {
     setSearch(e.target.value);
   };
@@ -42,7 +45,7 @@ const Search = () => {
 
       try {
         const userId = JSON.parse(atob(token.split('.')[1])).id;
-        await fetch("http://localhost:4000/api/user/search", {
+        await fetch(`${backendUrl}/api/user/search`, {
           method: "POST",
           headers: { "Content-Type": "application/json", token },
           body: JSON.stringify({ userId, keyword })
@@ -61,7 +64,7 @@ const Search = () => {
 
       try {
         const userId = JSON.parse(atob(token.split('.')[1])).id;
-        const res = await fetch("http://localhost:4000/api/user/recent-search-recommendations", {
+        const res = await fetch(`${backendUrl}/api/user/recent-search-recommendations`, {
           method: "POST",
           headers: { "Content-Type": "application/json", token },
           body: JSON.stringify({ userId })
@@ -135,8 +138,10 @@ const Search = () => {
   const toggleLike = (item) => {
     if (isItemLiked(item)) {
       removeFromWishlist(item._id, item.size || "default");
+      toast.info("Removed from wishlist");
     } else {
       addToWishlist(item._id, item.size || "default");
+      toast.success("Added to wishlist");
     }
   };
 
@@ -144,39 +149,105 @@ const Search = () => {
     product.name.toLowerCase().includes(search.toLowerCase())
   );
 
-  const renderProductCard = (item) => (
-    <div key={item._id} className="relative group overflow-hidden">
-      <Link to={`/product/${item._id}`}>
-        <div className="overflow-hidden">
-          <img
-            src={Array.isArray(item.images) ? item.images[0] : item.images}
-            alt={item.name}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-          />
-        </div>
-      </Link>
-      <button
-        className="absolute top-2 right-2 text-gray-700 z-10"
-        onClick={() => toggleLike(item)}
-      >
-        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
-          <img
-            src={isItemLiked(item) ? heartIconFilled : heartIcon}
-            alt="Heart"
-            className="w-5 h-5"
-          />
-        </div>
-      </button>
-      <div className="mt-3 text-center">
-        <p className="text-sm">{item.name ?? "Unnamed"}</p>
-        <p className="text-lg font-medium">
-          {currency}
-          {typeof item.price === "number" ? item.price.toFixed(2) : "N/A"}
-        </p>
-      </div>
-    </div>
-  );
+  const calculateDiscountedPrice = (price, tag) => {
+    if (!tag || !tag.toLowerCase().includes("save")) return null;
+    const match = tag.match(/(\d+)%/);
+    const percent = match ? parseInt(match[1]) : 0;
+    return price - (price * percent) / 100;
+  };
 
+  // const renderProductCard = (item) => (
+  //   <div key={item._id} className="relative group overflow-hidden">
+  //     <Link to={`/product/${item._id}`}>
+  //       <div className="overflow-hidden">
+  //         <img
+  //           src={Array.isArray(item.images) ? item.images[0] : item.images}
+  //           alt={item.name}
+  //          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+  //         />
+  //       </div>
+  //     </Link>
+  //     <button
+  //       className="absolute top-2 right-2 text-gray-700 z-10"
+  //       onClick={() => toggleLike(item)}
+  //     >
+  //       <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
+  //         <img
+  //           src={isItemLiked(item) ? heartIconFilled : heartIcon}
+  //           alt="Heart"
+  //           className="w-5 h-5"
+  //         />
+  //       </div>
+  //     </button>
+  //     <div className="mt-3 text-center">
+  //       <p className="text-sm">{item.name ?? "Unnamed"}</p>
+  //       <p className="text-lg font-medium">
+  //         {currency}
+  //         {typeof item.price === "number" ? item.price.toFixed(2) : "N/A"}
+  //       </p>
+  //     </div>
+  //   </div>
+  // );
+  const renderProductCard = (item) => {
+    const discountTag = Array.isArray(item.tags) ? item.tags[0] : null;
+    const hasDiscount = discountTag?.toLowerCase().includes("save");
+    const discountedPrice = hasDiscount ? calculateDiscountedPrice(item.price, discountTag) : null;
+  
+    return (
+      <div key={item._id} className="relative group overflow-hidden">
+        <Link to={`/product/${item._id}`}>
+          <div className="overflow-hidden">
+            <img
+              src={Array.isArray(item.images) ? item.images[0] : item.images}
+              alt={item.name}
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            />
+          </div>
+        </Link>
+  
+        {/* Tag Label */}
+        {hasDiscount && (
+          <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded-md z-10">
+            {discountTag}
+          </span>
+        )}
+  
+        {/* Wishlist Button */}
+        <button
+          className="absolute top-2 right-2 text-gray-700 z-10"
+          onClick={() => toggleLike(item)}
+        >
+          <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white cursor-pointer">
+            <img
+              src={isItemLiked(item) ? heartIconFilled : heartIcon}
+              alt="Heart"
+              className="w-5 h-5"
+            />
+          </div>
+        </button>
+  
+        {/* Product Info */}
+        <div className="mt-3 text-center">
+          <p className="text-sm">{item.name ?? "Unnamed"}</p>
+          {hasDiscount ? (
+            <>
+              <p className="text-sm text-gray-500 line-through">
+                {currency}{item.price.toFixed(2)}
+              </p>
+              <p className="text-lg font-semibold text-red-600">
+                {currency}{discountedPrice.toFixed(2)}
+              </p>
+            </>
+          ) : (
+            <p className="text-lg font-medium">
+              {currency}{typeof item.price === "number" ? item.price.toFixed(2) : "N/A"}
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  };
+  
   return (
     <div className="flex flex-col items-center px-4 py-10">
       {/* Search Bar + Upload */}

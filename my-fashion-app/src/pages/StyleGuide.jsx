@@ -4,6 +4,15 @@ import { ShopContext } from "../context/ShopContext";
 import { Link } from "react-router-dom";
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
+import { toast } from "react-toastify";
+
+
+const calculateDiscountedPrice = (price, tag) => {
+  if (!tag || !tag.toLowerCase().includes("save")) return null;
+  const match = tag.match(/(\d+)%/);
+  const percent = match ? parseInt(match[1]) : 0;
+  return price - (price * percent) / 100;
+};
 
 const StyleGuide = () => {
   const { currency, wishlistItems, addToWishlist, removeFromWishlist } = useContext(ShopContext);
@@ -195,20 +204,27 @@ const StyleGuide = () => {
                           e.preventDefault();
                           if (isWishlisted) {
                             removeFromWishlist(product._id, "default");
+                            toast.info("Removed from wishlist");
                           } else {
                             addToWishlist(product._id, "default");
+                            toast.success("Added to wishlist");
                           }
                         };
 
                         return (
                           <div key={product._id} className="relative group flex flex-col items-center">
                             <button className="absolute top-2 right-2 z-10" onClick={handleWishlistToggle}>
-                              <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center">
+                              <div className="w-9 h-9 bg-white rounded-full flex items-center justify-center cursor-pointer">
                                 <img src={isWishlisted ? heartIconFilled : heartIcon} alt="Wishlist" className="w-5 h-5" />
                               </div>
                             </button>
                             <Link to={`/product/${product._id}`} className="group w-full flex flex-col items-center transition">
                               <div className="w-full overflow-hidden">
+                              {Array.isArray(product.tags) && product.tags[0]?.toLowerCase().includes("save") && (
+                                  <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded-md z-10">
+                                    {product.tags[0]}
+                                  </span>
+                                )}
                                 <img
                                   src={product.images[0]}
                                   alt={product.name}
@@ -217,7 +233,20 @@ const StyleGuide = () => {
                               </div>
                               <div className="mt-2 text-center">
                                 <p className="text-sm font-medium text-gray-800">{product.name}</p>
-                                <p className="text-sm text-gray-600 mt-1">{currency} {product.price}</p>
+                                {Array.isArray(product.tags) && product.tags[0]?.toLowerCase().includes("save") ? (
+                                  <>
+                                    <p className="text-xs text-gray-500 line-through">
+                                      {currency}{product.price.toFixed(2)}
+                                    </p>
+                                    <p className="text-sm font-semibold text-red-600">
+                                      {currency}{calculateDiscountedPrice(product.price, product.tags[0]).toFixed(2)}
+                                    </p>
+                                  </>
+                                ) : (
+                                  <p className="text-sm text-gray-600 mt-1">
+                                    {currency}{product.price.toFixed(2)}
+                                  </p>
+                                )}
                               </div>
                             </Link>
                           </div>

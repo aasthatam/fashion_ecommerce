@@ -223,6 +223,13 @@ const Collection = () => {
   
   const dynamicColorOptions = generateColorCounts();
 
+  const calculateDiscountedPrice = (price, tag) => {
+    if (!tag || !tag.toLowerCase().includes("save")) return null;
+    const match = tag.match(/(\d+)%/);
+    const percent = match ? parseInt(match[1]) : 0;
+    return price - (price * percent) / 100;
+  };
+
   return (
     <div className="font-sans p-6 md:p-10">
       <a href="/" className="text-gray-500 text-sm mb-4 inline-block hover:underline">
@@ -280,7 +287,7 @@ const Collection = () => {
               className="absolute top-2 right-2 text-gray-700"
               onClick={() => handleWishlistToggle(item)}
             >
-              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white cursor-pointer">
               <img
                   src={
                     wishlistItems.some(wItem => wItem._id === item._id)
@@ -294,7 +301,21 @@ const Collection = () => {
             </button>
             <div className="mt-3 text-center">
               <p className="text-sm">{item.name}</p>
-              <p className="text-lg font-medium">{currency}{item.price.toFixed(2)}</p>
+              {/* <p className="text-lg font-medium">{currency}{item.price.toFixed(2)}</p> */}
+              {Array.isArray(item.tags) && item.tags[0]?.toLowerCase().includes("save") ? (
+                <>
+                  <p className="text-sm text-gray-500 line-through">
+                    {currency}{item.price.toFixed(2)}
+                  </p>
+                  <p className="text-lg font-semibold text-red-600">
+                    {currency}{calculateDiscountedPrice(item.price, item.tags[0]).toFixed(2)}
+                  </p>
+                </>
+              ) : (
+                <p className="text-lg font-medium">
+                  {currency}{item.price.toFixed(2)}
+                </p>
+              )}
             </div>
           </div>
         ))}
