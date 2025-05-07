@@ -156,38 +156,6 @@ const Search = () => {
     return price - (price * percent) / 100;
   };
 
-  // const renderProductCard = (item) => (
-  //   <div key={item._id} className="relative group overflow-hidden">
-  //     <Link to={`/product/${item._id}`}>
-  //       <div className="overflow-hidden">
-  //         <img
-  //           src={Array.isArray(item.images) ? item.images[0] : item.images}
-  //           alt={item.name}
-  //          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-  //         />
-  //       </div>
-  //     </Link>
-  //     <button
-  //       className="absolute top-2 right-2 text-gray-700 z-10"
-  //       onClick={() => toggleLike(item)}
-  //     >
-  //       <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border-2 border-white">
-  //         <img
-  //           src={isItemLiked(item) ? heartIconFilled : heartIcon}
-  //           alt="Heart"
-  //           className="w-5 h-5"
-  //         />
-  //       </div>
-  //     </button>
-  //     <div className="mt-3 text-center">
-  //       <p className="text-sm">{item.name ?? "Unnamed"}</p>
-  //       <p className="text-lg font-medium">
-  //         {currency}
-  //         {typeof item.price === "number" ? item.price.toFixed(2) : "N/A"}
-  //       </p>
-  //     </div>
-  //   </div>
-  // );
   const renderProductCard = (item) => {
     const discountTag = Array.isArray(item.tags) ? item.tags[0] : null;
     const hasDiscount = discountTag?.toLowerCase().includes("save");
