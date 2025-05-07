@@ -21,8 +21,8 @@ export const createPayment = (req, res) => {
     intent: "sale",
     payer: { payment_method: "paypal" },
     redirect_urls: {
-      return_url: "http://localhost:5173/payment-success",
-      cancel_url: "http://localhost:5173/payment-cancel",
+      return_url: `${process.env.CLIENT_URL}/payment-success`,
+      cancel_url: `${process.env.CLIENT_URL}/payment-cancel`,
     },
     transactions: [{
       amount: { currency: "USD", total: total.toFixed(2) },
