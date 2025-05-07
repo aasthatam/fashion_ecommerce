@@ -62,7 +62,34 @@ const Wishlist = () => {
                       <div>
                         <h3 className="text-xs sm:text-lg font-medium">{item.name}</h3>
                         <div className='flex items-center gap-5 mt-2'>
-                          <p>{currency}{item.price.toFixed(2)}</p>
+                        {(() => {
+                              const discountTag = item.tags?.find(tag => tag.toLowerCase().includes("save"));
+                              let discount = 0;
+
+                              if (discountTag) {
+                                const match = discountTag.match(/\d+/);
+                                if (match) discount = parseInt(match[0]);
+                              }
+
+                              const discountedPrice = item.price - (item.price * (discount / 100));
+
+                              return (
+                                <div className="flex gap-3 items-center">
+                                  {discount > 0 ? (
+                                    <>
+                                      <p className="text-sm line-through text-gray-500">
+                                        {currency}{item.price.toFixed(2)}
+                                      </p>
+                                      <p className="text-sm font-semibold text-red-600">
+                                        {currency}{discountedPrice.toFixed(2)} ({discountTag})
+                                      </p>
+                                    </>
+                                  ) : (
+                                    <p className="text-sm font-medium">{currency}{item.price.toFixed(2)}</p>
+                                  )}
+                                </div>
+                              );
+                            })()}
                           <select
                             value={item.size}
                             onChange={async (e) => {
