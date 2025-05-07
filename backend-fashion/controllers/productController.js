@@ -3,6 +3,7 @@ import productModel from "../models/productModel.js";
 import axios from "axios";
 import crypto from "crypto";
 import userBehaviorModel from "../models/userBehaviorModel.js";
+import userModel from "../models/userModel.js";
 
 
 // FastAPI service URL
@@ -290,6 +291,48 @@ const addReview = async (req, res) => {
       res.json({ success: false, message: err.message });
     }
   };
+
+  const updateProductTag = async (req, res) => {
+    try {
+      const { productId, tags } = req.body;
+  
+      const updatedProduct = await productModel.findByIdAndUpdate(
+        productId,
+        { tags },
+        { new: true }
+      );
+  
+      if (!updatedProduct) {
+        return res.status(404).json({ success: false, message: "Product not found" });
+      }
+  
+      // === Notify users who have this product in wishlist ===
+      if (Array.isArray(tags) && tags.some(tag => tag.toLowerCase().includes("save"))) {
+        const usersToNotify = await userModel.find({
+            wishlistData: { $elemMatch: { itemId: productId } }
+          });
+  
+        const notifications = usersToNotify.map(user => {
+          const newNotification = {
+            productId,
+            message: `${updatedProduct.name} is now on discount: ${tags[0]}`,
+            createdAt: new Date(),
+            read: false
+          };
+  
+          user.notifications.push(newNotification);
+          return user.save();
+        });
+  
+        await Promise.all(notifications);
+      }
+  
+      res.json({ success: true, message: "Tag updated and notifications sent (if applicable)" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: "Server error" });
+    }
+  };
   
 
-export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, recommendProduct, findSimilarProducts, addReview};
+export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, recommendProduct, findSimilarProducts, addReview, updateProductTag };
