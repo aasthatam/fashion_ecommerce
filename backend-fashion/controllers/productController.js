@@ -333,6 +333,27 @@ const addReview = async (req, res) => {
       res.status(500).json({ success: false, message: "Server error" });
     }
   };
+
+  const deleteReview = async (req, res) => {
+    try {
+      const { productId, reviewId } = req.body;
+  
+      const product = await productModel.findById(productId);
+      if (!product) return res.json({ success: false, message: "Product not found" });
+  
+      product.reviews = product.reviews.filter(
+        (review) => review._id.toString() !== reviewId
+      );
+  
+      await product.save();
+  
+      res.json({ success: true, message: "Review deleted successfully" });
+    } catch (error) {
+      console.log(error);
+      res.json({ success: false, message: error.message });
+    }
+  };
+  
   
 
-export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, recommendProduct, findSimilarProducts, addReview, updateProductTag };
+export { addProduct, listProduct, removeProduct, singleProduct, updateProduct, recommendProduct, findSimilarProducts, addReview, updateProductTag, deleteReview};
