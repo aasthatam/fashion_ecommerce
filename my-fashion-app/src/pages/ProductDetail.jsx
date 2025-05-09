@@ -19,6 +19,14 @@ function ProductDetailPage() {
   const { token, currency, addToCart , addToWishlist, removeFromWishlist, wishlistItems, backendUrl} = useContext(ShopContext); 
   const [ product, setProduct ] = useState(null);
   const navigate = useNavigate();
+  const [isVisible, setIsVisible] = useState(false);
+
+   useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
 
   useEffect(() => {
@@ -89,7 +97,11 @@ function ProductDetailPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 py-8">
+    <div
+      className={`max-w-6xl mx-auto px-4 py-8 transition-all duration-1000 ease-in-out transform ${
+        isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+      }`}
+    >
       {/* Breadcrumb */}
       <div className="mb-8">
         <a href="/" className="text-gray-500 text-sm mb-4 inline-block hover:underline">
@@ -105,7 +117,9 @@ function ProductDetailPage() {
             <img 
               src={productImages[selectedImage]} 
               alt={product.name} 
-              className="w-full h-[800px] object-cover"
+              className={`w-full h-[800px] object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 ${
+                isVisible ? "scale-100" : "scale-110"
+              }`}
             />
             {/* Navigation Buttons */}
             {productImages.length > 1 && (
@@ -331,7 +345,13 @@ function ProductDetailPage() {
         {product.reviews && product.reviews.length > 0 ? (
           <div className="space-y-4">
             {product.reviews.map((review, index) => (
-              <div key={index} className="border p-4 rounded-md shadow-sm">
+                <div
+                  key={index}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                  className={`border p-4 rounded-md shadow-sm transition-all duration-700 ease-in-out transform ${
+                    isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                  }`}
+                >
                 <div className="font-medium">{review.username}</div>
                 <div className="text-yellow-500">
                   {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}

@@ -24,12 +24,19 @@ const Search = () => {
   const [loading, setLoading] = useState(false);
   const [debouncedSearch, setDebouncedSearch] = useState(search);
   const token = localStorage.getItem("token");
+  const [isVisible, setIsVisible] = useState(false);
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
   const handleInputChange = (e) => {
     setSearch(e.target.value);
   };
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    setIsVisible(true);
+  }, 100);
+  return () => clearTimeout(timer);
+}, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -168,7 +175,7 @@ const Search = () => {
             <img
               src={Array.isArray(item.images) ? item.images[0] : item.images}
               alt={item.name}
-              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              className={`w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 ${isVisible ? 'scale-100' : 'scale-110'}`}
             />
           </div>
         </Link>
@@ -217,7 +224,11 @@ const Search = () => {
   };
   
   return (
-    <div className="flex flex-col items-center px-4 py-10">
+    <div
+  className={`flex flex-col items-center px-4 py-10 transition-all duration-1000 ease-in-out transform ${
+    isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+  }`}
+>
       {/* Search Bar + Upload */}
       <div className="relative flex items-center px-4 py-2 w-full max-w-md border-b border-gray-400">
         <input

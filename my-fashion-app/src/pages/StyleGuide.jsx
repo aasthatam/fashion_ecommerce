@@ -6,7 +6,6 @@ import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
 import { toast } from "react-toastify";
 
-
 const calculateDiscountedPrice = (price, tag) => {
   if (!tag || !tag.toLowerCase().includes("save")) return null;
   const match = tag.match(/(\d+)%/);
@@ -20,11 +19,19 @@ const StyleGuide = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [bodyShape, setBodyShape] = useState(null);
   const [description, setDescription] = useState(null);
-  const [resultImageBase64, setResultImageBase64] = useState(null);
+  const [resultImageUrl, setResultImageUrl] = useState(null);
   const [recommendedProducts, setRecommendedProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingRecommendations, setLoadingRecommendations] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+  const timer = setTimeout(() => {
+    setIsVisible(true);
+  }, 100);
+  return () => clearTimeout(timer);
+}, []);
 
   useEffect(() => {
     const stored = localStorage.getItem("styleGuideData");
@@ -32,7 +39,7 @@ const StyleGuide = () => {
       const data = JSON.parse(stored);
       setImageUploaded(true);
       setImagePreview(data.imagePreview);
-      setResultImageBase64(data.resultImageBase64);
+      setResultImageUrl(data.resultImageUrl);
       setBodyShape(data.shape);
       setDescription(data.description);
       setRecommendedProducts(data.recommendedProducts);
@@ -46,7 +53,7 @@ const StyleGuide = () => {
       reader.onloadend = async () => {
         setImagePreview(reader.result);
         setImageUploaded(true);
-        setErrorMessage(null); // clear previous error
+        setErrorMessage(null);
 
         const formData = new FormData();
         formData.append("image", file);
@@ -60,35 +67,28 @@ const StyleGuide = () => {
 
           const shape = response.data.shape;
           setBodyShape(shape);
+
           try {
             const token = localStorage.getItem("token");
             if (token) {
-              await axios.put(
-                "http://localhost:4000/api/user/body-shape",  // or update URL as per your route setup
-                { bodyShape: shape },
-                {
-                  headers: {
-                    token: token,  // your `authUser` middleware expects this key
-                  },
-                }
-              );
+              await axios.put("http://localhost:4000/api/user/body-shape", { bodyShape: shape }, {
+                headers: { token }
+              });
             }
           } catch (err) {
             console.error("Failed to store body shape:", err);
           }
-          
+
           setDescription(response.data.description);
-          setResultImageBase64(response.data.result_image_base64);
+          setResultImageUrl(response.data.result_image_url);
 
           setLoadingRecommendations(true);
-          const recResponse = await axios.get(
-            `http://localhost:4000/api/product/recommendations?shape=${shape.toLowerCase()}`
-          );
+          const recResponse = await axios.get(`http://localhost:4000/api/product/recommendations?shape=${shape.toLowerCase()}`);
           setRecommendedProducts(recResponse.data.products);
 
           localStorage.setItem("styleGuideData", JSON.stringify({
             imagePreview: reader.result,
-            resultImageBase64: response.data.result_image_base64,
+            resultImageUrl: response.data.result_image_url,
             shape: response.data.shape,
             description: response.data.description,
             recommendedProducts: recResponse.data.products
@@ -96,13 +96,9 @@ const StyleGuide = () => {
         } catch (error) {
           console.error("Error uploading image or fetching recommendations:", error);
           let msg = "An error occurred. Please try again.";
-          if (error.response && error.response.data) {
-            if (error.response.data.error) {
-              msg = error.response.data.error;
-            } else if (error.response.data.detail) {
-              msg = error.response.data.detail;
-            }
-          }
+          if (error.response?.data?.error) msg = error.response.data.error;
+          if (error.response?.data?.detail) msg = error.response.data.detail;
+          toast.error(msg);
           setErrorMessage(msg);
           setBodyShape(null);
           setDescription(null);
@@ -122,13 +118,17 @@ const StyleGuide = () => {
     setImagePreview(null);
     setBodyShape(null);
     setDescription(null);
-    setResultImageBase64(null);
+    setResultImageUrl(null);
     setRecommendedProducts([]);
     setErrorMessage(null);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-50">
+    <div
+  className={`flex flex-col items-center justify-center min-h-screen p-6 bg-gray-50 transition-all duration-1000 ease-in-out transform ${
+    isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+  }`}
+>
       <h1 className="text-3xl font-semibold text-gray-900 mb-8 text-center">
         Find Your Perfect Style Based on Your Body Type
       </h1>
@@ -139,8 +139,6 @@ const StyleGuide = () => {
           <div className="w-full overflow-hidden rounded-lg bg-gray-100 flex items-center justify-center">
             {loading ? (
               <div className="text-gray-500 animate-pulse">Processing...</div>
-            ) : resultImageBase64 ? (
-              <img src={`data:image/jpeg;base64,${resultImageBase64}`} alt="Result preview" className="w-full object-contain rounded" />
             ) : imagePreview ? (
               <img src={imagePreview} alt="Uploaded preview" className="w-full object-contain rounded" />
             ) : (
@@ -157,8 +155,8 @@ const StyleGuide = () => {
 
           {!imageUploaded && (
             <div className="mt-3 text-sm text-gray-600 text-center px-2">
-               <p>Upload a clear, front-facing full body photo.</p>
-               <p>Avoid sitting, angled poses, or group shots.</p>
+              <p>Upload a clear, front-facing full body photo.</p>
+              <p>Avoid sitting, angled poses, or group shots.</p>
             </div>
           )}
 
@@ -181,12 +179,29 @@ const StyleGuide = () => {
             ) : (
               <>
                 {bodyShape && (
-                  <>
-                    <h2 className="text-lg font-light text-gray-800 mb-3 text-center md:text-left">
-                      Your Body Type: <strong>{bodyShape}</strong>
+                  <div className="mb-6">
+                    <h2 className="text-lg font-bold text-gray-800 mb-3 text-center md:text-left">
+                      Your Body Type: {bodyShape}
                     </h2>
                     <p className="text-gray-600 mb-6">{description}</p>
-                  </>
+                    {resultImageUrl && (
+                      <button
+                    onClick={async () => {
+                      const url = `http://localhost:5000${resultImageUrl}`;
+                      const response = await fetch(url);
+                      const blob = await response.blob();
+                      const link = document.createElement('a');
+                      link.href = URL.createObjectURL(blob);
+                      link.download = "analyzed_result.jpg";
+                      link.click();
+                      URL.revokeObjectURL(link.href);
+                    }}
+                     className="inline-block bg-black text-white text-sm px-4 py-2 rounded border border-black hover:bg-white hover:text-black transition"
+                  >
+                    Download Analyzed Image
+                  </button>
+                    )}
+                  </div>
                 )}
 
                 <h3 className="text-lg font-semibold text-gray-900 text-center mb-4">
@@ -220,7 +235,7 @@ const StyleGuide = () => {
                             </button>
                             <Link to={`/product/${product._id}`} className="group w-full flex flex-col items-center transition">
                               <div className="w-full overflow-hidden">
-                              {Array.isArray(product.tags) && product.tags[0]?.toLowerCase().includes("save") && (
+                                {Array.isArray(product.tags) && product.tags[0]?.toLowerCase().includes("save") && (
                                   <span className="absolute top-2 left-2 bg-black text-white text-xs px-2 py-1 rounded-md z-10">
                                     {product.tags[0]}
                                   </span>
@@ -228,7 +243,7 @@ const StyleGuide = () => {
                                 <img
                                   src={product.images[0]}
                                   alt={product.name}
-                                  className="w-full h-72 object-cover transition-transform duration-300 group-hover:scale-110"
+                                  className={`w-full h-auto object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 ${isVisible ? 'scale-100' : 'scale-110'}`}
                                 />
                               </div>
                               <div className="mt-2 text-center">
@@ -267,3 +282,4 @@ const StyleGuide = () => {
 };
 
 export default StyleGuide;
+
