@@ -7,6 +7,14 @@ import 'react-toastify/dist/ReactToastify.css';
 const OrderDetails = () => {
   const { backendUrl, token, currency } = useContext(ShopContext);
   const [orderData, setOrderData] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const getDiscountedPrice = (item) => {
     const tag = Array.isArray(item.tags) ? item.tags.find(tag => tag.toLowerCase().includes("save")) : null;
@@ -77,7 +85,11 @@ const OrderDetails = () => {
   }, [token]);
 
   return (
-    <div className='pt-16 px-4 sm:px-8 md:px-12'>
+    <div
+      className={`pt-16 px-4 sm:px-8 md:px-12 transition-all duration-1000 ease-in-out transform ${
+        isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+      }`}
+    >
       <ToastContainer position="top-right" autoClose={2000} />
       
       <div className="text-2xl font-semibold mb-6">
