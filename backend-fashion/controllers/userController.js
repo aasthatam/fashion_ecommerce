@@ -295,8 +295,24 @@ const getNotifications = async (req, res) => {
   }
 };
 
+const markNotificationsAsRead = async (req, res) => {
+  try {
+    const token = req.headers.token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // if you're using JWT
+    const user = await userModel.findById(decoded.id);
 
- 
+    if (!user) return res.json({ success: false, message: "User not found" });
 
- 
-export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile, getAllCustomers, saveSearchKeyword, recommendFromSearch, getNotifications }
+    user.notifications.forEach(note => {
+      note.read = true;
+    });
+
+    await user.save();
+    res.json({ success: true, message: "All notifications marked as read" });
+  } catch (err) {
+    console.error("Mark as read error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile, getAllCustomers, saveSearchKeyword, recommendFromSearch, getNotifications, markNotificationsAsRead }
