@@ -14,6 +14,14 @@ const Cart = () => {
   } = useContext(ShopContext);
 
   const [cartList, setCartList] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const tempData = [];
@@ -54,7 +62,11 @@ const Cart = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between p-6 font-sans">
+    <div
+    className={`min-h-screen flex flex-col justify-between p-6 font-sans transition-all duration-1000 ease-in-out transform ${
+      isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+    }`}
+  >
       {/* Header */}
       <header className="text-center pt-20">
         <h1 className="text-2xl font-semibold mb-6">Shopping Cart</h1>
@@ -77,7 +89,13 @@ const Cart = () => {
             {/* Cart Items */}
             <div className="space-y-4">
               {cartList.map((item, index) => (
-                <div key={`${item._id}-${item.size}-${index}`} className="border-b pb-4">
+                <div
+                  key={`${item._id}-${item.size}-${index}`}
+                  style={{ transitionDelay: `${index * 100}ms` }}
+                  className={`border-b pb-4 transform transition-all duration-700 ease-in-out ${
+                    isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                  }`}
+                >
                   <div className="flex justify-between items-start">
                     <div className="flex items-start space-x-4">
                       <img
