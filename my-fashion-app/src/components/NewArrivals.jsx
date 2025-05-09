@@ -10,6 +10,14 @@ const NewArrivals = ({handleViewNewArrivals}) => {
   const { products } = useContext(ShopContext);
   const { currency } = useContext(ShopContext);
   const [latestProducts, setLatestProducts] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() =>{
     const newArrivals = products.filter(item => item.isNewArrival);
@@ -28,7 +36,7 @@ const NewArrivals = ({handleViewNewArrivals}) => {
                 <img
                   src={item.images[0]}
                   alt={item.name}
-                  className="w-full h-auto object-cover transition-transform duration-300 group-hover:scale-110"
+                  className={`w-full h-auto object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 ${isVisible ? 'scale-100' : 'scale-110'}`}
                 />
               </div>
             </Link>
