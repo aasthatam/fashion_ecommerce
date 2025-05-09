@@ -52,13 +52,19 @@ const FilterDropdown = ({ title, options, selectedOptions, onOptionChange }) => 
 const Collection = () => {
   const { products, currency, wishlistItems, addToWishlist, removeFromWishlist } = useContext(ShopContext); // Using products from ShopContext
   const [currentPage, setCurrentPage] = useState(1);
+  const [isVisible, setIsVisible] = useState(false);
   const [selectedColors, setSelectedColors] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedFabrics, setSelectedFabrics] = useState([]);
   const [sortBy, setSortBy] = useState("");
   const location = useLocation();
   const navigate = useNavigate();
-
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, []);
   const category = location.pathname.split('/')[2] || "collection";
 
   const pageTitles = {
@@ -268,13 +274,13 @@ const Collection = () => {
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
         {paginatedProducts.map((item) => (
-          <div key={item._id} className="relative group overflow-hidden">
+          <div key={item._id} className={`relative group overflow-hidden transition-opacity duration-1000 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
             <Link to={`/product/${item._id}`}>
               <div className="overflow-hidden">
                 <img 
                   src={Array.isArray(item.images) ? item.images[0] : item.images} 
                   alt={item.name} 
-                  className="w-full h-full transition-transform duration-300 group-hover:scale-110" 
+                  className={`w-full h-full object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 ${isVisible ? 'scale-100' : 'scale-110'}`}
                 />
               </div>
             </Link>
