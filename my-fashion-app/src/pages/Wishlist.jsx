@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import removeIcon from "../assets/material-symbols-light_delete-outline.svg";
 import { Link } from "react-router-dom";
@@ -16,6 +16,14 @@ const Wishlist = () => {
     addToCart,
     backendUrl
   } = useContext(ShopContext);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleAddToCart = (itemId, size) => {
     if (!token) {
@@ -28,7 +36,11 @@ const Wishlist = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-between p-6 font-sans">
+    <div
+  className={`min-h-screen flex flex-col justify-between p-6 font-sans transition-all duration-1000 ease-in-out transform ${
+    isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+  }`}
+>
       {/* Header */}
       <header className="text-center pt-20">
         <h1 className="text-2xl font-semibold mb-6">Your Wishlist</h1>
@@ -51,7 +63,13 @@ const Wishlist = () => {
             {/* Wishlist Items */}
             <div className="space-y-4">
               {wishlistItems.map((item, index) => (
-                <div key={`${item._id}-${item.size}-${index}`} className="border-b pb-4">
+                <div
+                    key={`${item._id}-${item.size}-${index}`}
+                    style={{ transitionDelay: `${index * 100}ms` }}
+                    className={`border-b pb-4 transform transition-all duration-700 ease-in-out ${
+                      isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+                    }`}
+                  >
                   <div className="flex justify-between items-start">
                     <div className="flex items-start space-x-4">
                       <img
