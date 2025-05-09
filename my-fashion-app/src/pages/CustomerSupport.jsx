@@ -348,7 +348,7 @@ const sectionSubSections = {
           sectionSubSections[selectedSection].map((subSection, index) => (
             <div key={index} className="border-b py-4">
               <button
-                className="flex justify-between items-center w-full text-lg font-medium"
+                className="flex justify-between items-center w-full text-lg font-medium cursor-pointer"
                 onClick={() =>
                   setOpenSubSection(openSubSection === index ? null : index)
                 }
