@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import heartIcon from "../assets/heart1.svg";
 import heartIconFilled from "../assets/heart2.svg";
@@ -24,6 +24,12 @@ function RecommendationsSection({ currentProductId, category }) {
     product.category === category && product._id !== currentProductId
   )
   .slice(0, 8);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="mt-16">
@@ -49,7 +55,13 @@ function RecommendationsSection({ currentProductId, category }) {
             };
 
             return (
-              <div key={product._id} className="relative group overflow-hidden">
+              <div
+                key={product._id}
+                style={{ transitionDelay: `${Math.random() * 200}ms` }}
+                className={`relative group overflow-hidden transform transition-all duration-700 ease-in-out ${
+                  isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+                }`}
+              >
                 {/* Product Image with Link */}
                 <Link to={`/product/${product._id}`}>
                   <div className="overflow-hidden">
@@ -60,7 +72,7 @@ function RecommendationsSection({ currentProductId, category }) {
                           : product.images
                       }
                       alt={product.name}
-                      className="w-full h-full transition-transform duration-300 group-hover:scale-110"
+                      className={`w-full h-auto object-cover transition-transform duration-1000 ease-in-out group-hover:scale-110 ${isVisible ? 'scale-100' : 'scale-110'}`}
                     />
                   </div>
                 </Link>
