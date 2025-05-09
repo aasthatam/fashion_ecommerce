@@ -15,6 +15,18 @@ const LoginPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+  const [formVisible, setFormVisible] = useState(false);
+  useEffect(() => {
+  setFormVisible(false); // reset animation
+  const timer = setTimeout(() => setFormVisible(true), 50); // short delay for effect
+  return () => clearTimeout(timer);
+}, [mode]);
 
   const { token, setToken, backendUrl } = useContext(ShopContext);
   const navigate = useNavigate();
@@ -75,12 +87,21 @@ const LoginPage = () => {
   }, [token, navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <div className={`min-h-screen flex items-center justify-center bg-white-100 transition-all duration-700 ease-in-out transform ${
+      isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+    }`}>
+      <div className={`bg-white p-8 rounded-lg shadow-lg w-full max-w-md transition-all duration-700 ease-in-out transform ${
+      isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+    }`}>
         <h2 className="text-2xl font-bold mb-6 text-center">
           {mode === "login" ? "Login" : "Create Account"}
         </h2>
-        <form onSubmit={handleSubmit}>
+        <form
+        onSubmit={handleSubmit}
+        className={`transition-all duration-500 ease-in-out transform ${
+          formVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+        }`}
+      >
           {mode === "register" && (
             <div className="mb-4">
               <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-2">
