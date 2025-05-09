@@ -13,6 +13,14 @@ const CustomerSupport = () => {
   const [openSubSection, setOpenSubSection] = useState(null);
   const [showFeedbackPopup, setShowFeedbackPopup] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+
+    useEffect(() => {
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 100); // Delay for smoother transition
+      return () => clearTimeout(timer);
+    }, []);
 
   const handleFeedback = (message) => {
     setFeedbackMessage(message);
@@ -321,7 +329,11 @@ const sectionSubSections = {
 
 
   return (
-    <div className="flex flex-col md:flex-row p-8 space-x-10">
+     <div
+    className={`flex flex-col md:flex-row p-8 space-x-10 transition-opacity duration-1000 ease-in-out ${
+      isVisible ? "opacity-100" : "opacity-0"
+    }`}
+  >
       {/* Sidebar */}
       <div className="w-full md:w-1/4">
         <ul className="space-y-3 text-gray-700">
