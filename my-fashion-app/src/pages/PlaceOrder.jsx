@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { ShopContext } from '../context/ShopContext';
 import CartSummary from '../components/CartSummary';
 import axios from 'axios';
@@ -10,6 +10,7 @@ const PlaceOrder = () => {
   const navigate = useNavigate();
 
   const [paymentMethod, setPaymentMethod] = useState("COD");
+  const [isVisible, setIsVisible] = useState(false); 
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -21,6 +22,13 @@ const PlaceOrder = () => {
     country: '',
     phone: ''
   });
+   useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
 
   const onChangeHandler = (event) => {
     const name = event.target.name;
@@ -116,7 +124,11 @@ const PlaceOrder = () => {
   };
 
   return (
-    <div className="min-h-[80vh] pt-5 sm:pt-14">
+     <div
+      className={`min-h-[80vh] pt-5 sm:pt-14 transition-all duration-1000 ease-in-out transform ${
+        isVisible ? "opacity-100 scale-100" : "opacity-0 scale-95"
+      }`}
+    >
       <div className="px-4 sm:px-8 md:px-12">
         <form onSubmit={onSubmitHandler} className="flex flex-col sm:flex-row justify-between gap-8">
           {/* Left - Delivery Form */}
