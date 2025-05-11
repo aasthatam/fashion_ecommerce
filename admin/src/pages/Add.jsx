@@ -30,56 +30,92 @@ const Add = ({token}) => {
   };
 
   const onSubmitHandler = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData()
-      formData.append("name", name)
-      formData.append("details", details)
-      formData.append("price", price)
-      formData.append("category", category)
-      formData.append("bestselling", bestselling)
-      formData.append("sizes", JSON.stringify(sizes))
-      formData.append("fabric", fabric)
-      formData.append("tags", JSON.stringify(tags))
-      formData.append("suitableBodyType", JSON.stringify(suitableBodyType));
-      formData.append("isNewArrival", isNewArrival)
-      formData.append("availability", availability)
-      formData.append("colors", colors)
+  e.preventDefault();
 
-      image1 && formData.append("image1", image1)
-      image2 && formData.append("image2", image2)
-      image3 && formData.append("image3", image3)
-      image4 && formData.append("image4", image4)
-
-      const response = await axios.post(backendUrl + "/api/product/add", formData, {headers: {token}})
-      if(response.data.success) {
-        toast.success(response.data.message)
-        setName('')
-        setDetails('')
-        setImage1(false)
-        setImage2(false)
-        setImage3(false)
-        setImage4(false)
-        setPrice('')
-        setBestselling(false)
-        setSizes([])
-        setFabric('')
-        setIsNewArrival(false)
-        setAvailability('In Stock')
-        setColors('')
-        setTags([])
-        setSuitableBodyType([])
-        
-      } else {
-        toast.error(response.data.message)
-      }
-      
-    } catch (error) {
-      console.log(error);
-      toast.error(error.message);
-      
-    }
+  // Frontend validations with toast
+  if (!name.trim()) {
+    toast.error("Product name is required.");
+    return;
   }
+
+  if (!details.trim()) {
+    toast.error("Product details are required.");
+    return;
+  }
+
+  if (!price) {
+    toast.error("Product price is required.");
+    return;
+  }
+
+  if (!image1) {
+    toast.error("At least one product image (image1) is required.");
+    return;
+  }
+
+  if (sizes.length === 0) {
+    toast.error("Please select at least one size.");
+    return;
+  }
+
+  if (tags.length === 0) {
+    toast.error("Please select a discount tag.");
+    return;
+  }
+
+  try {
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("details", details);
+    formData.append("price", price);
+    formData.append("category", category);
+    formData.append("bestselling", bestselling);
+    formData.append("sizes", JSON.stringify(sizes));
+    formData.append("fabric", fabric);
+    formData.append("tags", JSON.stringify(tags));
+    formData.append("suitableBodyType", JSON.stringify(suitableBodyType));
+    formData.append("isNewArrival", isNewArrival);
+    formData.append("availability", availability);
+    formData.append("colors", colors);
+
+    image1 && formData.append("image1", image1);
+    image2 && formData.append("image2", image2);
+    image3 && formData.append("image3", image3);
+    image4 && formData.append("image4", image4);
+
+    const response = await axios.post(
+      backendUrl + "/api/product/add",
+      formData,
+      { headers: { token } }
+    );
+
+    if (response.data.success) {
+      toast.success(response.data.message);
+      // Reset form
+      setName('');
+      setDetails('');
+      setImage1(false);
+      setImage2(false);
+      setImage3(false);
+      setImage4(false);
+      setPrice('');
+      setBestselling(false);
+      setSizes([]);
+      setFabric('');
+      setIsNewArrival(false);
+      setAvailability('In Stock');
+      setColors('');
+      setTags([]);
+      setSuitableBodyType([]);
+    } else {
+      toast.error(response.data.message);
+    }
+  } catch (error) {
+    console.log(error);
+    toast.error(error.message);
+  }
+};
+
 
   return (
     <form onSubmit={onSubmitHandler} className='flex flex-col w-full items-start gap-3'>
