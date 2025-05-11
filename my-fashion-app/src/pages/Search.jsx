@@ -116,7 +116,7 @@ const Search = () => {
       const cloudinaryData = await cloudinaryResponse.json();
       const imageUrl = cloudinaryData.secure_url;
 
-      const response = await fetch("http://localhost:4000/api/product/similar", {
+      const response = await fetch(`${backendUrl}/api/product/similar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ imageUrl }),

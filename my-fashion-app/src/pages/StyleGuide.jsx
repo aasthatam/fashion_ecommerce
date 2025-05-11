@@ -26,6 +26,9 @@ const StyleGuide = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
+  const bodyApiUrl = import.meta.env.VITE_BODY_API_URL;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   useEffect(() => {
   const timer = setTimeout(() => {
     setIsVisible(true);
@@ -61,7 +64,7 @@ const StyleGuide = () => {
 
         try {
           setLoading(true);
-          const response = await axios.post("http://localhost:5000/predict", formData, {
+          const response = await axios.post(`${bodyApiUrl}/predict`, formData, {
             headers: { "Content-Type": "multipart/form-data" },
           });
 
@@ -71,7 +74,7 @@ const StyleGuide = () => {
           try {
             const token = localStorage.getItem("token");
             if (token) {
-              await axios.put("http://localhost:4000/api/user/body-shape", { bodyShape: shape }, {
+              await axios.put(`${backendUrl}/api/user/body-shape`, { bodyShape: shape }, {
                 headers: { token }
               });
             }
@@ -83,7 +86,7 @@ const StyleGuide = () => {
           setResultImageUrl(response.data.result_image_url);
 
           setLoadingRecommendations(true);
-          const recResponse = await axios.get(`http://localhost:4000/api/product/recommendations?shape=${shape.toLowerCase()}`);
+          const recResponse = await axios.get(`${backendUrl}/api/product/recommendations?shape=${shape.toLowerCase()}`);
           setRecommendedProducts(recResponse.data.products);
 
           localStorage.setItem("styleGuideData", JSON.stringify({
@@ -187,7 +190,7 @@ const StyleGuide = () => {
                     {resultImageUrl && (
                       <button
                     onClick={async () => {
-                      const url = `http://localhost:5000${resultImageUrl}`;
+                      const url = `${bodyApiUrl}${resultImageUrl}`;
                       const response = await fetch(url);
                       const blob = await response.blob();
                       const link = document.createElement('a');
