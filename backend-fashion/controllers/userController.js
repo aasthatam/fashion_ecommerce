@@ -5,9 +5,6 @@ import jwt from "jsonwebtoken";
 import productModel from "../models/productModel.js"; 
 
 
-// const createToken = (id) => {
-//     return jwt.sign({id}, process.env.JWT_SECRET)
-// }
 const createToken = (payload) => {
    return jwt.sign(payload, process.env.JWT_SECRET);
 }
@@ -137,20 +134,6 @@ const adminLogin = async (req, res) => {
      console.log(error);
      res.json({ success: false, message: error.message });
    }
-
-   // try{
-   //    const {email, password} = req.body
-   //    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
-   //       const json = jwt.sign(email+password, process.env.JWT_SECRET);
-   //       res.json({success: true, token})
-   //    } else {
-   //       res.json({success: false, message: 'Invalid credentials'})
-   //    }
-   // } catch(error){
-   //    console.log(error);
-   //    res.json({ success: false, message: error.message });
-
-   // }
  };
 
  // Add this function in userController.js
