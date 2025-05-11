@@ -4,25 +4,45 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import EyeIcon from "../assets/image120.svg";
 import EyeSlashIcon from "../assets/image121.svg";
+import { Link } from 'react-router-dom';
 
 const Login = ({ setToken }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false); // 👈 Add this
+  const [showPassword, setShowPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+
+    // Custom validation
+    if (!email.trim()) {
+      toast.error("Email is required.");
+      return;
+    }
+
+    if (!password.trim()) {
+      toast.error("Password is required.");
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
       console.log("Submitting login request...");
       const response = await axios.post(backendUrl + '/api/user/admin', { email, password });
+
       if (response.data.success) {
         setToken(response.data.token);
+        toast.success("Login successful!");
       } else {
-        toast.error(response.data.message);
+        toast.error(response.data.message || "Login failed.");
       }
     } catch (error) {
-      console.log(error);
-      toast.error(error.message);
+      console.error(error);
+      toast.error(error.message || "Something went wrong.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -32,6 +52,7 @@ const Login = ({ setToken }) => {
         <h1 className="text-2xl font-semibold text-center mb-4">Admin Panel</h1>
 
         <form onSubmit={onSubmitHandler}>
+          {/* Email Field */}
           <div className="mb-4">
             <label className="block text-gray-700">Email Address</label>
             <input
@@ -40,11 +61,10 @@ const Login = ({ setToken }) => {
               type="email"
               className="w-full border rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="Enter your email"
-              required
             />
           </div>
 
-          {/* Password field with eye toggle */}
+          {/* Password Field */}
           <div className="mb-4 relative">
             <label className="block text-gray-700">Password</label>
             <input
@@ -53,7 +73,6 @@ const Login = ({ setToken }) => {
               type={showPassword ? "text" : "password"}
               className="w-full border rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="Enter your password"
-              required
             />
             <span
               onClick={() => setShowPassword(!showPassword)}
@@ -68,11 +87,17 @@ const Login = ({ setToken }) => {
             </span>
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-800 transition"
+            disabled={isSubmitting}
+            className={`w-full py-2 rounded-md transition ${
+              isSubmitting
+                ? 'bg-gray-400 cursor-not-allowed'
+                : 'bg-black text-white hover:bg-gray-800'
+            }`}
           >
-            Login
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
