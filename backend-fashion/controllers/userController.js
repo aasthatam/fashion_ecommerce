@@ -188,22 +188,24 @@ const updateBodyShape = async (req, res) => {
    }
  };
 
- const getProfile = async (req, res) => {
-   try {
-     const { userId } = req.body; // set by authUser middleware
- 
-     const user = await userModel.findById(userId).select("name email role bodyShape");
- 
-     if (!user) {
-       return res.status(404).json({ success: false, message: "User not found" });
-     }
- 
-     res.json({ success: true, user });
-   } catch (err) {
-     console.error(err);
-     res.status(500).json({ success: false, message: "Server error" });
-   }
- };
+const getProfile = async (req, res) => {
+  try {
+    const token = req.headers.token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await userModel.findById(decoded.id).select("name email role bodyShape");
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, user });
+  } catch (err) {
+    console.error("Profile fetch error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
 
  const getAllCustomers = async (req, res) => {
   try {
@@ -298,4 +300,57 @@ const markNotificationsAsRead = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile, getAllCustomers, saveSearchKeyword, recommendFromSearch, getNotifications, markNotificationsAsRead }
+const updateProfile = async (req, res) => {
+  try {
+    const token = req.headers.token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const { name, email, bodyShape } = req.body;
+
+    // Check if the new email is already in use by another user
+    const existingUser = await userModel.findOne({
+      email,
+      _id: { $ne: decoded.id }  // Exclude current user
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is already in use by another account."
+      });
+    }
+
+    const updatedUser = await userModel.findByIdAndUpdate(
+      decoded.id,
+      { name, email, bodyShape },
+      { new: true }
+    ).select("-password");
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.json({ success: true, user: updatedUser });
+  } catch (err) {
+    console.error("Update profile error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+const deleteAccount = async (req, res) => {
+  try {
+    const token = req.headers.token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    await userModel.findByIdAndDelete(decoded.id);
+
+    res.json({ success: true, message: "Account deleted successfully" });
+  } catch (err) {
+    console.error("Delete account error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
+
+export { loginUser, registerUser, adminLogin, resetPassword, updateBodyShape, getProfile, getAllCustomers, saveSearchKeyword, recommendFromSearch, getNotifications, markNotificationsAsRead, updateProfile, deleteAccount }
